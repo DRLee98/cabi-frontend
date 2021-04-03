@@ -40,6 +40,7 @@ export interface CafeInputType {
   address: AddressInputType;
   keywords?: KeywordInputType[] | null;
   owner: UserInputType;
+  likedUsers?: UserInputType[] | null;
   menus?: MenuInputType[] | null;
   reviews?: ReviewInputType[] | null;
   ratings?: RatingInputType[] | null;
@@ -61,6 +62,11 @@ export interface KeywordInputType {
   cafes?: CafeInputType[] | null;
 }
 
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
 export interface MenuInputType {
   name: string;
   description: string;
@@ -71,6 +77,8 @@ export interface MenuInputType {
   nutrient?: NutrientInputType | null;
   reviews?: ReviewInputType[] | null;
   ratings?: RatingInputType[] | null;
+  totalScore: number;
+  avgScore: number;
 }
 
 export interface NutrientInputType {
@@ -117,6 +125,7 @@ export interface UserInputType {
   profileImg?: string | null;
   address: AddressInputType;
   cafes?: CafeInputType[] | null;
+  likeCafes?: CafeInputType[] | null;
   review?: ReviewInputType[] | null;
   reply?: ReplyInputType[] | null;
 }

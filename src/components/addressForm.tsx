@@ -21,6 +21,12 @@ const Input = styled.input<InputStyleProps>`
   &::placeholder {
     color: darkgray;
   }
+  &:first-child {
+    border-top-left-radius: 10px;
+  }
+  &:last-child {
+    border-radius: 0 0 10px 10px;
+  }
 `;
 
 const SearchBtn = styled.span`
@@ -28,8 +34,11 @@ const SearchBtn = styled.span`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background-color: olive;
-  color: white;
+  background-color: ${(prop) => prop.theme.signatureBgColor};
+  color: ${(prop) => prop.theme.signatureColor};
+  font-size: 15px;
+  font-weight: 600;
+  border-top-right-radius: 10px;
 `;
 
 interface InputStyleProps {
@@ -41,21 +50,23 @@ interface InputProps {
   setAddressResult: React.Dispatch<
     React.SetStateAction<AddressData | undefined>
   >;
-  zonecode: string | undefined;
-  address: string | undefined;
+  addressResult: AddressData | undefined;
 }
 
 export const AddressForm: React.FC<InputProps> = ({
   register,
   setAddressResult,
-  zonecode,
-  address,
+  addressResult,
 }) => {
   const [postCodeLayer, setPostCodeLayer] = useState<Boolean>(false);
+  const [zonecode, setZonecode] = useState<string | undefined>();
+  const [address, setAddress] = useState<string | undefined>();
 
   useEffect(() => {
     setPostCodeLayer(false);
-  }, [zonecode]);
+    setZonecode(addressResult?.zonecode);
+    setAddress(addressResult?.address);
+  }, [addressResult]);
 
   return (
     <AddressBox>
@@ -63,7 +74,7 @@ export const AddressForm: React.FC<InputProps> = ({
         ref={register}
         name="zonecode"
         placeholder="우편번호"
-        value={zonecode}
+        value={zonecode || ""}
         disabled
       />
       <SearchBtn onClick={() => setPostCodeLayer(true)}>
@@ -73,7 +84,7 @@ export const AddressForm: React.FC<InputProps> = ({
         ref={register}
         name="address"
         placeholder="주소"
-        value={address}
+        value={address || ""}
         disabled
       />
       {postCodeLayer && <Postcode setAddressResult={setAddressResult} />}

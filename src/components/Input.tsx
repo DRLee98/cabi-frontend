@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { UserRole } from "../__generated__/globalTypes";
+import { ErrorMsg } from "./styledComponent";
 
 const SInput = styled.input`
   display: block;
@@ -22,16 +23,20 @@ const InputLabel = styled.label<InputLabelProps>`
   transition: all 0.2s ease;
 `;
 
-const InputBox = styled.div`
+const InputInBox = styled.div<InputInBoxProps>`
   border-bottom: 1px solid #c1c1c1;
   position: relative;
-  &:not(:last-child) {
-    margin-bottom: 1.5em;
-  }
   &:focus-within ${InputLabel} {
     color: #383838;
     top: -10px;
     transform: scale(0.8);
+  }
+  ${(props) => props.error && "border-color: red"}
+`;
+
+const InputOutBox = styled.div`
+  &:not(:last-child) {
+    margin-bottom: 1.5em;
   }
 `;
 
@@ -45,18 +50,30 @@ const RadioInputLabel = styled.label`
   justify-content: center;
   transition: all 0.2s ease;
   color: darkgray;
+  font-weight: bold;
   cursor: pointer;
   ${SRadioInput}:checked + & {
-    color: blue;
+    color: ${(prop) => prop.theme.signatureColor};
   }
 `;
 
 const RadioInputBox = styled.div<RadioInputLabelProps>`
-  border: 1px solid #c1c1c1;
-  border-color: ${(prop) => (prop.check ? "blue" : "#c1c1c1")};
+  border: 1px solid darkgray;
+  border-color: ${(prop) =>
+    prop.check ? prop.theme.signatureColor : "darkgray"};
   height: 3em;
   width: 100%;
+  &:first-child:not(:last-child) {
+    border-radius: 10px 0 0 10px;
+  }
+  & + &:last-child {
+    border-radius: 0 10px 10px 0;
+  }
 `;
+
+interface InputInBoxProps {
+  error?: string;
+}
 
 interface InputLabelProps {
   write: Boolean;
@@ -72,6 +89,7 @@ interface InputProps {
   label: string;
   write: Boolean;
   type?: string;
+  error?: string;
 }
 
 interface RadioInputProps {
@@ -88,12 +106,16 @@ export const Input: React.FC<InputProps> = ({
   label,
   write,
   type = "text",
+  error,
 }) => {
   return (
-    <InputBox>
-      <InputLabel write={write}>{label}</InputLabel>
-      <SInput ref={register} name={name} type={type} />
-    </InputBox>
+    <InputOutBox>
+      <InputInBox error={error}>
+        <InputLabel write={write}>{label}</InputLabel>
+        <SInput ref={register} name={name} type={type} />
+      </InputInBox>
+      {error && <ErrorMsg>{error}</ErrorMsg>}
+    </InputOutBox>
   );
 };
 
