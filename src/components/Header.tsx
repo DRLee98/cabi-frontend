@@ -1,5 +1,5 @@
 import { useReactiveVar } from "@apollo/client";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -12,7 +12,7 @@ const SHeader = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  height: 5vh;
+  height: 7vh;
   min-height: 40px;
   max-height: 60px;
   background-color: white;
@@ -52,6 +52,34 @@ const SLInk = styled(Link)`
   }
 `;
 
+const Form = styled.form`
+  height: 100%;
+  background-color: #ecececa3;
+  border-radius: 999px;
+  margin-right: 2em;
+  padding-left: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.5s ease;
+  &:focus-within {
+    background-color: #fff6e9;
+  }
+`;
+
+const Input = styled.input``;
+
+const SearchButton = styled.button`
+  cursor: pointer;
+  padding: 0.5em;
+  border-radius: 999px;
+  transition: all 0.5s ease;
+  &:hover {
+    background-color: ${(props) => props.theme.lightBgColor};
+  }
+`;
+
 export const Header = () => {
   const isLogin = useReactiveVar(isLoginVar);
 
@@ -74,6 +102,12 @@ export const Header = () => {
             </Link>
           </TitleBox>
           <LInkBox>
+            <Form action="/search-cafes/">
+              <Input name="word" type="text" required />
+              <SearchButton>
+                <FontAwesomeIcon icon={faSearch} />
+              </SearchButton>
+            </Form>
             {isLogin
               ? loginLinks.map((link) => (
                   <SLInk key={link.path} to={link.path}>

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Container, ErrorMsg } from "../components/styledComponent";
+import { Container, Image } from "../components/styledComponent";
 import { siteName } from "../constants";
 import { useMe } from "../hooks/useMe";
 import { UserRole } from "../__generated__/globalTypes";
@@ -25,13 +25,6 @@ const ContentsBox = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`;
-
-const Image = styled.img`
-  width: 20rem;
-  height: 20rem;
-  border-radius: 999px;
-  background-color: lightgray;
 `;
 
 const Name = styled.strong`
@@ -66,8 +59,8 @@ const SLink = styled(Link)`
   color: ${(props) => props.theme.disableColor};
   transition: all 0.5s ease;
   &:hover {
-    border-color: ${(props) => props.theme.signatureBgColor};
-    color: ${(props) => props.theme.signatureBgColor};
+    border-color: ${(props) => props.theme.signatureColor};
+    color: ${(props) => props.theme.signatureColor};
   }
 `;
 
@@ -86,7 +79,7 @@ export const Profile = () => {
       <Container>
         <ProfileBox>
           <SideBox>
-            <Image></Image>
+            <Image src={user?.profileImg || undefined} />
           </SideBox>
           <ContentsBox>
             <Name>{user?.name} 님</Name>

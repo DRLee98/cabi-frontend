@@ -17,3 +17,10 @@ export const ErrorMsg = styled.p`
   color: red;
   margin-top: 5px;
 `;
+
+export const Image = styled.img`
+  width: 20rem;
+  height: 20rem;
+  border-radius: 999px;
+  background-color: lightgray;
+`;

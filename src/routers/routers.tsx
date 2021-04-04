@@ -29,6 +29,9 @@ export const Routers = () => {
           <Route path="/" exact>
             <Home />
           </Route>
+          <Route path="/search-cafes/:word" exact>
+            <Home />
+          </Route>
           {isLogin
             ? loginRouters.map((router) => (
                 <Route key={router.path} path={router.path} exact>

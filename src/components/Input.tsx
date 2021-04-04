@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { UserRole } from "../__generated__/globalTypes";
-import { ErrorMsg } from "./styledComponent";
+import { ErrorMsg, Image } from "./styledComponent";
 
 const SInput = styled.input`
   display: block;
@@ -71,6 +71,25 @@ const RadioInputBox = styled.div<RadioInputLabelProps>`
   }
 `;
 
+const FileInputBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+const FileInput = styled.input`
+  display: none;
+`;
+
+const Label = styled.label`
+  cursor: pointer;
+`;
+
+const Name = styled.span`
+  margin-top: 1em;
+`;
+
 interface InputInBoxProps {
   error?: string;
 }
@@ -98,6 +117,10 @@ interface RadioInputProps {
   label: string;
   value: UserRole;
   check: Boolean;
+}
+
+interface ImageInputProps {
+  register: any;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -137,5 +160,34 @@ export const RadioInput: React.FC<RadioInputProps> = ({
       />
       <RadioInputLabel htmlFor={value}>{label}</RadioInputLabel>
     </RadioInputBox>
+  );
+};
+
+export const ImageInput: React.FC<ImageInputProps> = ({ register }) => {
+  const [previewUrl, setPreviewUrl] = useState<any>();
+
+  const handleOnChange = (e: any) => {
+    const file = e?.target?.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+  };
+
+  return (
+    <FileInputBox>
+      <Label htmlFor="file">
+        <Image src={previewUrl} />
+      </Label>
+      <Name>프로필 이미지</Name>
+      <FileInput
+        ref={register}
+        id="file"
+        name="file"
+        type="file"
+        onChange={handleOnChange}
+      />
+    </FileInputBox>
   );
 };

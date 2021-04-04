@@ -75,6 +75,7 @@ export interface MenuInputType {
   category: Category;
   cafe: CafeInputType;
   nutrient?: NutrientInputType | null;
+  options?: OptionInputType[] | null;
   reviews?: ReviewInputType[] | null;
   ratings?: RatingInputType[] | null;
   totalScore: number;
@@ -92,7 +93,18 @@ export interface NutrientInputType {
   saturatedFat?: number | null;
   cholesterol?: number | null;
   protein?: number | null;
-  menu?: MenuInputType | null;
+  menu: MenuInputType;
+}
+
+export interface OptionInputType {
+  name: string;
+  price?: number | null;
+  optionItems?: OptionItemInputType[] | null;
+}
+
+export interface OptionItemInputType {
+  name: string;
+  price?: number | null;
 }
 
 export interface RatingInputType {

@@ -5,6 +5,7 @@ export const theme = {
   signatureColor: "#d1913c",
   disableBgColor: "#c2c4c7",
   disableColor: "#8c8c8c",
+  lightBgColor: "#ffe5c1",
 };
 
 const themeBlue = {
