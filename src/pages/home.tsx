@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { AddressData } from "react-daum-postcode";
-import { Postcode } from "../api/postCode";
+import React from "react";
+import { Helmet } from "react-helmet-async";
+import { GridCafe } from "../components/cafes";
+import { Container } from "../components/styledComponent";
+import { siteName } from "../constants";
 
 export const Home = () => {
   return (
-    <div>
-      <div></div>
-    </div>
+    <>
+      <Helmet>
+        <title>{siteName}</title>
+      </Helmet>
+      <Container>
+        <GridCafe />
+      </Container>
+    </>
   );
 };

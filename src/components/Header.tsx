@@ -12,7 +12,7 @@ const SHeader = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  height: 7vh;
+  height: ${(prop) => prop.theme.headerHeight};
   min-height: 40px;
   max-height: 60px;
   background-color: white;
@@ -64,7 +64,7 @@ const Form = styled.form`
   border: none;
   transition: all 0.5s ease;
   &:focus-within {
-    background-color: #fff6e9;
+    background-color: ${(props) => props.theme.signaturelightBgColor};
   }
 `;
 

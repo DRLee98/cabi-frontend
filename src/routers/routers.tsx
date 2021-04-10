@@ -1,18 +1,22 @@
 import { useReactiveVar } from "@apollo/client";
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Header } from "../components/Header";
+import { Header } from "../components/header"
 import { Home } from "../pages/home";
 import { isLoginVar } from "../apollo";
 import { CreateAccount } from "../pages/createAccount";
 import { Wrap } from "../components/styledComponent";
 import { Login } from "../pages/login";
 import { Profile } from "../pages/profile";
+import { EditProfile } from "../pages/edit-profile";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
 
-  const loginRouters = [{ path: "/profile", component: <Profile /> }];
+  const loginRouters = [
+    { path: "/profile", component: <Profile /> },
+    { path: "/edit-profile", component: <EditProfile /> },
+  ];
 
   const logoutRouters = [
     { path: "/login", component: <Login /> },

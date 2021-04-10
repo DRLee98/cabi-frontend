@@ -123,3 +123,25 @@ export const CAFE_FRAGMENT = gql`
   ${MENU_FRAGMENT}
   ${REVIEW_FRAGMENT}
 `;
+
+export const SIMPLE_CAFE_FRAGMENT = gql`
+  fragment CafeFragment on Cafe {
+    id
+    name
+    coverImg
+    totalScore
+    avgScore
+    createdAt
+    updatedAt
+    keywords {
+      name
+    }
+    owner {
+      ...UserFragment
+    }
+    likedUsers {
+      id
+    }
+  }
+  ${USER_FRAGMENT}
+`;

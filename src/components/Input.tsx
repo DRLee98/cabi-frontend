@@ -9,6 +9,10 @@ const SInput = styled.input`
   min-width: 300px;
   max-width: 400px;
   padding: 0.8em 1.5em;
+  ${(prop) =>
+    prop.disabled &&
+    `background-color: ${prop.theme.disablelightBgColor}; 
+    color: ${prop.theme.disableColor};`};
 `;
 
 const InputLabel = styled.label<InputLabelProps>`
@@ -95,7 +99,7 @@ interface InputInBoxProps {
 }
 
 interface InputLabelProps {
-  write: Boolean;
+  write?: Boolean;
 }
 
 interface RadioInputLabelProps {
@@ -103,24 +107,27 @@ interface RadioInputLabelProps {
 }
 
 interface InputProps {
-  register: any;
-  name: string;
+  register?: any;
+  name?: string;
   label: string;
-  write: Boolean;
+  write?: Boolean;
   type?: string;
   error?: string;
+  value?: string | undefined;
+  disabled?: boolean | undefined;
 }
 
 interface RadioInputProps {
-  register: any;
-  name: string;
-  label: string;
-  value: UserRole;
+  register?: any;
+  name?: string;
+  label?: string;
+  value?: UserRole;
   check: Boolean;
 }
 
 interface ImageInputProps {
   register: any;
+  url?: string | null | undefined;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -130,12 +137,20 @@ export const Input: React.FC<InputProps> = ({
   write,
   type = "text",
   error,
+  value,
+  disabled,
 }) => {
   return (
     <InputOutBox>
       <InputInBox error={error}>
-        <InputLabel write={write}>{label}</InputLabel>
-        <SInput ref={register} name={name} type={type} />
+        <InputLabel write={write || Boolean(value)}>{label}</InputLabel>
+        <SInput
+          ref={register}
+          name={name}
+          type={type}
+          defaultValue={value}
+          disabled={disabled}
+        />
       </InputInBox>
       {error && <ErrorMsg>{error}</ErrorMsg>}
     </InputOutBox>
@@ -156,14 +171,14 @@ export const RadioInput: React.FC<RadioInputProps> = ({
         id={value}
         name={name}
         type="radio"
-        value={value}
+        value={value || ""}
       />
       <RadioInputLabel htmlFor={value}>{label}</RadioInputLabel>
     </RadioInputBox>
   );
 };
 
-export const ImageInput: React.FC<ImageInputProps> = ({ register }) => {
+export const ImageInput: React.FC<ImageInputProps> = ({ register, url }) => {
   const [previewUrl, setPreviewUrl] = useState<any>();
 
   const handleOnChange = (e: any) => {
@@ -178,7 +193,7 @@ export const ImageInput: React.FC<ImageInputProps> = ({ register }) => {
   return (
     <FileInputBox>
       <Label htmlFor="file">
-        <Image src={previewUrl} />
+        <Image src={previewUrl || url} />
       </Label>
       <Name>프로필 이미지</Name>
       <FileInput

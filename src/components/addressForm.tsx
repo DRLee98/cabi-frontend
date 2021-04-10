@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AddressData } from "react-daum-postcode";
 import styled from "styled-components";
 import { Postcode } from "../api/postCode";
+import { myProfileQuery_myProfile_user_address } from "../__generated__/myProfileQuery";
 
 const AddressBox = styled.div`
   display: grid;
@@ -15,7 +16,7 @@ const Input = styled.input<InputStyleProps>`
   display: block;
   padding: 0.8em 1.5em;
   border-bottom: 1px solid #c1c1c1;
-  background-color: #f3f3f3;
+  background-color: ${(prop) => prop.theme.disablelightBgColor};
   color: darkgray;
   grid-area: ${(prop) => prop.name};
   &::placeholder {
@@ -51,12 +52,14 @@ interface InputProps {
     React.SetStateAction<AddressData | undefined>
   >;
   addressResult: AddressData | undefined;
+  userAddress?: myProfileQuery_myProfile_user_address | undefined;
 }
 
 export const AddressForm: React.FC<InputProps> = ({
   register,
   setAddressResult,
   addressResult,
+  userAddress,
 }) => {
   const [postCodeLayer, setPostCodeLayer] = useState<Boolean>(false);
   const [zonecode, setZonecode] = useState<string | undefined>();
@@ -74,7 +77,7 @@ export const AddressForm: React.FC<InputProps> = ({
         ref={register}
         name="zonecode"
         placeholder="우편번호"
-        value={zonecode || ""}
+        value={zonecode || userAddress?.zonecode || ""}
         disabled
       />
       <SearchBtn onClick={() => setPostCodeLayer(true)}>
@@ -84,7 +87,7 @@ export const AddressForm: React.FC<InputProps> = ({
         ref={register}
         name="address"
         placeholder="주소"
-        value={address || ""}
+        value={address || userAddress?.address || ""}
         disabled
       />
       {postCodeLayer && <Postcode setAddressResult={setAddressResult} />}

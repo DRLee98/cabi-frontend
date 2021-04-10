@@ -35,7 +35,7 @@ const Name = styled.strong`
 const Email = styled.small`
   font-size: 15px;
   color: lightseagreen;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 `;
 
 const Role = styled.span`
@@ -46,7 +46,7 @@ const Role = styled.span`
   border-radius: 999px;
   border-color: ${(props) => props.theme.signatureColor};
   color: ${(props) => props.theme.signatureColor};
-  margin-bottom: 1.5rem;
+  margin-right: 1rem;
 `;
 
 const SLink = styled(Link)`
@@ -64,7 +64,15 @@ const SLink = styled(Link)`
   }
 `;
 
-const Address = styled.address``;
+const Box = styled.div`
+  display: flex;
+  margin-top: 1.5rem;
+`;
+
+const Address = styled.p`
+  font-size: 18px;
+  color: gray;
+`;
 
 export const Profile = () => {
   const { data } = useMe();
@@ -84,9 +92,15 @@ export const Profile = () => {
           <ContentsBox>
             <Name>{user?.name} 님</Name>
             <Email>{user?.email}</Email>
-            <Role>{user?.role === UserRole.Client ? "고객님" : "사장님"}</Role>
-            <SLink to="/edit-profile">회원정보 변경하기</SLink>
-            {/* <Address>{user?.address.address}</Address> */}
+            <Address>
+              {`(${user?.address.zonecode})` + " " + user?.address.address}
+            </Address>
+            <Box>
+              <Role>
+                {user?.role === UserRole.Client ? "고객님" : "사장님"}
+              </Role>
+              <SLink to="/edit-profile">회원정보 변경하기</SLink>
+            </Box>
           </ContentsBox>
         </ProfileBox>
       </Container>

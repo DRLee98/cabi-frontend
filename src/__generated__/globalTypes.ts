@@ -54,6 +54,15 @@ export interface CreateAccountInput {
   password: string;
   role: UserRole;
   address: AddressInputType;
+  profileImg?: string | null;
+}
+
+export interface EditProfileInput {
+  name?: string | null;
+  password?: string | null;
+  profileImg?: string | null;
+  oldPassword?: string | null;
+  address?: AddressInputType | null;
 }
 
 export interface KeywordInputType {

@@ -3,20 +3,20 @@ import gql from "graphql-tag";
 import React, { useState } from "react";
 import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
-import { FieldError, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import { AddressForm } from "../components/addressForm";
 import { Button } from "../components/button";
-import { ImageInput, Input, RadioInput } from "../components/Input";
-import { Container, ErrorMsg } from "../components/styledComponent";
+import { ImageInput, Input } from "../components/Input";
+import { Container } from "../components/styledComponent";
 import { siteName } from "../constants";
+import { useMe } from "../hooks/useMe";
 import { uploadFile } from "../upload";
 import {
-  createAccountMutation,
-  createAccountMutationVariables,
-} from "../__generated__/createAccountMutation";
-import { UserRole } from "../__generated__/globalTypes";
+  editProfiletMutation,
+  editProfiletMutationVariables,
+} from "../__generated__/editProfiletMutation";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -39,12 +39,6 @@ const Form = styled.form`
     "Button Button" 1fr/ 1fr 1fr;
 `;
 
-const RadioBox = styled.div<RadioBoxProps>`
-  display: flex;
-  margin-bottom: 2em;
-  ${(props) => props.error && "border-color: red"}
-`;
-
 const BtnBox = styled.div`
   margin-top: 1em;
   grid-area: Button;
@@ -61,31 +55,29 @@ const ContentsBox = styled.div`
   grid-area: Contents;
 `;
 
-const CREATE_ACCOUNT_MUTATION = gql`
-  mutation createAccountMutation($input: CreateAccountInput!) {
-    createAccount(input: $input) {
+const EDIT_PROFILE_MUTATION = gql`
+  mutation editProfiletMutation($input: EditProfileInput!) {
+    editProfile(input: $input) {
       ok
       error
     }
   }
 `;
 
-interface RadioBoxProps {
-  error?: FieldError;
+interface IEditProfiletForm {
+  name?: string;
+  oldPassword?: string;
+  password?: string;
+  verifyPassword?: string;
+  zonecode?: string;
+  address?: string;
+  file?: FileList;
 }
 
-interface ICreateAccountForm {
-  email: string;
-  name: string;
-  password: string;
-  verifyPassword: string;
-  role: UserRole;
-  zonecode: string;
-  address: string;
-  file: FileList;
-}
+export const EditProfile = () => {
+  const { data } = useMe();
+  const user = data?.myProfile.user;
 
-export const CreateAccount = () => {
   const {
     register,
     handleSubmit,
@@ -93,104 +85,100 @@ export const CreateAccount = () => {
     watch,
     getValues,
     formState,
-  } = useForm<ICreateAccountForm>({ mode: "onChange" });
+  } = useForm<IEditProfiletForm>({ mode: "onChange" });
   const history = useHistory();
-  const onCompleted = (data: createAccountMutation) => {
+  const onCompleted = (data: editProfiletMutation) => {
     const {
-      createAccount: { ok, error },
+      editProfile: { ok, error },
     } = data;
     if (ok) {
-      history.push("/login");
+      history.push("/profile");
     } else {
       setErrorMsg(error);
       setTimeout(() => setErrorMsg(null), 2000);
     }
+    console.log(data);
   };
   const [addressResult, setAddressResult] = useState<AddressData>();
-  const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
-  const [createAccountMutation, { loading }] = useMutation<
-    createAccountMutation,
-    createAccountMutationVariables
-  >(CREATE_ACCOUNT_MUTATION, { onCompleted });
+  const [editProfiletMutation, { loading }] = useMutation<
+    editProfiletMutation,
+    editProfiletMutationVariables
+  >(EDIT_PROFILE_MUTATION, { onCompleted });
 
   const onSubmit = async () => {
     if (!loading) {
       let profileImg;
-      const { email, name, password, role, file } = getValues();
-      if (!addressResult) {
-        setAddressdError("주소를 입력해주세요");
-        return;
-      }
-      if (file.length > 0) {
+      const { name, oldPassword, password, file } = getValues();
+      if (file && file.length > 0) {
         ({ url: profileImg } = await uploadFile(file[0]));
       }
-      createAccountMutation({
+      editProfiletMutation({
         variables: {
           input: {
-            email,
-            name,
-            password,
-            role,
-            address: {
-              zonecode: addressResult?.zonecode,
-              address: addressResult?.address,
-              sido: addressResult?.sido,
-              sigungu: addressResult?.sigungu,
-              sigunguCode: addressResult?.sigunguCode,
-              bname: addressResult?.bname,
-            },
+            ...(name && { name }),
+            ...(password && { oldPassword, password }),
+            ...(addressResult && {
+              address: {
+                zonecode: addressResult?.zonecode,
+                address: addressResult?.address,
+                sido: addressResult?.sido,
+                sigungu: addressResult?.sigungu,
+                sigunguCode: addressResult?.sigunguCode,
+                bname: addressResult?.bname,
+              },
+            }),
             ...(profileImg && { profileImg }),
           },
         },
       });
     }
   };
-
   return (
     <>
       <Helmet>
-        <title>{siteName} | 회원가입</title>
+        <title>{siteName} | 회원정보 변경</title>
       </Helmet>
       <Container>
         <FormBox>
-          <Title>회원가입</Title>
+          <Title>회원정보 변경</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <ImageInput register={register} />
+              <ImageInput register={register} url={user?.profileImg} />
             </ImageBox>
             <ContentsBox>
+              <Input value={user?.email} label={"이메일"} disabled={true} />
               <Input
-                register={register({
-                  required: "이메일은 필수 항목입니다",
-                  pattern: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-                })}
-                name={"email"}
-                label={"이메일 계정"}
-                write={Boolean(watch("email"))}
-                error={
-                  errors.email?.type === "pattern"
-                    ? "이메일 형식을 확인해 주세요."
-                    : errors.email?.message
-                }
-              />
-              <Input
-                register={register({
-                  required: "닉네임은 필수 항목입니다",
-                })}
+                register={register}
                 name={"name"}
                 label={"닉네임"}
                 write={Boolean(watch("name"))}
                 error={errors.name?.message}
+                value={user?.name}
               />
               <Input
                 register={register({
-                  required: "비밀번호는 필수 항목입니다",
+                  minLength: 5,
+                  maxLength: 15,
+                })}
+                name={"oldPassword"}
+                label={"현재 비밀번호"}
+                type={"password"}
+                write={Boolean(watch("oldPassword"))}
+                error={
+                  errors.oldPassword?.type === "maxLength" ||
+                  errors.oldPassword?.type === "minLength"
+                    ? "비밀번호는 5자리에서 15자리 입니다."
+                    : errors.oldPassword?.message
+                }
+              />
+              <Input
+                register={register({
                   minLength: 5,
                   maxLength: 15,
                 })}
                 name={"password"}
-                label={"비밀번호"}
+                label={"변경할 비밀번호"}
                 type={"password"}
                 write={Boolean(watch("password"))}
                 error={
@@ -202,7 +190,6 @@ export const CreateAccount = () => {
               />
               <Input
                 register={register({
-                  required: "비밀번호 확인은 필수 항목입니다",
                   minLength: 5,
                   maxLength: 15,
                   validate: (data) => data === getValues("password"),
@@ -220,34 +207,18 @@ export const CreateAccount = () => {
                     : errors.verifyPassword?.message
                 }
               />
-              <RadioBox error={errors.role}>
-                <RadioInput
-                  register={register({ required: true })}
-                  name={"role"}
-                  label={"고객님"}
-                  value={UserRole.Client}
-                  check={watch("role") === UserRole.Client}
-                />
-                <RadioInput
-                  register={register({ required: true })}
-                  name={"role"}
-                  label={"사장님"}
-                  value={UserRole.Owner}
-                  check={watch("role") === UserRole.Owner}
-                />
-              </RadioBox>
               <AddressForm
                 register={register}
                 setAddressResult={setAddressResult}
                 addressResult={addressResult}
+                userAddress={user?.address}
               ></AddressForm>
-              {addressError && <ErrorMsg>{addressError}</ErrorMsg>}
             </ContentsBox>
             <BtnBox>
               <Button
                 loading={loading}
-                valid={formState.isValid && Boolean(addressResult)}
-                text={"가입하기"}
+                valid={formState.isValid}
+                text={"변경하기"}
                 error={errorMsg}
               ></Button>
             </BtnBox>

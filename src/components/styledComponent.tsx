@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Wrap = styled.div`
   height: 100vh;
-  padding-top: 5vh;
+  padding-top: ${(prop) => prop.theme.headerHeight};
 `;
 
 export const Container = styled.div`

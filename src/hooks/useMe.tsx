@@ -6,10 +6,10 @@ import {
   REPLY_FRAGMENT,
   REVIEW_FRAGMENT,
 } from "../fragments";
-import { myProfile } from "../__generated__/myProfile";
+import { myProfileQuery } from "../__generated__/myProfileQuery";
 
 const MY_PROFILE_QUERY = gql`
-  query myProfile {
+  query myProfileQuery {
     myProfile {
       ok
       error
@@ -46,5 +46,11 @@ const MY_PROFILE_QUERY = gql`
 `;
 
 export const useMe = () => {
-  return useQuery<myProfile>(MY_PROFILE_QUERY);
+  return useQuery<myProfileQuery>(MY_PROFILE_QUERY);
+};
+
+export const likeCafeId = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { data } = useMe();
+  return data?.myProfile.user?.likeCafes?.map((likeCafe) => likeCafe.id);
 };

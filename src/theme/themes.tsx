@@ -2,10 +2,13 @@
 
 export const theme = {
   signatureBgColor: "#ffd194",
+  signaturelightBgColor: "#fff6e9",
   signatureColor: "#d1913c",
   disableBgColor: "#c2c4c7",
+  disablelightBgColor: "#f3f3f3",
   disableColor: "#8c8c8c",
   lightBgColor: "#ffe5c1",
+  headerHeight: "7vh",
 };
 
 const themeBlue = {
