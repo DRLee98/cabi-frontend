@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import React, { useState } from "react";
 import { AddressData } from "react-daum-postcode";
@@ -11,7 +11,7 @@ import { Button } from "../components/button";
 import { ImageInput, Input } from "../components/Input";
 import { Container } from "../components/styledComponent";
 import { siteName } from "../constants";
-import { useMe } from "../hooks/useMe";
+import { MY_PROFILE_QUERY, useMe } from "../hooks/useMe";
 import { uploadFile } from "../upload";
 import {
   editProfiletMutation,
@@ -65,19 +65,21 @@ const EDIT_PROFILE_MUTATION = gql`
 `;
 
 interface IEditProfiletForm {
+  email: string;
   name?: string;
   oldPassword?: string;
   password?: string;
   verifyPassword?: string;
   zonecode?: string;
-  address?: string;
+  address?: string | null;
   file?: FileList;
 }
 
 export const EditProfile = () => {
   const { data } = useMe();
   const user = data?.myProfile.user;
-
+  const [profileImg, setProfileImg] = useState<string | undefined>("");
+  const client = useApolloClient();
   const {
     register,
     handleSubmit,
@@ -85,19 +87,52 @@ export const EditProfile = () => {
     watch,
     getValues,
     formState,
-  } = useForm<IEditProfiletForm>({ mode: "onChange" });
+  } = useForm<IEditProfiletForm>({
+    mode: "onChange",
+    defaultValues: {
+      email: user?.email,
+      name: user?.name,
+      address: user?.address.address,
+      zonecode: user?.address.zonecode,
+    },
+  });
   const history = useHistory();
   const onCompleted = (data: editProfiletMutation) => {
     const {
       editProfile: { ok, error },
     } = data;
     if (ok) {
+      const { name } = getValues();
+      const {
+        myProfile: { user },
+      } = client.readQuery({
+        query: MY_PROFILE_QUERY,
+      });
+      client.writeQuery({
+        query: MY_PROFILE_QUERY,
+        data: {
+          myProfile: {
+            error,
+            ok,
+            user: {
+              ...user,
+              ...(name && { name }),
+              ...(profileImg && { profileImg }),
+              address: {
+                ...user.address,
+                ...(addressResult && { address: addressResult.address }),
+                ...(addressResult && { zonecode: addressResult.zonecode }),
+              },
+            },
+            __typename: "UserProfileOutput",
+          },
+        },
+      });
       history.push("/profile");
     } else {
       setErrorMsg(error);
       setTimeout(() => setErrorMsg(null), 2000);
     }
-    console.log(data);
   };
   const [addressResult, setAddressResult] = useState<AddressData>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
@@ -108,10 +143,11 @@ export const EditProfile = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let profileImg;
+      let url;
       const { name, oldPassword, password, file } = getValues();
       if (file && file.length > 0) {
-        ({ url: profileImg } = await uploadFile(file[0]));
+        ({ url } = await uploadFile(file[0]));
+        setProfileImg(url);
       }
       editProfiletMutation({
         variables: {
@@ -128,12 +164,13 @@ export const EditProfile = () => {
                 bname: addressResult?.bname,
               },
             }),
-            ...(profileImg && { profileImg }),
+            ...(url && { profileImg: url }),
           },
         },
       });
     }
   };
+
   return (
     <>
       <Helmet>
@@ -147,14 +184,18 @@ export const EditProfile = () => {
               <ImageInput register={register} url={user?.profileImg} />
             </ImageBox>
             <ContentsBox>
-              <Input value={user?.email} label={"이메일"} disabled={true} />
+              <Input
+                register={register}
+                name={"email"}
+                label={"이메일"}
+                disabled={true}
+              />
               <Input
                 register={register}
                 name={"name"}
                 label={"닉네임"}
                 write={Boolean(watch("name"))}
                 error={errors.name?.message}
-                value={user?.name}
               />
               <Input
                 register={register({

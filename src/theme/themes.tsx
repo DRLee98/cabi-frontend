@@ -8,6 +8,7 @@ export const theme = {
   disablelightBgColor: "#f3f3f3",
   disableColor: "#8c8c8c",
   lightBgColor: "#ffe5c1",
+  keywordColor: "#08887d",
   headerHeight: "7vh",
 };
 

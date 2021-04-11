@@ -1,13 +1,9 @@
-import { useQuery } from "@apollo/client";
 import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import gql from "graphql-tag";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { likeCafeId } from "../hooks/useMe";
-import { seeCafesQuery } from "../__generated__/seeCafesQuery";
+import { seeCafesQuery_seeCafes_cafes } from "../__generated__/seeCafesQuery";
 
 const GridBox = styled.ul`
   display: grid;
@@ -22,18 +18,18 @@ const CafeImg = styled.div<CafeBoxProps>`
   background-position: center;
   background-size: cover;
   background-image: url(${(prop) => prop.image});
-  border-radius: 10px 10px 0 0;
+  border-radius: 5px 5px 0 0;
   position: relative;
 `;
 
 const CafeContents = styled.div`
   height: 50px;
   padding: 5px 10px;
-  background-color: ${(prop) => prop.theme.signaturelightBgColor};
-  border-radius: 0 0 10px 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  border-radius: 0 0 5px 5px;
+  border-bottom: 1px solid ${(prop) => prop.theme.keywordColor};
 `;
 
 const LikeIcon = styled(FontAwesomeIcon)<IconProps>`
@@ -54,11 +50,13 @@ const LikeIcon = styled(FontAwesomeIcon)<IconProps>`
 `;
 
 const StarIcon = styled(FontAwesomeIcon)`
+  margin-right: 4px;
   color: #ffde39;
 `;
 
 const HeartIcon = styled(FontAwesomeIcon)`
-  margin-left: 8px;
+  margin-left: 10px;
+  margin-right: 4px;
   color: red;
 `;
 
@@ -77,24 +75,13 @@ interface IconProps {
   like: boolean | undefined;
 }
 
-const SEE_CAFES_QUERY = gql`
-  query seeCafesQuery {
-    seeCafes {
-      ok
-      error
-      cafes {
-        ...CafeFragment
-      }
-    }
-  }
-  ${SIMPLE_CAFE_FRAGMENT}
-`;
+interface CafesProp {
+  owner?: boolean;
+  cafes: seeCafesQuery_seeCafes_cafes[] | null | undefined;
+}
 
-export const GridCafe = () => {
+export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
   const [likeCafesId, setLikeCafesId] = useState(likeCafeId() || []);
-  const { data, loading } = useQuery<seeCafesQuery>(SEE_CAFES_QUERY);
-  console.log(data);
-  const cafes = data?.seeCafes.cafes;
 
   const toggleLikeCafe = (id: number) => {
     console.log(likeCafesId);
@@ -111,17 +98,19 @@ export const GridCafe = () => {
         // <Link to={cafe.id + ""} key={cafe.id}>
         <CafeBox>
           <CafeImg image={cafe.coverImg}>
-            <LikeIcon
-              icon={faHeart}
-              like={likeCafesId?.includes(cafe.id)}
-              onClick={() => toggleLikeCafe(cafe.id)}
-            />
+            {!owner && (
+              <LikeIcon
+                icon={faHeart}
+                like={likeCafesId?.includes(cafe.id)}
+                onClick={() => toggleLikeCafe(cafe.id)}
+              />
+            )}
           </CafeImg>
           <CafeContents>
             <CafeName>{cafe.name}</CafeName>
             <ScoreBox>
               <StarIcon icon={faStar} />
-              {cafe.totalScore}/{cafe.avgScore}
+              총합: {cafe.totalScore} / 평균: {cafe.avgScore}
               <HeartIcon icon={faHeart} />
               {cafe.likedUsers?.length || 0}
             </ScoreBox>

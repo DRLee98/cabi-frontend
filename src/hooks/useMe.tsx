@@ -8,7 +8,7 @@ import {
 } from "../fragments";
 import { myProfileQuery } from "../__generated__/myProfileQuery";
 
-const MY_PROFILE_QUERY = gql`
+export const MY_PROFILE_QUERY = gql`
   query myProfileQuery {
     myProfile {
       ok

@@ -1,10 +1,15 @@
 import { useReactiveVar } from "@apollo/client";
-import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faSignOutAlt,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { isLoginVar } from "../apollo";
+import { isLoginVar, tokenVar } from "../apollo";
+import { TOKEN } from "../constants";
 import { Container } from "./styledComponent";
 
 const SHeader = styled.header`
@@ -17,8 +22,6 @@ const SHeader = styled.header`
   max-height: 60px;
   background-color: white;
   color: ${(props) => props.theme.signatureColor};
-  // border-bottom: 1px solid;
-  // border-color: ${(props) => props.theme.signatureBgColor};
 `;
 
 const HeaderBox = styled.div`
@@ -49,6 +52,18 @@ const SLInk = styled(Link)`
   }
   & + & {
     margin-left: 5px;
+  }
+`;
+
+const LogoutBtn = styled.button`
+  font-size: 20px;
+  padding: 0.5em 0.8em;
+  border-radius: 999px;
+  margin-left: 5px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  &:hover {
+    background-color: ${(props) => props.theme.signatureBgColor};
   }
 `;
 
@@ -91,6 +106,11 @@ export const Header = () => {
     { path: "/create-account", pathName: "회원가입" },
   ];
 
+  const logout = () => {
+    localStorage.setItem(TOKEN, "");
+    window.location.reload();
+  };
+
   return (
     <SHeader>
       <Container>
@@ -108,17 +128,24 @@ export const Header = () => {
                 <FontAwesomeIcon icon={faSearch} />
               </SearchButton>
             </Form>
-            {isLogin
-              ? loginLinks.map((link) => (
-                  <SLInk key={link.path} to={link.path}>
-                    {link.pathName}
-                  </SLInk>
-                ))
-              : logoutLinks.map((link) => (
+            {isLogin ? (
+              <>
+                {loginLinks.map((link) => (
                   <SLInk key={link.path} to={link.path}>
                     {link.pathName}
                   </SLInk>
                 ))}
+                <LogoutBtn onClick={logout}>
+                  <FontAwesomeIcon icon={faSignOutAlt} />
+                </LogoutBtn>
+              </>
+            ) : (
+              logoutLinks.map((link) => (
+                <SLInk key={link.path} to={link.path}>
+                  {link.pathName}
+                </SLInk>
+              ))
+            )}
           </LInkBox>
         </HeaderBox>
       </Container>

@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 
@@ -9,7 +10,7 @@ export const Wrap = styled.div`
 export const Container = styled.div`
   height: 100%;
   width: 100%;
-  max-width: 1500px;
+  max-width: 1400px;
   margin: 0 auto;
 `;
 
@@ -23,4 +24,44 @@ export const Image = styled.img`
   height: 20rem;
   border-radius: 999px;
   background-color: lightgray;
+`;
+
+export const CoverImage = styled.img`
+  width: 100%;
+  height: 100%;
+  background-color: lightgray;
+`;
+
+export const NextBtn = styled.span`
+  color: ${(prop) => prop.theme.keywordColor};
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 10;
+  padding: 0 5px 0 10px;
+  border-radius: 999px;
+  transition: all 0.5s ease;
+  &:hover {
+    background-color: ${(prop) => prop.theme.lightBgColor};
+  }
+`;
+
+export const PrevBtn = styled.span`
+  color: ${(prop) => prop.theme.keywordColor};
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 10;
+  padding: 0 10px 0 5px;
+  border-radius: 999px;
+  transition: all 0.5s ease;
+  &:hover {
+    background-color: ${(prop) => prop.theme.lightBgColor};
+  }
 `;

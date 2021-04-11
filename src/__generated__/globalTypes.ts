@@ -57,6 +57,14 @@ export interface CreateAccountInput {
   profileImg?: string | null;
 }
 
+export interface CreateCafeInput {
+  name: string;
+  description: string;
+  address: AddressInputType;
+  coverImg?: string | null;
+  keywordsName?: string[] | null;
+}
+
 export interface EditProfileInput {
   name?: string | null;
   password?: string | null;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { UserRole } from "../__generated__/globalTypes";
-import { ErrorMsg, Image } from "./styledComponent";
+import { CoverImage, ErrorMsg, Image } from "./styledComponent";
 
 const SInput = styled.input`
   display: block;
@@ -75,11 +75,34 @@ const RadioInputBox = styled.div<RadioInputLabelProps>`
   }
 `;
 
+const STextarea = styled.textarea`
+  display: block;
+  width: 100%;
+  height: 100%;
+  &::placeholder {
+    color: darkgray;
+  }
+`;
+
+const TextareaBox = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 0.5em;
+  border-bottom: 1px solid #c1c1c1;
+  display: flex;
+  flex-direction: column;
+`;
+
 const FileInputBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+`;
+
+const CoverFileInputBox = styled.div`
+  width: 100%;
+  height: 100%;
 `;
 
 const FileInput = styled.input`
@@ -92,6 +115,21 @@ const Label = styled.label`
 
 const Name = styled.span`
   margin-top: 1em;
+`;
+
+const KInput = styled.input`
+  width: 100%;
+  margin-left: 5px;
+`;
+
+const KeywordInputBox = styled.div`
+  display: flex;
+  align-items: center;
+  width: 150px;
+  padding: 5px 10px;
+  color: ${(prop) => prop.theme.keywordColor};
+  border-radius: 999px;
+  border: 1px solid ${(prop) => prop.theme.keywordColor};
 `;
 
 interface InputInBoxProps {
@@ -113,8 +151,13 @@ interface InputProps {
   write?: Boolean;
   type?: string;
   error?: string;
-  value?: string | undefined;
   disabled?: boolean | undefined;
+}
+
+interface KeywordInputProps {
+  register?: any;
+  name?: string;
+  error?: string;
 }
 
 interface RadioInputProps {
@@ -123,6 +166,13 @@ interface RadioInputProps {
   label?: string;
   value?: UserRole;
   check: Boolean;
+}
+
+interface TextareaProps {
+  register?: any;
+  name?: string;
+  error?: string;
+  placeholder?: string;
 }
 
 interface ImageInputProps {
@@ -137,23 +187,30 @@ export const Input: React.FC<InputProps> = ({
   write,
   type = "text",
   error,
-  value,
   disabled,
 }) => {
   return (
     <InputOutBox>
       <InputInBox error={error}>
-        <InputLabel write={write || Boolean(value)}>{label}</InputLabel>
-        <SInput
-          ref={register}
-          name={name}
-          type={type}
-          defaultValue={value}
-          disabled={disabled}
-        />
+        <InputLabel write={write || disabled}>{label}</InputLabel>
+        <SInput ref={register} name={name} type={type} disabled={disabled} />
       </InputInBox>
       {error && <ErrorMsg>{error}</ErrorMsg>}
     </InputOutBox>
+  );
+};
+
+export const KeywordInput: React.FC<KeywordInputProps> = ({
+  register,
+  name,
+  error,
+}) => {
+  return (
+    <KeywordInputBox>
+      #
+      <KInput ref={register} name={name} type="text" />
+      {error && <ErrorMsg>{error}</ErrorMsg>}
+    </KeywordInputBox>
   );
 };
 
@@ -175,6 +232,20 @@ export const RadioInput: React.FC<RadioInputProps> = ({
       />
       <RadioInputLabel htmlFor={value}>{label}</RadioInputLabel>
     </RadioInputBox>
+  );
+};
+
+export const Textarea: React.FC<TextareaProps> = ({
+  register,
+  name,
+  error,
+  placeholder,
+}) => {
+  return (
+    <TextareaBox>
+      <STextarea ref={register} name={name} placeholder={placeholder} />
+      {error && <ErrorMsg>{error}</ErrorMsg>}
+    </TextareaBox>
   );
 };
 
@@ -204,5 +275,36 @@ export const ImageInput: React.FC<ImageInputProps> = ({ register, url }) => {
         onChange={handleOnChange}
       />
     </FileInputBox>
+  );
+};
+
+export const CoverImageInput: React.FC<ImageInputProps> = ({
+  register,
+  url,
+}) => {
+  const [previewUrl, setPreviewUrl] = useState<any>();
+
+  const handleOnChange = (e: any) => {
+    const file = e?.target?.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+  };
+
+  return (
+    <CoverFileInputBox>
+      <Label htmlFor="file">
+        <CoverImage src={previewUrl || url} />
+      </Label>
+      <FileInput
+        ref={register}
+        id="file"
+        name="file"
+        type="file"
+        onChange={handleOnChange}
+      />
+    </CoverFileInputBox>
   );
 };
