@@ -1,4 +1,5 @@
-import { useMutation } from "@apollo/client";
+/* eslint-disable array-callback-return */
+import { useApolloClient, useMutation } from "@apollo/client";
 import {
   faCaretLeft,
   faCaretRight,
@@ -28,6 +29,8 @@ import {
   createCafeMutationVariables,
 } from "../../__generated__/createCafeMutation";
 import { NextBtn, PrevBtn } from "../../components/styledComponent";
+import { MY_CAFES_QUERY } from "./myCafes";
+import { useMe } from "../../hooks/useMe";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -84,28 +87,38 @@ const AddressBox = styled.div`
 `;
 
 const KeywordBox = styled.div`
-  margin: 1em;
+  margin: 1em 0;
   display: flex;
 `;
 
 const KeywordBtn = styled.span`
-  display: table;
   cursor: pointer;
   color: ${(prop) => prop.theme.keywordColor};
   padding: 10px;
   border-radius: 3px;
-  margin-right: 1em;
+  //margin-right: 1em;
   transition: all 0.3s ease;
-  width: 135px;
+  min-width: fit-content;
   &:hover {
     background-color: ${(prop) => prop.theme.keywordColor};
     color: white;
   }
 `;
 
+const KeywordListOuterBox = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+`;
+
 const KeywordListBox = styled.div`
   overflow: hidden;
-  position: relative;
+  //position: relative;
+  margin: 0 2.5em;
+  position: absolute;
+  left: 0;
+  right: 0;
 `;
 
 const KeywordList = styled.ul<KeywordListProps>`
@@ -113,13 +126,6 @@ const KeywordList = styled.ul<KeywordListProps>`
   width: max-content;
   transform: translateX(${(prop) => prop.keywordsScroll}px);
   transition: all 0.5s ease;
-`;
-
-const KeywordItem = styled.li`
-  position: relative;
-  & + & {
-    margin-left: 5px;
-  }
 `;
 
 const KeywordDelBtn = styled.span`
@@ -131,6 +137,21 @@ const KeywordDelBtn = styled.span`
   align-items: center;
   cursor: pointer;
   font-size: small;
+  opacity: 0;
+  transition: all 0.5s ease;
+  &:hover {
+    color: red;
+  }
+`;
+
+const KeywordItem = styled.li`
+  position: relative;
+  &:hover ${KeywordDelBtn} {
+    opacity: 1;
+  }
+  & + & {
+    margin-left: 5px;
+  }
 `;
 
 const CREATE_CAFE_MUTATION = gql`
@@ -163,14 +184,53 @@ export const CreateCafe = () => {
     getValues,
     formState,
   } = useForm<ICreateAccountForm>({ mode: "onChange" });
+
+  const { data } = useMe();
+  const userId = data?.myProfile.user?.id;
+
   const history = useHistory();
+  const client = useApolloClient();
+
   const onCompleted = (data: any) => {
     const {
-      createAccount: { ok, error },
+      createCafe: { ok, error, cafeId },
     } = data;
     if (ok) {
+      const { name } = getValues();
+      let keywordList: { name: unknown; __typename: string }[] = [];
+      if (keywords.length > 0) {
+        keywordList = keywords.map((keyword) => ({
+          name: getValues(keyword),
+          __typename: "Keyword",
+        }));
+      }
+      const newCafe = {
+        id: cafeId,
+        __typename: "Cafe",
+        name,
+        coverImg,
+        totalScore: 0,
+        avgScore: 0,
+        keywords: keywordList,
+        owner: { __ref: `User:${userId}` },
+      };
+      const {
+        myCafes: { cafes },
+      } = client.readQuery({
+        query: MY_CAFES_QUERY,
+      });
+      client.writeQuery({
+        query: MY_CAFES_QUERY,
+        data: {
+          myProfile: {
+            error,
+            ok,
+            cafes: [...cafes, newCafe],
+            __typename: "SeeCafeOutput",
+          },
+        },
+      });
       history.push("/");
-      console.log(data);
     } else {
       setErrorMsg(error);
       setTimeout(() => setErrorMsg(null), 2000);
@@ -182,6 +242,8 @@ export const CreateCafe = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [keywords, setKeywords] = useState<string[]>([]);
   const [keywordsScroll, setKeywordsScroll] = useState<number>(0);
+  const [keywordListBoxWidth, setKeywordListBoxWidth] = useState<number>(0);
+  const [keywordListWidth, setKeywordListWidth] = useState<number>(0);
 
   const addKeyword = () => {
     const keywordTarget = `${new Date().getTime()}_keyword`;
@@ -195,7 +257,6 @@ export const CreateCafe = () => {
 
   const nextBtn = () => {
     setKeywordsScroll((prev) => (prev -= 150));
-    console.log(keywordsScroll, (keywords.length - 6) * -150);
   };
 
   const prevBtn = () => {
@@ -213,7 +274,12 @@ export const CreateCafe = () => {
       let keywordsName: string[] = [];
       const { name, description, file } = getValues();
       if (keywords.length > 0) {
-        keywords.forEach((keyword) => keywordsName.push(getValues(keyword)));
+        keywords.forEach((keyword) => {
+          const value: string = getValues(keyword);
+          if (value && value !== "") {
+            keywordsName.push(value);
+          }
+        });
       }
       if (!addressResult) {
         setAddressdError("주소를 입력해주세요");
@@ -289,29 +355,37 @@ export const CreateCafe = () => {
             </ContentsBox>
             <KeywordBox>
               <KeywordBtn onClick={addKeyword}>+ 키워드 추가하기</KeywordBtn>
-              <KeywordListBox>
-                {keywords.length > 5 && keywordsScroll < 0 && (
+              <KeywordListOuterBox>
+                {keywordListWidth > keywordListBoxWidth && keywordsScroll < 0 && (
                   <PrevBtn onClick={prevBtn}>
                     <FontAwesomeIcon icon={faCaretLeft} />
                   </PrevBtn>
                 )}
-                <KeywordList keywordsScroll={keywordsScroll}>
-                  {keywords?.map((keyword) => (
-                    <KeywordItem key={keyword}>
-                      <KeywordInput register={register} name={keyword} />
-                      <KeywordDelBtn onClick={() => removeKeyword(keyword)}>
-                        <FontAwesomeIcon icon={faTimes} />
-                      </KeywordDelBtn>
-                    </KeywordItem>
-                  ))}
-                </KeywordList>
-                {keywords.length > 5 &&
-                  keywordsScroll > (keywords.length - 5) * -150 && (
+                <KeywordListBox
+                  ref={(ref) => ref && setKeywordListBoxWidth(ref.clientWidth)}
+                >
+                  <KeywordList
+                    keywordsScroll={keywordsScroll}
+                    ref={(ref) => ref && setKeywordListWidth(ref.clientWidth)}
+                  >
+                    {keywords?.map((keyword) => (
+                      <KeywordItem key={keyword}>
+                        <KeywordInput register={register} name={keyword} />
+                        <KeywordDelBtn onClick={() => removeKeyword(keyword)}>
+                          <FontAwesomeIcon icon={faTimes} />
+                        </KeywordDelBtn>
+                      </KeywordItem>
+                    ))}
+                  </KeywordList>
+                </KeywordListBox>
+                {keywordListWidth > keywordListBoxWidth &&
+                  keywordsScroll * -1 + keywordListBoxWidth <
+                    keywordListWidth && (
                     <NextBtn onClick={nextBtn}>
                       <FontAwesomeIcon icon={faCaretRight} />
                     </NextBtn>
                   )}
-              </KeywordListBox>
+              </KeywordListOuterBox>
             </KeywordBox>
             <BtnBox>
               <Button

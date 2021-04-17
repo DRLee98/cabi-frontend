@@ -26,7 +26,7 @@ const SLink = styled(Link)`
   }
 `;
 
-const MY_CAFES_QUERY = gql`
+export const MY_CAFES_QUERY = gql`
   query myCafesQuery {
     myCafes {
       ok
@@ -49,6 +49,7 @@ export const MyCafes = () => {
         <title>{siteName}</title>
       </Helmet>
       <Container>
+        <Link to="/create-cafe">카페 만들기</Link>
         <Keywords />
         {cafes && cafes?.length > 0 ? (
           <GridCafe owner={true} cafes={cafes} />

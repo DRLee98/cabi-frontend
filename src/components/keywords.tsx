@@ -8,10 +8,15 @@ import styled from "styled-components";
 import { viewKeywordsQuery } from "../__generated__/viewKeywordsQuery";
 import { NextBtn, PrevBtn } from "./styledComponent";
 
+const KeywordContainer = styled.div`
+  position: relative;
+`;
+
 const KeywordBox = styled.div`
   padding: 1em;
   overflow: hidden;
   position: relative;
+  margin: 0 3em;
 `;
 
 const KeywordList = styled.ul<KeywordListProps>`
@@ -63,38 +68,43 @@ export const Keywords = () => {
   const keywords = data?.viewKeywords.keywords;
 
   const [keywordsScroll, setKeywordsScroll] = useState<number>(0);
+  const [blockWidth, setBlockWidth] = useState<number>(0);
+  const [listWidth, setListWidth] = useState<number>(0);
 
   const nextBtn = () => {
-    setKeywordsScroll((prev) => (prev -= 150));
+    setKeywordsScroll((prev) => (prev -= 200));
   };
 
   const prevBtn = () => {
-    setKeywordsScroll((prev) => (prev += 150));
+    setKeywordsScroll((prev) => (prev += 200));
   };
 
   return (
-    <KeywordBox>
-      {keywords && keywords.length > 5 && keywordsScroll < 0 && (
+    <KeywordContainer>
+      {listWidth > blockWidth && keywordsScroll < 0 && (
         <PrevBtn onClick={prevBtn}>
           <FontAwesomeIcon icon={faCaretLeft} />
         </PrevBtn>
       )}
-      <KeywordList keywordsScroll={keywordsScroll}>
-        {keywords?.map((keyword) => (
-          <Keyword key={keyword.slug}>
-            <KeywordLink to={`keyword/${keyword.slug}`}>
-              # {keyword.name}
-            </KeywordLink>
-          </Keyword>
-        ))}
-      </KeywordList>
-      {keywords &&
-        keywords.length > 5 &&
-        keywordsScroll > (keywords.length - 15) * -100 && (
-          <NextBtn onClick={nextBtn}>
-            <FontAwesomeIcon icon={faCaretRight} />
-          </NextBtn>
-        )}
-    </KeywordBox>
+      <KeywordBox ref={(ref) => ref && setBlockWidth(ref?.clientWidth)}>
+        <KeywordList
+          ref={(ref) => ref && setListWidth(ref?.clientWidth)}
+          keywordsScroll={keywordsScroll}
+        >
+          {keywords?.map((keyword) => (
+            <Keyword key={keyword.slug}>
+              <KeywordLink to={`keyword/${keyword.slug}`}>
+                # {keyword.name}
+              </KeywordLink>
+            </Keyword>
+          ))}
+        </KeywordList>
+      </KeywordBox>
+      {listWidth > blockWidth && keywordsScroll * -1 + blockWidth < listWidth && (
+        <NextBtn onClick={nextBtn}>
+          <FontAwesomeIcon icon={faCaretRight} />
+        </NextBtn>
+      )}
+    </KeywordContainer>
   );
 };

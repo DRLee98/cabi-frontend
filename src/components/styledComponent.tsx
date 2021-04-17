@@ -27,6 +27,7 @@ export const Image = styled.img`
 `;
 
 export const CoverImage = styled.img`
+  object-fit: cover;
   width: 100%;
   height: 100%;
   background-color: lightgray;

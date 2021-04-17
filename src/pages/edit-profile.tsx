@@ -96,7 +96,9 @@ export const EditProfile = () => {
       zonecode: user?.address.zonecode,
     },
   });
+
   const history = useHistory();
+
   const onCompleted = (data: editProfiletMutation) => {
     const {
       editProfile: { ok, error },
