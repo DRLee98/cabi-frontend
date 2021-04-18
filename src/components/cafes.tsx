@@ -1,9 +1,11 @@
 import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { likeCafeId } from "../hooks/useMe";
 import { seeCafesQuery_seeCafes_cafes } from "../__generated__/seeCafesQuery";
+import { Score } from "./score";
 
 const GridBox = styled.ul`
   display: grid;
@@ -49,23 +51,7 @@ const LikeIcon = styled(FontAwesomeIcon)<IconProps>`
   }
 `;
 
-const StarIcon = styled(FontAwesomeIcon)`
-  margin-right: 4px;
-  color: #ffde39;
-`;
-
-const HeartIcon = styled(FontAwesomeIcon)`
-  margin-left: 10px;
-  margin-right: 4px;
-  color: red;
-`;
-
 const CafeName = styled.span``;
-
-const ScoreBox = styled.div`
-  font-size: 12px;
-  align-self: flex-end;
-`;
 
 interface CafeBoxProps {
   image: string | null;
@@ -95,28 +81,27 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
   return (
     <GridBox>
       {cafes?.map((cafe) => (
-        // <Link to={cafe.id + ""} key={cafe.id}>
-        <CafeBox>
-          <CafeImg image={cafe.coverImg}>
-            {!owner && (
-              <LikeIcon
-                icon={faHeart}
-                like={likeCafesId?.includes(cafe.id)}
-                onClick={() => toggleLikeCafe(cafe.id)}
+        <Link to={`cafe/${cafe.id}`} key={cafe.id}>
+          <CafeBox>
+            <CafeImg image={cafe.coverImg}>
+              {!owner && (
+                <LikeIcon
+                  icon={faHeart}
+                  like={likeCafesId?.includes(cafe.id)}
+                  onClick={() => toggleLikeCafe(cafe.id)}
+                />
+              )}
+            </CafeImg>
+            <CafeContents>
+              <CafeName>{cafe.name}</CafeName>
+              <Score
+                totalScore={cafe.totalScore}
+                avgScore={cafe.avgScore}
+                likedUsers={cafe.likedUsers?.length || 0}
               />
-            )}
-          </CafeImg>
-          <CafeContents>
-            <CafeName>{cafe.name}</CafeName>
-            <ScoreBox>
-              <StarIcon icon={faStar} />
-              총합: {cafe.totalScore} / 평균: {cafe.avgScore}
-              <HeartIcon icon={faHeart} />
-              {cafe.likedUsers?.length || 0}
-            </ScoreBox>
-          </CafeContents>
-        </CafeBox>
-        // </Link>
+            </CafeContents>
+          </CafeBox>
+        </Link>
       ))}
     </GridBox>
   );

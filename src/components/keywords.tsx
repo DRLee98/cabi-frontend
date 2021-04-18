@@ -1,11 +1,9 @@
-import { useQuery } from "@apollo/client";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import gql from "graphql-tag";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { viewKeywordsQuery } from "../__generated__/viewKeywordsQuery";
+import { viewKeywordsQuery_viewKeywords_keywords } from "../__generated__/viewKeywordsQuery";
 import { NextBtn, PrevBtn } from "./styledComponent";
 
 const KeywordContainer = styled.div`
@@ -45,28 +43,20 @@ const Keyword = styled.li`
 
 const KeywordLink = styled(Link)``;
 
-const VIEW_KEYWORDS_QUERY = gql`
-  query viewKeywordsQuery {
-    viewKeywords {
-      ok
-      error
-      keywords {
-        id
-        name
-        slug
-      }
-    }
-  }
-`;
-
 interface KeywordListProps {
   keywordsScroll: number;
 }
 
-export const Keywords = () => {
-  const { data } = useQuery<viewKeywordsQuery>(VIEW_KEYWORDS_QUERY);
-  const keywords = data?.viewKeywords.keywords;
+interface KeywordProp {
+  name: string;
+  slug: string;
+}
 
+interface KeywordsProp {
+  keywords: KeywordProp[] | undefined | null;
+}
+
+export const Keywords: React.FC<KeywordsProp> = ({ keywords }) => {
   const [keywordsScroll, setKeywordsScroll] = useState<number>(0);
   const [blockWidth, setBlockWidth] = useState<number>(0);
   const [listWidth, setListWidth] = useState<number>(0);
@@ -91,7 +81,7 @@ export const Keywords = () => {
           ref={(ref) => ref && setListWidth(ref?.clientWidth)}
           keywordsScroll={keywordsScroll}
         >
-          {keywords?.map((keyword) => (
+          {keywords?.map((keyword: { slug: string; name: string }) => (
             <Keyword key={keyword.slug}>
               <KeywordLink to={`keyword/${keyword.slug}`}>
                 # {keyword.name}

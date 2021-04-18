@@ -13,11 +13,12 @@ import { CreateAccount } from "../pages/createAccount";
 import { Wrap } from "../components/styledComponent";
 import { Login } from "../pages/login";
 import { Profile } from "../pages/profile";
-import { EditProfile } from "../pages/edit-profile";
+import { EditProfile } from "../pages/editProfile";
 import { useMe } from "../hooks/useMe";
 import { UserRole } from "../__generated__/globalTypes";
 import { MyCafes } from "../pages/owner/myCafes";
 import { CreateCafe } from "../pages/owner/createCafe";
+import { CafeDetail } from "../pages/cafeDetail";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
@@ -37,6 +38,7 @@ export const Routers = () => {
   const ownerRouters = [
     { path: "/", component: <MyCafes /> },
     { path: "/create-cafe", component: <CreateCafe /> },
+    { path: "/cafe/:cafeId", component: <CafeDetail /> },
   ];
 
   return (

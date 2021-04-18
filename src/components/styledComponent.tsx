@@ -20,8 +20,8 @@ export const ErrorMsg = styled.p`
 `;
 
 export const Image = styled.img`
-  width: 20rem;
-  height: 20rem;
+  width: ${(prop) => (prop.sizes ? prop.sizes : "20rem")};
+  height: ${(prop) => (prop.sizes ? prop.sizes : "20rem")};
   border-radius: 999px;
   background-color: lightgray;
 `;
@@ -66,3 +66,7 @@ export const PrevBtn = styled.span`
     background-color: ${(prop) => prop.theme.lightBgColor};
   }
 `;
+
+interface ImageProps {
+  size: number;
+}

@@ -33,6 +33,10 @@ export interface AddressInputType {
   cafe?: CafeInputType | null;
 }
 
+export interface CafeDetailInput {
+  id: number;
+}
+
 export interface CafeInputType {
   name: string;
   description: string;

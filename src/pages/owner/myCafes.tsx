@@ -8,6 +8,7 @@ import { Keywords } from "../../components/keywords";
 import { Container } from "../../components/styledComponent";
 import { siteName } from "../../constants";
 import { SIMPLE_CAFE_FRAGMENT } from "../../fragments";
+import { useKeywords } from "../../hooks/useKeywords";
 import { myCafesQuery } from "../../__generated__/myCafesQuery";
 
 const EmptyBox = styled.div`
@@ -17,12 +18,27 @@ const EmptyBox = styled.div`
   color: ${(prop) => prop.theme.disableColor};
 `;
 
-const SLink = styled(Link)`
+const EmptyLink = styled(Link)`
   display: block;
   margin-top: 1em;
   color: ${(prop) => prop.theme.keywordColor};
   &:hover {
     text-decoration: underline;
+  }
+`;
+
+const CreateCafeBlock = styled.div``;
+
+const CreateCafeLink = styled(Link)`
+  display: block;
+  padding: 1em;
+  margin: 1em;
+  text-align: center;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  &:hover {
+    color: ${(prop) => prop.theme.signatureColor};
+    background-color: ${(prop) => prop.theme.lightBgColor};
   }
 `;
 
@@ -32,7 +48,7 @@ export const MY_CAFES_QUERY = gql`
       ok
       error
       cafes {
-        ...CafeFragment
+        ...SimpleCafeFragment
       }
     }
   }
@@ -41,6 +57,8 @@ export const MY_CAFES_QUERY = gql`
 
 export const MyCafes = () => {
   const { data, loading } = useQuery<myCafesQuery>(MY_CAFES_QUERY);
+  const { data: getkeywords } = useKeywords();
+  const keywords = getkeywords?.viewKeywords.keywords;
   const cafes = data?.myCafes.cafes;
   console.log(cafes);
   return (
@@ -49,14 +67,16 @@ export const MyCafes = () => {
         <title>{siteName}</title>
       </Helmet>
       <Container>
-        <Link to="/create-cafe">카페 만들기</Link>
-        <Keywords />
+        <CreateCafeBlock>
+          <CreateCafeLink to="/create-cafe">+ 카페 만들기</CreateCafeLink>
+        </CreateCafeBlock>
+        <Keywords keywords={keywords} />
         {cafes && cafes?.length > 0 ? (
           <GridCafe owner={true} cafes={cafes} />
         ) : (
           <EmptyBox>
             사장님의 카페가 없습니다.
-            <SLink to="create-cafe">카페 만들러 가기</SLink>
+            <EmptyLink to="create-cafe">카페 만들러 가기</EmptyLink>
           </EmptyBox>
         )}
       </Container>
