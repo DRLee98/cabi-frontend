@@ -69,6 +69,30 @@ export interface CreateCafeInput {
   keywordsName?: string[] | null;
 }
 
+export interface CreateMenuInput {
+  name: string;
+  description: string;
+  price: number;
+  category: Category;
+  options?: OptionInputType[] | null;
+  cafeId: number;
+  menuImg?: string | null;
+  nutrient?: CreateNutrientInput | null;
+}
+
+export interface CreateNutrientInput {
+  volume?: number | null;
+  calorie?: number | null;
+  salt?: number | null;
+  carbohydrate?: number | null;
+  sugars?: number | null;
+  fat?: number | null;
+  transFat?: number | null;
+  saturatedFat?: number | null;
+  cholesterol?: number | null;
+  protein?: number | null;
+}
+
 export interface EditProfileInput {
   name?: string | null;
   password?: string | null;

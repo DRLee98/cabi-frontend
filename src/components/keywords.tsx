@@ -27,14 +27,14 @@ const KeywordList = styled.ul<KeywordListProps>`
 
 const Keyword = styled.li`
   display: inline-block;
-  color: ${(prop) => prop.theme.keywordColor};
-  border: 1px solid ${(prop) => prop.theme.keywordColor};
+  color: ${(prop) => prop.theme.keywordBgColor};
+  border: 1px solid ${(prop) => prop.theme.keywordBgColor};
   border-radius: 999px;
   padding: 0.3em 0.5em;
   transition: all 0.3s ease;
   &:hover {
-    background-color: ${(prop) => prop.theme.keywordColor};
-    color: white;
+    background-color: ${(prop) => prop.theme.keywordBgColor};
+    color: ${(prop) => prop.theme.keywordColor};
   }
   & + & {
     margin-left: 1em;

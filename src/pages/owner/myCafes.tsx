@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GridCafe } from "../../components/cafes";
+import { CreateButton } from "../../components/createBtn";
 import { Keywords } from "../../components/keywords";
 import { Container } from "../../components/styledComponent";
 import { siteName } from "../../constants";
@@ -15,30 +16,15 @@ const EmptyBox = styled.div`
   margin-top: 30vh;
   font-size: 25px;
   text-align: center;
-  color: ${(prop) => prop.theme.disableColor};
+  color: ${(prop) => prop.theme.keywordBgColor};
 `;
 
 const EmptyLink = styled(Link)`
   display: block;
   margin-top: 1em;
-  color: ${(prop) => prop.theme.keywordColor};
+  color: ${(prop) => prop.theme.keywordBgColor};
   &:hover {
     text-decoration: underline;
-  }
-`;
-
-const CreateCafeBlock = styled.div``;
-
-const CreateCafeLink = styled(Link)`
-  display: block;
-  padding: 1em;
-  margin: 1em;
-  text-align: center;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  &:hover {
-    color: ${(prop) => prop.theme.signatureColor};
-    background-color: ${(prop) => prop.theme.lightBgColor};
   }
 `;
 
@@ -67,9 +53,7 @@ export const MyCafes = () => {
         <title>{siteName}</title>
       </Helmet>
       <Container>
-        <CreateCafeBlock>
-          <CreateCafeLink to="/create-cafe">+ 카페 만들기</CreateCafeLink>
-        </CreateCafeBlock>
+        <CreateButton link={"/create-cafe"} text={"+ 카페 만들기"} />
         <Keywords keywords={keywords} />
         {cafes && cafes?.length > 0 ? (
           <GridCafe owner={true} cafes={cafes} />

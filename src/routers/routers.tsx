@@ -19,6 +19,7 @@ import { UserRole } from "../__generated__/globalTypes";
 import { MyCafes } from "../pages/owner/myCafes";
 import { CreateCafe } from "../pages/owner/createCafe";
 import { CafeDetail } from "../pages/cafeDetail";
+import { CreateMenu } from "../pages/owner/createMenu";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
@@ -39,6 +40,7 @@ export const Routers = () => {
     { path: "/", component: <MyCafes /> },
     { path: "/create-cafe", component: <CreateCafe /> },
     { path: "/cafe/:cafeId", component: <CafeDetail /> },
+    { path: "/cafe/:cafeId/create-menu", component: <CreateMenu /> },
   ];
 
   return (

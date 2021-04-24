@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Wrap = styled.div`
@@ -33,8 +34,14 @@ export const CoverImage = styled.img`
   background-color: lightgray;
 `;
 
+export const MenuImage = styled.img`
+  width: ${(prop) => (prop.sizes ? prop.sizes : "20rem")};
+  height: ${(prop) => (prop.sizes ? prop.sizes : "20rem")};
+  background-color: lightgray;
+`;
+
 export const NextBtn = styled.span`
-  color: ${(prop) => prop.theme.keywordColor};
+  color: ${(prop) => prop.theme.keywordBgColor};
   font-size: 30px;
   position: absolute;
   top: 50%;
@@ -51,7 +58,7 @@ export const NextBtn = styled.span`
 `;
 
 export const PrevBtn = styled.span`
-  color: ${(prop) => prop.theme.keywordColor};
+  color: ${(prop) => prop.theme.keywordBgColor};
   font-size: 30px;
   position: absolute;
   top: 50%;

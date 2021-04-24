@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 import { useApolloClient, useMutation } from "@apollo/client";
 import {
   faCaretLeft,
@@ -93,14 +92,14 @@ const KeywordBox = styled.div`
 
 const KeywordBtn = styled.span`
   cursor: pointer;
-  color: ${(prop) => prop.theme.keywordColor};
+  color: ${(prop) => prop.theme.keywordBgColor};
   padding: 10px;
   border-radius: 3px;
   //margin-right: 1em;
   transition: all 0.3s ease;
   min-width: fit-content;
   &:hover {
-    background-color: ${(prop) => prop.theme.keywordColor};
+    background-color: ${(prop) => prop.theme.keywordBgColor};
     color: white;
   }
 `;

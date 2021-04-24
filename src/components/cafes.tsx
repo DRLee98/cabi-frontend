@@ -31,7 +31,7 @@ const CafeContents = styled.div`
   flex-direction: column;
   justify-content: space-around;
   border-radius: 0 0 5px 5px;
-  border-bottom: 1px solid ${(prop) => prop.theme.keywordColor};
+  border-bottom: 1px solid ${(prop) => prop.theme.keywordBgColor};
 `;
 
 const LikeIcon = styled(FontAwesomeIcon)<IconProps>`

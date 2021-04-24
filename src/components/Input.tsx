@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { UserRole } from "../__generated__/globalTypes";
-import { CoverImage, ErrorMsg, Image } from "./styledComponent";
+import { CoverImage, ErrorMsg, Image, MenuImage } from "./styledComponent";
 
-const SInput = styled.input`
+export const SInput = styled.input`
   display: block;
   width: 25em;
-  min-width: 300px;
+  min-width: 100%;
   max-width: 400px;
   padding: 0.8em 1.5em;
+  box-sizing: border-box;
   ${(prop) =>
     prop.disabled &&
     `background-color: ${prop.theme.disablelightBgColor}; 
@@ -38,7 +39,7 @@ const InputInBox = styled.div<InputInBoxProps>`
   ${(props) => props.error && "border-color: red"}
 `;
 
-const InputOutBox = styled.div`
+export const InputOutBox = styled.div`
   &:not(:last-child) {
     margin-bottom: 1.5em;
   }
@@ -74,6 +75,28 @@ const RadioInputBox = styled.div<RadioInputLabelProps>`
     border-radius: 0 10px 10px 0;
   }
 `;
+
+const SelectBox = styled.select`
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 18px;
+  text-align-last: center;
+  text-align: center;
+  -ms-text-align-last: center;
+  -moz-text-align-last: center;
+  width: 100%;
+  padding: 0.8em;
+  color: ${(prop) => prop.theme.signatureColor};
+  border: none;
+  border-bottom: 1px solid ${(prop) => prop.theme.signatureColor};
+  outline: chocolate;
+`;
+
+const Option = styled.option``;
 
 const STextarea = styled.textarea`
   display: block;
@@ -127,9 +150,9 @@ const KeywordInputBox = styled.div`
   align-items: center;
   width: 150px;
   padding: 5px 10px;
-  color: ${(prop) => prop.theme.keywordColor};
+  color: ${(prop) => prop.theme.keywordBgColor};
   border-radius: 999px;
-  border: 1px solid ${(prop) => prop.theme.keywordColor};
+  border: 1px solid ${(prop) => prop.theme.keywordBgColor};
 `;
 
 interface InputInBoxProps {
@@ -166,6 +189,12 @@ interface RadioInputProps {
   label?: string;
   value?: UserRole;
   check: Boolean;
+}
+
+interface SelectProps {
+  register?: any;
+  name: string;
+  options: { name: string; value: string }[];
 }
 
 interface TextareaProps {
@@ -232,6 +261,18 @@ export const RadioInput: React.FC<RadioInputProps> = ({
       />
       <RadioInputLabel htmlFor={value}>{label}</RadioInputLabel>
     </RadioInputBox>
+  );
+};
+
+export const Select: React.FC<SelectProps> = ({ register, name, options }) => {
+  return (
+    <SelectBox ref={register} name={name}>
+      {options.map((option) => (
+        <Option key={option.value} value={option.value}>
+          {option.name}
+        </Option>
+      ))}
+    </SelectBox>
   );
 };
 
@@ -306,5 +347,37 @@ export const CoverImageInput: React.FC<ImageInputProps> = ({
         onChange={handleOnChange}
       />
     </CoverFileInputBox>
+  );
+};
+
+export const MenuImageInput: React.FC<ImageInputProps> = ({
+  register,
+  url,
+}) => {
+  const [previewUrl, setPreviewUrl] = useState<any>();
+
+  const handleOnChange = (e: any) => {
+    const file = e?.target?.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+  };
+
+  return (
+    <FileInputBox>
+      <Label htmlFor="file">
+        <MenuImage src={previewUrl || url} />
+      </Label>
+      <Name>메뉴 이미지</Name>
+      <FileInput
+        ref={register}
+        id="file"
+        name="file"
+        type="file"
+        onChange={handleOnChange}
+      />
+    </FileInputBox>
   );
 };

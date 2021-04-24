@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router";
 import styled from "styled-components";
+import { CreateButton } from "../components/createBtn";
 import { Keywords } from "../components/keywords";
 import { Score } from "../components/score";
 import { Container, CoverImage, Image } from "../components/styledComponent";
@@ -10,7 +11,7 @@ import { siteName } from "../constants";
 import { CAFE_FRAGMENT } from "../fragments";
 import { cafeDetailQuery } from "../__generated__/cafeDetailQuery";
 
-const ContentsBox = styled.div`
+const InfoBox = styled.div`
   position: relative;
   height: 35vh;
   display: flex;
@@ -32,6 +33,7 @@ const Title = styled.h1`
   background-color: rgb(255 255 255 / 50%);
   display: inline-block;
   text-align: center;
+  font-size: 1em;
 `;
 
 const OwnerInfo = styled.div`
@@ -77,6 +79,28 @@ const Description = styled.p`
   font-size: small;
 `;
 
+const ContentsBox = styled.main`
+  margin-top: 3em;
+  display: grid;
+  grid-gap: 10px;
+  grid-template:
+    "menu map" 350px
+    "menu review" 1fr / 3fr 350px;
+`;
+
+const MenuBox = styled.section`
+  grid-area: menu;
+`;
+
+const MapBox = styled.section`
+  grid-area: map;
+  background-color: blue;
+`;
+
+const ReviewBox = styled.section`
+  grid-area: review;
+`;
+
 interface OwnerBoxProp {
   width: number;
 }
@@ -118,7 +142,7 @@ export const CafeDetail = () => {
         </title>
       </Helmet>
       <Container>
-        <ContentsBox>
+        <InfoBox>
           <ImageBox>
             <CoverImage src={cafe?.coverImg || ""} />
           </ImageBox>
@@ -144,11 +168,20 @@ export const CafeDetail = () => {
               </OwnerEmail>
             </OwnerInfo>
           </OwnerBox>
-        </ContentsBox>
+        </InfoBox>
         <KeywordBox>
           <Keywords keywords={keywords} />
         </KeywordBox>
         <Description>{cafe?.description}</Description>
+        <CreateButton
+          link={`/cafe/${cafe?.id}/create-menu`}
+          text={"+ 메뉴 만들기"}
+        />
+        <ContentsBox>
+          <MenuBox>menu</MenuBox>
+          <MapBox>map</MapBox>
+          <ReviewBox>review</ReviewBox>
+        </ContentsBox>
       </Container>
     </>
   );
