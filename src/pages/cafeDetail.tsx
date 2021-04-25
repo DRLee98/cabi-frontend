@@ -109,7 +109,7 @@ interface cafeDetailParam {
   cafeId: string;
 }
 
-const CAFE_DETAIL_QUERY = gql`
+export const CAFE_DETAIL_QUERY = gql`
   query cafeDetailQuery($input: CafeDetailInput!) {
     cafeDetail(input: $input) {
       ok
@@ -131,7 +131,6 @@ export const CafeDetail = () => {
   });
   const cafe = data?.cafeDetail.cafe;
   const keywords = cafe?.keywords;
-  console.log(cafe);
   return loading ? (
     <h1>loading</h1>
   ) : (
@@ -178,7 +177,7 @@ export const CafeDetail = () => {
           text={"+ 메뉴 만들기"}
         />
         <ContentsBox>
-          <MenuBox>menu</MenuBox>
+          <MenuBox>{cafe?.menus?.map((menu) => menu.name)}</MenuBox>
           <MapBox>map</MapBox>
           <ReviewBox>review</ReviewBox>
         </ContentsBox>

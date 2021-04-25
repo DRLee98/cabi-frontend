@@ -1,27 +1,20 @@
-import { useMutation } from "@apollo/client";
-import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { useApolloClient, useMutation } from "@apollo/client";
+import {
+  faCaretLeft,
+  faCaretRight,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { FieldError, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router";
 import styled from "styled-components";
 import { Button } from "../../components/button";
-import {
-  SInput,
-  InputOutBox,
-  Input,
-  MenuImageInput,
-  Select,
-} from "../../components/Input";
+import { Input, MenuImageInput, Select } from "../../components/Input";
 import { NutrientForm } from "../../components/nutrientForm";
-import {
-  Container,
-  ErrorMsg,
-  NextBtn,
-  PrevBtn,
-} from "../../components/styledComponent";
+import { Container, NextBtn, PrevBtn } from "../../components/styledComponent";
 import { siteName } from "../../constants";
 import { uploadFile } from "../../upload";
 import {
@@ -29,6 +22,7 @@ import {
   createMenuMutationVariables,
 } from "../../__generated__/createMenuMutation";
 import { Category } from "../../__generated__/globalTypes";
+import { CAFE_DETAIL_QUERY } from "../cafeDetail";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -96,6 +90,21 @@ const OptionInput = styled.input`
   border-bottom: 1px solid #c1c1c1;
 `;
 
+const OptionDelBtn = styled.span`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: small;
+  opacity: 0;
+  transition: all 0.5s ease;
+  &:hover {
+    color: red;
+  }
+`;
+
 const OptionListOuterBox = styled.div`
   position: relative;
   width: 100%;
@@ -122,12 +131,21 @@ const OptionItem = styled.li`
   padding: 0.3em;
   max-height: 120px;
   overflow-y: auto;
+  position: relative;
   ${OptionBtn} {
     display: block;
   }
+  &:hover ${OptionDelBtn} {
+    opacity: 1;
+  }
 `;
 
-const Box = styled.div``;
+const Box = styled.div`
+  position: relative;
+  &:hover ${OptionDelBtn} {
+    opacity: 1;
+  }
+`;
 
 const CREATE_MENU_MUTATION = gql`
   mutation createMenuMutation($input: CreateMenuInput!) {
@@ -175,7 +193,9 @@ export const CreateMenu = () => {
     formState,
   } = useForm<CreateMenuProp>({ mode: "onChange" });
   const history = useHistory();
+  const client = useApolloClient();
   const { cafeId } = useParams<CreateMenuParams>();
+  const [menuImg, setMenuImg] = useState<string | undefined>("");
   const [options, setOptions] = useState<string[]>([]);
   const [additionalOptions, setAdditionalOptions] = useState<string[]>([]);
   const [optionsScroll, setOptionsScroll] = useState<number>(0);
@@ -203,6 +223,10 @@ export const CreateMenu = () => {
   const removeOption = (target: string) => {
     const removedOption = options.filter((option) => option !== target);
     setOptions(removedOption);
+    const removedOptionItem = additionalOptions.filter(
+      (option) => !option.includes(target),
+    );
+    setAdditionalOptions(removedOptionItem);
   };
 
   const removeOptionItem = (target: string) => {
@@ -226,12 +250,55 @@ export const CreateMenu = () => {
       createMenu: { ok, error, menuId },
     } = data;
     if (ok) {
+      const { name, description, category, price } = getValues();
+      const newMenu = {
+        avgScore: 0,
+        category,
+        description,
+        id: menuId,
+        menuImg,
+        name,
+        price: +price,
+        totalScore: 0,
+        __typename: "Menu",
+      };
+      const {
+        cafeDetail: { cafe },
+      } = client.readQuery({
+        query: CAFE_DETAIL_QUERY,
+        variables: { input: { id: +cafeId } },
+      });
+      client.writeQuery({
+        query: CAFE_DETAIL_QUERY,
+        data: {
+          cafeDetail: {
+            error,
+            ok,
+            cafe: {
+              ...cafe,
+              menus: [...cafe.menus, newMenu],
+            },
+          },
+          __typename: "Cafe",
+        },
+        variables: { input: { id: +cafeId } },
+      });
       history.push(`/cafe/${cafeId}`);
     } else {
       setErrorMsg(error);
       setTimeout(() => setErrorMsg(null), 2000);
     }
   };
+
+  const {
+    cafeDetail: { cafe },
+  } = client.readQuery({
+    query: CAFE_DETAIL_QUERY,
+    variables: { input: { id: +cafeId } },
+  });
+
+  console.log("cache", cafe);
+
   const [createMenuMutation, { loading }] = useMutation<
     createMenuMutation,
     createMenuMutationVariables
@@ -249,7 +316,6 @@ export const CreateMenu = () => {
         const name: string = getValues(`${option}_name`);
         const price: number = getValues(`${option}_price`);
         const items = additionalOptions.filter((item) => item.includes(option));
-        console.log(items, additionalOptions, option);
         if (items.length > 0) {
           items.forEach((item) => {
             const itemName: string = getValues(`${item}_name`);
@@ -279,7 +345,7 @@ export const CreateMenu = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let menuImg;
+      let url;
       const {
         name,
         price,
@@ -299,7 +365,8 @@ export const CreateMenu = () => {
       } = getValues();
       const optionList = getOption();
       if (file.length > 0) {
-        ({ url: menuImg } = await uploadFile(file[0]));
+        ({ url } = await uploadFile(file[0]));
+        setMenuImg(url);
       }
       createMenuMutation({
         variables: {
@@ -310,7 +377,7 @@ export const CreateMenu = () => {
             description,
             category,
             ...(optionList.length > 0 && { options: optionList }),
-            ...(menuImg && { menuImg }),
+            ...(url && { menuImg: url }),
             nutrient: {
               ...(volume && { volume: +volume }),
               ...(calorie && { calorie: +calorie }),
@@ -409,6 +476,9 @@ export const CreateMenu = () => {
                               name={`${option}_price`}
                               placeholder={"옵션 가격"}
                             />
+                            <OptionDelBtn onClick={() => removeOption(option)}>
+                              <FontAwesomeIcon icon={faTimes} />
+                            </OptionDelBtn>
                             <OptionBtn
                               onClick={() => {
                                 addOptionItem(option);
@@ -430,6 +500,11 @@ export const CreateMenu = () => {
                                       name={`${item}_price`}
                                       placeholder={"추가 옵션 가격"}
                                     />
+                                    <OptionDelBtn
+                                      onClick={() => removeOptionItem(item)}
+                                    >
+                                      <FontAwesomeIcon icon={faTimes} />
+                                    </OptionDelBtn>
                                   </Box>
                                 ),
                             )}
