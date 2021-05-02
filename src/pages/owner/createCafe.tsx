@@ -1,9 +1,5 @@
 import { useApolloClient, useMutation } from "@apollo/client";
-import {
-  faCaretLeft,
-  faCaretRight,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import React, { useState } from "react";
@@ -27,9 +23,9 @@ import {
   createCafeMutation,
   createCafeMutationVariables,
 } from "../../__generated__/createCafeMutation";
-import { NextBtn, PrevBtn } from "../../components/styledComponent";
 import { MY_CAFES_QUERY } from "./myCafes";
 import { useMe } from "../../hooks/useMe";
+import { Slider } from "../../components/slider";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -95,36 +91,13 @@ const KeywordBtn = styled.span`
   color: ${(prop) => prop.theme.keywordBgColor};
   padding: 10px;
   border-radius: 3px;
-  //margin-right: 1em;
+  margin-right: 1em;
   transition: all 0.3s ease;
   min-width: fit-content;
   &:hover {
     background-color: ${(prop) => prop.theme.keywordBgColor};
     color: white;
   }
-`;
-
-const KeywordListOuterBox = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
-`;
-
-const KeywordListBox = styled.div`
-  overflow: hidden;
-  //position: relative;
-  margin: 0 2.5em;
-  position: absolute;
-  left: 0;
-  right: 0;
-`;
-
-const KeywordList = styled.ul<KeywordListProps>`
-  display: flex;
-  width: max-content;
-  transform: translateX(${(prop) => prop.keywordsScroll}px);
-  transition: all 0.5s ease;
 `;
 
 const KeywordDelBtn = styled.span`
@@ -161,10 +134,6 @@ const CREATE_CAFE_MUTATION = gql`
     }
   }
 `;
-
-interface KeywordListProps {
-  keywordsScroll: number;
-}
 
 interface ICreateAccountForm {
   name: string;
@@ -240,9 +209,7 @@ export const CreateCafe = () => {
   const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [keywords, setKeywords] = useState<string[]>([]);
-  const [keywordsScroll, setKeywordsScroll] = useState<number>(0);
-  const [keywordListBoxWidth, setKeywordListBoxWidth] = useState<number>(0);
-  const [keywordListWidth, setKeywordListWidth] = useState<number>(0);
+  const [keywordWidth, setKeywordWidth] = useState<number>(0);
 
   const addKeyword = () => {
     const keywordTarget = `${new Date().getTime()}_keyword`;
@@ -252,14 +219,6 @@ export const CreateCafe = () => {
   const removeKeyword = (target: string) => {
     const removedKeyword = keywords.filter((keyword) => keyword !== target);
     setKeywords(removedKeyword);
-  };
-
-  const nextBtn = () => {
-    setKeywordsScroll((prev) => (prev -= 150));
-  };
-
-  const prevBtn = () => {
-    setKeywordsScroll((prev) => (prev += 150));
   };
 
   const [createCafeMutation, { loading }] = useMutation<
@@ -354,37 +313,19 @@ export const CreateCafe = () => {
             </ContentsBox>
             <KeywordBox>
               <KeywordBtn onClick={addKeyword}>+ 키워드 추가하기</KeywordBtn>
-              <KeywordListOuterBox>
-                {keywordListWidth > keywordListBoxWidth && keywordsScroll < 0 && (
-                  <PrevBtn onClick={prevBtn}>
-                    <FontAwesomeIcon icon={faCaretLeft} />
-                  </PrevBtn>
-                )}
-                <KeywordListBox
-                  ref={(ref) => ref && setKeywordListBoxWidth(ref.clientWidth)}
-                >
-                  <KeywordList
-                    keywordsScroll={keywordsScroll}
-                    ref={(ref) => ref && setKeywordListWidth(ref.clientWidth)}
+              <Slider slideWidth={keywordWidth}>
+                {keywords?.map((keyword) => (
+                  <KeywordItem
+                    key={keyword}
+                    ref={(ref) => ref && setKeywordWidth(ref.offsetWidth)}
                   >
-                    {keywords?.map((keyword) => (
-                      <KeywordItem key={keyword}>
-                        <KeywordInput register={register} name={keyword} />
-                        <KeywordDelBtn onClick={() => removeKeyword(keyword)}>
-                          <FontAwesomeIcon icon={faTimes} />
-                        </KeywordDelBtn>
-                      </KeywordItem>
-                    ))}
-                  </KeywordList>
-                </KeywordListBox>
-                {keywordListWidth > keywordListBoxWidth &&
-                  keywordsScroll * -1 + keywordListBoxWidth <
-                    keywordListWidth && (
-                    <NextBtn onClick={nextBtn}>
-                      <FontAwesomeIcon icon={faCaretRight} />
-                    </NextBtn>
-                  )}
-              </KeywordListOuterBox>
+                    <KeywordInput register={register} name={keyword} />
+                    <KeywordDelBtn onClick={() => removeKeyword(keyword)}>
+                      <FontAwesomeIcon icon={faTimes} />
+                    </KeywordDelBtn>
+                  </KeywordItem>
+                ))}
+              </Slider>
             </KeywordBox>
             <BtnBox>
               <Button

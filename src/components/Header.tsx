@@ -22,6 +22,7 @@ const SHeader = styled.header`
   max-height: 60px;
   background-color: white;
   color: ${(props) => props.theme.signatureColor};
+  z-index: 999;
 `;
 
 const HeaderBox = styled.div`

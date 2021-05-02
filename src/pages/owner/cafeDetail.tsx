@@ -3,18 +3,19 @@ import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Keywords } from "../components/keywords";
-import { Score } from "../components/score";
+import { CreateButton } from "../../components/createBtn";
+import { Keywords } from "../../components/keywords";
+import { Score } from "../../components/score";
 import {
   Container,
   CoverImage,
   Image,
   MenuImage,
-} from "../components/styledComponent";
-import { siteName } from "../constants";
-import { useCafeDetail } from "../hooks/cafeDetailQuery";
-import { cafeDetailQuery_cafeDetail_cafe_menus } from "../__generated__/cafeDetailQuery";
-import { Category } from "../__generated__/globalTypes";
+} from "../../components/styledComponent";
+import { siteName } from "../../constants";
+import { useCafeDetail } from "../../hooks/cafeDetailQuery";
+import { cafeDetailQuery_cafeDetail_cafe_menus } from "../../__generated__/cafeDetailQuery";
+import { Category } from "../../__generated__/globalTypes";
 
 const InfoBox = styled.div`
   position: relative;
@@ -148,7 +149,7 @@ interface categoryProp {
   menu: cafeDetailQuery_cafeDetail_cafe_menus[] | null | undefined;
 }
 
-export const CafeDetail = () => {
+export const OwnerCafeDetail = () => {
   const [ownerNameWidth, setOwnerNameWidth] = useState<number>(0);
   const [ownerEmailWidth, setOwnerEmailWidth] = useState<number>(0);
 
@@ -220,6 +221,10 @@ export const CafeDetail = () => {
           <Keywords keywords={keywords} />
         </KeywordBox>
         <Description>{cafe?.description}</Description>
+        <CreateButton
+          link={`/cafe/${cafe?.id}/create-menu`}
+          text={"+ 메뉴 만들기"}
+        />
         <ContentsBox>
           <MenuBox>
             {category.map(

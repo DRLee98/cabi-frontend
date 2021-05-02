@@ -9,6 +9,19 @@ import { Category } from "./globalTypes";
 // GraphQL fragment: MenuFragment
 // ====================================================
 
+export interface MenuFragment_options_optionItems {
+  __typename: "OptionItem";
+  name: string;
+  price: number | null;
+}
+
+export interface MenuFragment_options {
+  __typename: "Option";
+  name: string;
+  price: number | null;
+  optionItems: MenuFragment_options_optionItems[] | null;
+}
+
 export interface MenuFragment_nutrient {
   __typename: "Nutrient";
   id: number;
@@ -77,6 +90,7 @@ export interface MenuFragment {
   avgScore: number;
   createdAt: any;
   updatedAt: any;
+  options: MenuFragment_options[] | null;
   nutrient: MenuFragment_nutrient | null;
   reviews: MenuFragment_reviews[] | null;
 }

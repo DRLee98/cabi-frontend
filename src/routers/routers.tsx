@@ -20,6 +20,8 @@ import { MyCafes } from "../pages/owner/myCafes";
 import { CreateCafe } from "../pages/owner/createCafe";
 import { CafeDetail } from "../pages/cafeDetail";
 import { CreateMenu } from "../pages/owner/createMenu";
+import { OwnerCafeDetail } from "../pages/owner/cafeDetail";
+import { OwnerMenuDetail } from "../pages/owner/menuDetail";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
@@ -39,8 +41,9 @@ export const Routers = () => {
   const ownerRouters = [
     { path: "/", component: <MyCafes /> },
     { path: "/create-cafe", component: <CreateCafe /> },
-    { path: "/cafe/:cafeId", component: <CafeDetail /> },
+    { path: "/cafe/:cafeId", component: <OwnerCafeDetail /> },
     { path: "/cafe/:cafeId/create-menu", component: <CreateMenu /> },
+    { path: "/cafe/:cafeId/menu/:menuId", component: <OwnerMenuDetail /> },
   ];
 
   return (

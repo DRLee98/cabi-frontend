@@ -66,6 +66,17 @@ export const NUTRIENT_FRAGMENT = gql`
   }
 `;
 
+export const OPTION_FRAGMENT = gql`
+  fragment OptionFragment on Option {
+    name
+    price
+    optionItems {
+      name
+      price
+    }
+  }
+`;
+
 export const MENU_FRAGMENT = gql`
   fragment MenuFragment on Menu {
     id
@@ -78,6 +89,9 @@ export const MENU_FRAGMENT = gql`
     avgScore
     createdAt
     updatedAt
+    options {
+      ...OptionFragment
+    }
     nutrient {
       ...NutrientFragment
     }
@@ -85,8 +99,18 @@ export const MENU_FRAGMENT = gql`
       ...ReviewFragment
     }
   }
+  ${OPTION_FRAGMENT}
   ${NUTRIENT_FRAGMENT}
   ${REVIEW_FRAGMENT}
+`;
+
+export const SIMPLE_MENU_FRAGMENT = gql`
+  fragment SimpleMenuFragment on Menu {
+    id
+    name
+    menuImg
+    category
+  }
 `;
 
 export const CAFE_FRAGMENT = gql`
@@ -114,7 +138,7 @@ export const CAFE_FRAGMENT = gql`
       ...UserFragment
     }
     menus {
-      ...MenuFragment
+      ...SimpleMenuFragment
     }
     reviews {
       ...ReviewFragment
@@ -122,7 +146,7 @@ export const CAFE_FRAGMENT = gql`
   }
   ${ADDRESS_FRAGMENT}
   ${USER_FRAGMENT}
-  ${MENU_FRAGMENT}
+  ${SIMPLE_MENU_FRAGMENT}
   ${REVIEW_FRAGMENT}
 `;
 

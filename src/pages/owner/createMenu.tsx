@@ -1,9 +1,5 @@
 import { useApolloClient, useMutation } from "@apollo/client";
-import {
-  faCaretLeft,
-  faCaretRight,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import React, { useState } from "react";
@@ -13,8 +9,9 @@ import { useHistory, useParams } from "react-router";
 import styled from "styled-components";
 import { Button } from "../../components/button";
 import { Input, MenuImageInput, Select } from "../../components/Input";
-import { NutrientForm } from "../../components/nutrientForm";
-import { Container, NextBtn, PrevBtn } from "../../components/styledComponent";
+import { NutrientForm } from "../../components/nutrient";
+import { Slider } from "../../components/slider";
+import { Container } from "../../components/styledComponent";
 import { siteName } from "../../constants";
 import { uploadFile } from "../../upload";
 import {
@@ -22,7 +19,7 @@ import {
   createMenuMutationVariables,
 } from "../../__generated__/createMenuMutation";
 import { Category } from "../../__generated__/globalTypes";
-import { CAFE_DETAIL_QUERY } from "../cafeDetail";
+import { CAFE_DETAIL_QUERY } from "../../hooks/cafeDetailQuery";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -105,27 +102,6 @@ const OptionDelBtn = styled.span`
   }
 `;
 
-const OptionListOuterBox = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-const OptionListBox = styled.div`
-  overflow: hidden;
-  position: relative;
-  margin: 0 2.5em;
-  left: 0;
-  right: 0;
-`;
-
-const OptionList = styled.ul<OptionListProps>`
-  margin-top: 0.5em;
-  display: flex;
-  width: max-content;
-  transform: translateX(${(prop) => prop.optionsScroll}px);
-  transition: all 0.5s ease;
-`;
-
 const OptionItem = styled.li`
   max-width: 200px;
   padding: 0.3em;
@@ -156,10 +132,6 @@ const CREATE_MENU_MUTATION = gql`
     }
   }
 `;
-
-interface OptionListProps {
-  optionsScroll: number;
-}
 
 interface CreateMenuProp {
   name: string;
@@ -198,12 +170,11 @@ export const CreateMenu = () => {
   const [menuImg, setMenuImg] = useState<string | undefined>("");
   const [options, setOptions] = useState<string[]>([]);
   const [additionalOptions, setAdditionalOptions] = useState<string[]>([]);
-  const [optionsScroll, setOptionsScroll] = useState<number>(0);
-  const [optionListBoxWidth, setOptionListBoxWidth] = useState<number>(0);
-  const [optionListWidth, setOptionListWidth] = useState<number>(0);
+  const [optionWidth, setOptionWidth] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const CategoryList = [
     { name: "☕️ 음료", value: Category.Beverage },
+    { name: "🍨 디저트", value: Category.Dessert },
     { name: "🍞 빵", value: Category.Bread },
     { name: "🍚 식사", value: Category.Meal },
     { name: "🎀 상품", value: Category.Goods },
@@ -234,14 +205,6 @@ export const CreateMenu = () => {
       (option) => option !== target,
     );
     setAdditionalOptions(removedOptionItem);
-  };
-
-  const nextBtn = () => {
-    setOptionsScroll((prev) => (prev -= 200));
-  };
-
-  const prevBtn = () => {
-    setOptionsScroll((prev) => (prev += 200));
   };
 
   const onCompleted = (data: createMenuMutation) => {
@@ -296,8 +259,6 @@ export const CreateMenu = () => {
     query: CAFE_DETAIL_QUERY,
     variables: { input: { id: +cafeId } },
   });
-
-  console.log("cache", cafe);
 
   const [createMenuMutation, { loading }] = useMutation<
     createMenuMutation,
@@ -447,79 +408,57 @@ export const CreateMenu = () => {
               <OptionBox>
                 <OptionBtn onClick={addOption}>+ 옵션 추가하기</OptionBtn>
                 {options.length > 0 && (
-                  <OptionListOuterBox>
-                    {optionListWidth > optionListBoxWidth && optionsScroll < 0 && (
-                      <PrevBtn onClick={prevBtn}>
-                        <FontAwesomeIcon icon={faCaretLeft} />
-                      </PrevBtn>
-                    )}
-                    <OptionListBox
-                      ref={(ref) =>
-                        ref && setOptionListBoxWidth(ref.clientWidth)
-                      }
-                    >
-                      <OptionList
-                        optionsScroll={optionsScroll}
-                        ref={(ref) =>
-                          ref && setOptionListWidth(ref.clientWidth)
-                        }
+                  <Slider slideWidth={optionWidth}>
+                    {options.map((option) => (
+                      <OptionItem
+                        key={option}
+                        ref={(ref) => ref && setOptionWidth(ref.offsetWidth)}
                       >
-                        {options.map((option) => (
-                          <OptionItem key={option}>
-                            <OptionInput
-                              ref={register}
-                              name={`${option}_name`}
-                              placeholder={"옵션 이름"}
-                            />
-                            <OptionInput
-                              ref={register}
-                              name={`${option}_price`}
-                              placeholder={"옵션 가격"}
-                            />
-                            <OptionDelBtn onClick={() => removeOption(option)}>
-                              <FontAwesomeIcon icon={faTimes} />
-                            </OptionDelBtn>
-                            <OptionBtn
-                              onClick={() => {
-                                addOptionItem(option);
-                              }}
-                            >
-                              + 추가 옵션
-                            </OptionBtn>
-                            {additionalOptions.map(
-                              (item) =>
-                                item.includes(option) && (
-                                  <Box key={item}>
-                                    <OptionInput
-                                      ref={register}
-                                      name={`${item}_name`}
-                                      placeholder={"추가 옵션 이름"}
-                                    />
-                                    <OptionInput
-                                      ref={register}
-                                      name={`${item}_price`}
-                                      placeholder={"추가 옵션 가격"}
-                                    />
-                                    <OptionDelBtn
-                                      onClick={() => removeOptionItem(item)}
-                                    >
-                                      <FontAwesomeIcon icon={faTimes} />
-                                    </OptionDelBtn>
-                                  </Box>
-                                ),
-                            )}
-                          </OptionItem>
-                        ))}
-                      </OptionList>
-                    </OptionListBox>
-                    {optionListWidth > optionListBoxWidth &&
-                      optionsScroll * -1 + optionListBoxWidth <
-                        optionListWidth && (
-                        <NextBtn onClick={nextBtn}>
-                          <FontAwesomeIcon icon={faCaretRight} />
-                        </NextBtn>
-                      )}
-                  </OptionListOuterBox>
+                        <OptionInput
+                          ref={register}
+                          name={`${option}_name`}
+                          placeholder={"옵션 이름"}
+                        />
+                        <OptionInput
+                          ref={register}
+                          name={`${option}_price`}
+                          placeholder={"옵션 가격"}
+                        />
+                        <OptionDelBtn onClick={() => removeOption(option)}>
+                          <FontAwesomeIcon icon={faTimes} />
+                        </OptionDelBtn>
+                        <OptionBtn
+                          onClick={() => {
+                            addOptionItem(option);
+                          }}
+                        >
+                          + 추가 옵션
+                        </OptionBtn>
+                        {additionalOptions.map(
+                          (item) =>
+                            item.includes(option) && (
+                              <Box key={item}>
+                                <OptionInput
+                                  ref={register}
+                                  name={`${item}_name`}
+                                  placeholder={"추가 옵션 이름"}
+                                />
+                                <OptionInput
+                                  ref={register}
+                                  name={`${item}_price`}
+                                  placeholder={"추가 옵션 가격"}
+                                />
+                                <OptionDelBtn
+                                  onClick={() => removeOptionItem(item)}
+                                >
+                                  <FontAwesomeIcon icon={faTimes} />
+                                </OptionDelBtn>
+                              </Box>
+                            ),
+                        )}
+                      </OptionItem>
+                    ))}
+                  </Slider>
                 )}
               </OptionBox>
               {watch("category") !== Category.Etc &&

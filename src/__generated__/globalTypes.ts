@@ -10,6 +10,7 @@
 export enum Category {
   Beverage = "Beverage",
   Bread = "Bread",
+  Dessert = "Dessert",
   Etc = "Etc",
   Goods = "Goods",
   Meal = "Meal",
@@ -110,6 +111,11 @@ export interface KeywordInputType {
 export interface LoginInput {
   email: string;
   password: string;
+}
+
+export interface MenuDetailInput {
+  cafeId: number;
+  menuId: number;
 }
 
 export interface MenuInputType {

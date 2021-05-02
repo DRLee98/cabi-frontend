@@ -46,76 +46,12 @@ export interface myProfileQuery_myProfile_user_likeCafes_likedUsers {
   profileImg: string | null;
 }
 
-export interface myProfileQuery_myProfile_user_likeCafes_menus_nutrient {
-  __typename: "Nutrient";
-  id: number;
-  volume: number | null;
-  calorie: number | null;
-  salt: number | null;
-  carbohydrate: number | null;
-  sugars: number | null;
-  fat: number | null;
-  transFat: number | null;
-  saturatedFat: number | null;
-  cholesterol: number | null;
-  protein: number | null;
-}
-
-export interface myProfileQuery_myProfile_user_likeCafes_menus_reviews_rating {
-  __typename: "Rating";
-  score: number;
-}
-
-export interface myProfileQuery_myProfile_user_likeCafes_menus_reviews_writer {
-  __typename: "User";
-  id: number;
-  name: string;
-  email: string;
-  profileImg: string | null;
-}
-
-export interface myProfileQuery_myProfile_user_likeCafes_menus_reviews_reply_writer {
-  __typename: "User";
-  id: number;
-  name: string;
-  email: string;
-  profileImg: string | null;
-}
-
-export interface myProfileQuery_myProfile_user_likeCafes_menus_reviews_reply {
-  __typename: "Reply";
-  id: number;
-  contents: string;
-  createdAt: any;
-  updatedAt: any;
-  writer: myProfileQuery_myProfile_user_likeCafes_menus_reviews_reply_writer;
-}
-
-export interface myProfileQuery_myProfile_user_likeCafes_menus_reviews {
-  __typename: "Review";
-  id: number;
-  contents: string;
-  createdAt: any;
-  updatedAt: any;
-  rating: myProfileQuery_myProfile_user_likeCafes_menus_reviews_rating | null;
-  writer: myProfileQuery_myProfile_user_likeCafes_menus_reviews_writer;
-  reply: myProfileQuery_myProfile_user_likeCafes_menus_reviews_reply[] | null;
-}
-
 export interface myProfileQuery_myProfile_user_likeCafes_menus {
   __typename: "Menu";
   id: number;
   name: string;
-  description: string;
-  price: number;
   menuImg: string | null;
   category: Category;
-  totalScore: number;
-  avgScore: number;
-  createdAt: any;
-  updatedAt: any;
-  nutrient: myProfileQuery_myProfile_user_likeCafes_menus_nutrient | null;
-  reviews: myProfileQuery_myProfile_user_likeCafes_menus_reviews[] | null;
 }
 
 export interface myProfileQuery_myProfile_user_likeCafes_reviews_rating {
@@ -207,76 +143,12 @@ export interface myProfileQuery_myProfile_user_cafes_likedUsers {
   profileImg: string | null;
 }
 
-export interface myProfileQuery_myProfile_user_cafes_menus_nutrient {
-  __typename: "Nutrient";
-  id: number;
-  volume: number | null;
-  calorie: number | null;
-  salt: number | null;
-  carbohydrate: number | null;
-  sugars: number | null;
-  fat: number | null;
-  transFat: number | null;
-  saturatedFat: number | null;
-  cholesterol: number | null;
-  protein: number | null;
-}
-
-export interface myProfileQuery_myProfile_user_cafes_menus_reviews_rating {
-  __typename: "Rating";
-  score: number;
-}
-
-export interface myProfileQuery_myProfile_user_cafes_menus_reviews_writer {
-  __typename: "User";
-  id: number;
-  name: string;
-  email: string;
-  profileImg: string | null;
-}
-
-export interface myProfileQuery_myProfile_user_cafes_menus_reviews_reply_writer {
-  __typename: "User";
-  id: number;
-  name: string;
-  email: string;
-  profileImg: string | null;
-}
-
-export interface myProfileQuery_myProfile_user_cafes_menus_reviews_reply {
-  __typename: "Reply";
-  id: number;
-  contents: string;
-  createdAt: any;
-  updatedAt: any;
-  writer: myProfileQuery_myProfile_user_cafes_menus_reviews_reply_writer;
-}
-
-export interface myProfileQuery_myProfile_user_cafes_menus_reviews {
-  __typename: "Review";
-  id: number;
-  contents: string;
-  createdAt: any;
-  updatedAt: any;
-  rating: myProfileQuery_myProfile_user_cafes_menus_reviews_rating | null;
-  writer: myProfileQuery_myProfile_user_cafes_menus_reviews_writer;
-  reply: myProfileQuery_myProfile_user_cafes_menus_reviews_reply[] | null;
-}
-
 export interface myProfileQuery_myProfile_user_cafes_menus {
   __typename: "Menu";
   id: number;
   name: string;
-  description: string;
-  price: number;
   menuImg: string | null;
   category: Category;
-  totalScore: number;
-  avgScore: number;
-  createdAt: any;
-  updatedAt: any;
-  nutrient: myProfileQuery_myProfile_user_cafes_menus_nutrient | null;
-  reviews: myProfileQuery_myProfile_user_cafes_menus_reviews[] | null;
 }
 
 export interface myProfileQuery_myProfile_user_cafes_reviews_rating {
