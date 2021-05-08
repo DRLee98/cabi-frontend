@@ -70,6 +70,12 @@ export interface CreateCafeInput {
   keywordsName?: string[] | null;
 }
 
+export interface CreateCafeReviewInput {
+  contents: string;
+  score: number;
+  cafeId: number;
+}
+
 export interface CreateMenuInput {
   name: string;
   description: string;
@@ -79,6 +85,13 @@ export interface CreateMenuInput {
   cafeId: number;
   menuImg?: string | null;
   nutrient?: CreateNutrientInput | null;
+}
+
+export interface CreateMenuReviewInput {
+  contents: string;
+  score: number;
+  cafeId: number;
+  menuId: number;
 }
 
 export interface CreateNutrientInput {

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CreateButton } from "../../components/createBtn";
 import { Keywords } from "../../components/keywords";
+import { ReviewForm } from "../../components/review";
 import { Score } from "../../components/score";
 import {
   Container,
@@ -178,7 +179,7 @@ export const OwnerCafeDetail = () => {
         )),
   );
 
-  console.log(category);
+  console.log(cafe);
 
   return loading ? (
     <h1>loading</h1>
@@ -252,6 +253,7 @@ export const OwnerCafeDetail = () => {
           </MenuBox>
           <MapBox>map</MapBox>
           <ReviewBox>review</ReviewBox>
+          <ReviewForm cafeId={+cafeId} />
         </ContentsBox>
       </Container>
     </>

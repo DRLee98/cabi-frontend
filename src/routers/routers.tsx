@@ -46,6 +46,12 @@ export const Routers = () => {
     { path: "/cafe/:cafeId/menu/:menuId", component: <OwnerMenuDetail /> },
   ];
 
+  const clientRouters = [
+    { path: "/", component: <Home /> },
+    { path: "/cafe/:cafeId", component: <OwnerCafeDetail /> },
+    { path: "/cafe/:cafeId/menu/:menuId", component: <OwnerMenuDetail /> },
+  ];
+
   return (
     <Router>
       <Header />
@@ -60,6 +66,12 @@ export const Routers = () => {
               ))}
               {user?.role === UserRole.Owner &&
                 ownerRouters.map((router) => (
+                  <Route key={router.path} path={router.path} exact>
+                    {router.component}
+                  </Route>
+                ))}
+              {user?.role === UserRole.Client &&
+                clientRouters.map((router) => (
                   <Route key={router.path} path={router.path} exact>
                     {router.component}
                   </Route>
