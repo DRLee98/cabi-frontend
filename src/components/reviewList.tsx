@@ -12,10 +12,13 @@ import {
   createReplyMutation,
   createReplyMutationVariables,
 } from "../__generated__/createReplyMutation";
+import { myProfileQuery } from "../__generated__/myProfileQuery";
 import { Image } from "../components/styledComponent";
 import { REVIEW_FRAGMENT } from "../fragments";
 
-const ReviewListBox = styled.div``;
+const ReviewListBox = styled.div`
+  padding-bottom: 3em;
+`;
 
 const TitleBox = styled.div`
   display: flex;
@@ -27,6 +30,10 @@ const TitleBox = styled.div`
 
 const Title = styled.strong`
   font-size: 15px;
+`;
+
+const ReviewCount = styled.small`
+  font-size: 12px;
 `;
 
 const IconBox = styled.div`
@@ -63,6 +70,7 @@ const ReviewBox = styled.li`
 const ImageBox = styled.div<ImageBoxProp>`
   width: ${(prop) => (prop.size ? prop.size : "3.5em")};
   height: ${(prop) => (prop.size ? prop.size : "3.5em")};
+  min-width: ${(prop) => (prop.size ? prop.size : "3.5em")};
 `;
 
 const ContentsBox = styled.div`
@@ -78,7 +86,9 @@ const WriterName = styled.h4`
   color: ${(prop) => prop.theme.blackColor};
 `;
 
-const Contents = styled.p``;
+const Contents = styled.p`
+  margin: 0.2em 0;
+`;
 
 const CreateDate = styled.small`
   font-size: 8px;
@@ -128,11 +138,13 @@ const ReplyForm = styled.form`
 const ReplyInput = styled.input`
   margin: 0 0.5em;
   font-size: 14px;
+  width: 100%;
   border-bottom: 1px solid ${(prop) => prop.theme.disableBgColor};
 `;
 
 const ReplyFormBtn = styled.button<ReplyFormBtnProp>`
   font-size: 13px;
+  min-width: fit-content;
   padding: 0.34em;
   background-color: ${(prop) =>
     prop.valid ? prop.theme.keywordColor : prop.theme.disableBgColor};
@@ -170,12 +182,14 @@ interface ReplyFormBtnProp {
 }
 
 interface ReviewListProp {
+  me?: myProfileQuery;
   totalScore?: number;
   avgScore?: number;
   reviews?: ReviewFragment[] | null | undefined;
 }
 
 export const ReviewList: React.FC<ReviewListProp> = ({
+  me,
   totalScore,
   avgScore,
   reviews,
@@ -188,10 +202,11 @@ export const ReviewList: React.FC<ReviewListProp> = ({
     getValues,
     formState,
   } = useForm<ReplyFormProp>({ mode: "onChange" });
-  const { data: me } = useMe();
   const client = useApolloClient();
   const [reviewId, setReviewId] = useState<number>(-1);
   const [viewReply, setViewReply] = useState<number[]>([]);
+
+  const user = me?.myProfile.user;
 
   const toggleViewReply = (id: number) => {
     if (viewReply.includes(id)) {
@@ -253,7 +268,9 @@ export const ReviewList: React.FC<ReviewListProp> = ({
   return (
     <ReviewListBox>
       <TitleBox>
-        <Title>리뷰</Title>
+        <Title>
+          리뷰<ReviewCount>({reviews ? reviews?.length : 0}개)</ReviewCount>
+        </Title>
         <IconBox>
           <Icon icon={faStar}></Icon>
           별점 합계 : <Score>{totalScore || 0}</Score> / 별점 평균 :{" "}
@@ -284,25 +301,24 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                 <CreateDate>
                   {new Date(Date.parse(review.createdAt)).toLocaleString()}
                 </CreateDate>
-                <ReplyBtn
-                  onClick={() =>
-                    reviewId && reviewId === review.id
-                      ? setReviewId(-1)
-                      : setReviewId(review.id)
-                  }
-                >
-                  답글
-                </ReplyBtn>
+                {me && (
+                  <ReplyBtn
+                    onClick={() =>
+                      reviewId && reviewId === review.id
+                        ? setReviewId(-1)
+                        : setReviewId(review.id)
+                    }
+                  >
+                    답글
+                  </ReplyBtn>
+                )}
               </ContentsBox>
             </ReviewBox>
             <ReplyBox>
-              {reviewId === review.id && (
+              {me && reviewId === review.id && (
                 <ReplyForm onSubmit={handleSubmit(onSubmit)}>
                   <ImageBox size={"2em"}>
-                    <Image
-                      src={me?.myProfile?.user?.profileImg || ""}
-                      sizes={"100%"}
-                    />
+                    <Image src={user?.profileImg || ""} sizes={"100%"} />
                   </ImageBox>
                   <ReplyInput
                     ref={register({
@@ -317,7 +333,9 @@ export const ReviewList: React.FC<ReviewListProp> = ({
               {review?.reply && review?.reply.length > 0 && (
                 <>
                   <ViewReplyBtn onClick={() => toggleViewReply(review.id)}>
-                    답글 보기
+                    {viewReply.includes(review.id)
+                      ? "답글 숨기기"
+                      : "답글 보기"}
                   </ViewReplyBtn>
                   {viewReply.includes(review.id) && (
                     <ReplyList>

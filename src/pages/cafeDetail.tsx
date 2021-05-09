@@ -3,8 +3,10 @@ import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { CreateButton } from "../components/createBtn";
 import { Keywords } from "../components/keywords";
-import { Score } from "../components/score";
+import { ReviewForm } from "../components/reviewForm";
+import { ReviewList } from "../components/reviewList";
 import {
   Container,
   CoverImage,
@@ -13,8 +15,9 @@ import {
 } from "../components/styledComponent";
 import { siteName } from "../constants";
 import { useCafeDetail } from "../hooks/cafeDetailQuery";
+import { useMe } from "../hooks/useMe";
 import { cafeDetailQuery_cafeDetail_cafe_menus } from "../__generated__/cafeDetailQuery";
-import { Category } from "../__generated__/globalTypes";
+import { Category, UserRole } from "../__generated__/globalTypes";
 
 const InfoBox = styled.div`
   position: relative;
@@ -74,8 +77,6 @@ const OwnerBox = styled.div<OwnerBoxProp>`
     width: ${(prop) => prop.width}px;
   }
 `;
-
-const ScoreBox = styled.div``;
 
 const KeywordBox = styled.div``;
 
@@ -149,6 +150,7 @@ interface categoryProp {
 }
 
 export const CafeDetail = () => {
+  const { data: me } = useMe();
   const [ownerNameWidth, setOwnerNameWidth] = useState<number>(0);
   const [ownerEmailWidth, setOwnerEmailWidth] = useState<number>(0);
 
@@ -157,6 +159,9 @@ export const CafeDetail = () => {
 
   const cafe = data?.cafeDetail.cafe;
   const keywords = cafe?.keywords;
+  const user = me?.myProfile?.user;
+
+  const isOwner = user && user.role === UserRole.Owner;
 
   const category: categoryProp[] = [
     { key: Category.Beverage, name: "음료", menu: [] },
@@ -177,7 +182,7 @@ export const CafeDetail = () => {
         )),
   );
 
-  console.log(category);
+  console.log(cafe);
 
   return loading ? (
     <h1>loading</h1>
@@ -220,6 +225,12 @@ export const CafeDetail = () => {
           <Keywords keywords={keywords} />
         </KeywordBox>
         <Description>{cafe?.description}</Description>
+        {isOwner && (
+          <CreateButton
+            link={`/cafe/${cafe?.id}/create-menu`}
+            text={"+ 메뉴 만들기"}
+          />
+        )}
         <ContentsBox>
           <MenuBox>
             {category.map(
@@ -246,7 +257,15 @@ export const CafeDetail = () => {
             )}
           </MenuBox>
           <MapBox>map</MapBox>
-          <ReviewBox>review</ReviewBox>
+          <ReviewBox>
+            <ReviewList
+              me={me}
+              totalScore={cafe?.totalScore}
+              avgScore={cafe?.avgScore}
+              reviews={cafe?.reviews}
+            />
+            {me && !isOwner && <ReviewForm me={me} cafeId={+cafeId} />}
+          </ReviewBox>
         </ContentsBox>
       </Container>
     </>

@@ -1,31 +1,29 @@
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 import styled from "styled-components";
-import { Button } from "../../components/button";
-import { Input, MenuImageInput, Select } from "../../components/Input";
-import { Nutrient } from "../../components/nutrient";
-import { Slider } from "../../components/slider";
-import { Container, MenuImage } from "../../components/styledComponent";
-import { siteName } from "../../constants";
-import { Category } from "../../__generated__/globalTypes";
-import { useMenuDetail } from "../../hooks/menuDetailQuery";
-import { ReviewList } from "../../components/reviewList";
-import { ReviewForm } from "../../components/reviewForm";
+import { Nutrient } from "../components/nutrient";
+import { Slider } from "../components/slider";
+import { Container, MenuImage } from "../components/styledComponent";
+import { siteName } from "../constants";
+import { Category, UserRole } from "../__generated__/globalTypes";
+import { useMenuDetail } from "../hooks/menuDetailQuery";
+import { ReviewList } from "../components/reviewList";
+import { ReviewForm } from "../components/reviewForm";
+import { useMe } from "../hooks/useMe";
 
 const MenuContainer = styled.div`
   display: flex;
   padding: 5em;
   width: 100%;
-  height: 100%;
+  //height: 100%;
 `;
 
 const ImageBox = styled.div`
   width: 50%;
+  height: 75vh;
   position: sticky;
-  top: 0;
+  top: ${(prop) => prop.theme.headerHeight};
 `;
 
 const ContentsBox = styled.div`
@@ -132,19 +130,21 @@ const NutrientBox = styled.div`
   margin: 2em 0;
 `;
 
-const ReviewBox = styled.div``;
-
-interface OwnerMenuDetailParams {
+interface MenuDetailParams {
   cafeId: string;
   menuId: string;
 }
 
-export const OwnerMenuDetail = () => {
-  const { cafeId, menuId } = useParams<OwnerMenuDetailParams>();
+export const MenuDetail = () => {
+  const { data: me } = useMe();
+  const { cafeId, menuId } = useParams<MenuDetailParams>();
   const { loading, data } = useMenuDetail(+cafeId, +menuId);
   const [optionWidth, setOptionWidth] = useState<number>(0);
 
   const menu = data?.menuDetail.menu;
+  const user = me?.myProfile?.user;
+
+  const isOwner = user && user.role === UserRole.Owner;
 
   const getCategoryName = (category: string) => {
     switch (category) {
@@ -164,8 +164,6 @@ export const OwnerMenuDetail = () => {
         return "기타";
     }
   };
-
-  console.log(menu);
 
   return loading ? (
     <h1>loading</h1>
@@ -241,11 +239,14 @@ export const OwnerMenuDetail = () => {
               </NutrientBox>
             )}
             <ReviewList
+              me={me}
               totalScore={menu?.totalScore}
               avgScore={menu?.avgScore}
               reviews={menu?.reviews}
             />
-            <ReviewForm cafeId={+cafeId} menuId={+menuId} />
+            {me && !isOwner && (
+              <ReviewForm me={me} cafeId={+cafeId} menuId={+menuId} />
+            )}
           </ContentsBox>
         </MenuContainer>
       </Container>

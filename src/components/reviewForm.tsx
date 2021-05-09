@@ -14,9 +14,9 @@ import {
   createMenuReviewMutation,
   createMenuReviewMutationVariables,
 } from "../__generated__/createMenuReviewMutation";
+import { myProfileQuery } from "../__generated__/myProfileQuery";
 import { CAFE_DETAIL_QUERY } from "../hooks/cafeDetailQuery";
 import { MENU_DETAIL_QUERY } from "../hooks/menuDetailQuery";
-import { useMe } from "../hooks/useMe";
 
 const ReviewFormBtn = styled.button<ReviewFormViewProp>`
   position: fixed;
@@ -71,7 +71,7 @@ const ContentsBox = styled.div`
 
 const BtnBox = styled.div``;
 
-const RationgBox = styled.div`
+const RatingBox = styled.div`
   display: flex;
   margin-left: 1em;
 `;
@@ -120,6 +120,7 @@ interface IconProp {
 }
 
 interface ReviewFormProp {
+  me?: myProfileQuery;
   cafeId: number;
   menuId?: number;
 }
@@ -128,7 +129,11 @@ interface FormProp {
   contents: string;
 }
 
-export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
+export const ReviewForm: React.FC<ReviewFormProp> = ({
+  me,
+  cafeId,
+  menuId,
+}) => {
   const {
     register,
     handleSubmit,
@@ -143,7 +148,6 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
   const [ratingValue, setRatingValue] = useState(3);
   const [showForm, setShowForm] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>();
-  const { data: me } = useMe();
 
   const cafeReviewOnCompleted = (data: createCafeReviewMutation) => {
     const {
@@ -219,7 +223,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
             ok,
             menu: {
               ...menu,
-              reviews: [newReview, ...menu.reviews],
+              reviews: [newReview, ...(menu.reviews && [menu.reviews])],
             },
           },
           __typename: "Menu",
@@ -303,7 +307,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
               name={"contents"}
               placeholder="내용을 입력해 주세요"
             />
-            <RationgBox>
+            <RatingBox>
               {ratingArray.map((rating) => (
                 <Icon
                   key={rating}
@@ -312,7 +316,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
                   selected={rating <= ratingValue}
                 ></Icon>
               ))}
-            </RationgBox>
+            </RatingBox>
           </ContentsBox>
           <BtnBox>
             <Button
