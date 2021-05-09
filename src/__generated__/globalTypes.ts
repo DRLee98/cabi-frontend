@@ -107,6 +107,11 @@ export interface CreateNutrientInput {
   protein?: number | null;
 }
 
+export interface CreateReplyInput {
+  contents: string;
+  reviewId: number;
+}
+
 export interface EditProfileInput {
   name?: string | null;
   password?: string | null;

@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CreateButton } from "../../components/createBtn";
 import { Keywords } from "../../components/keywords";
-import { ReviewForm } from "../../components/review";
+import { ReviewForm } from "../../components/reviewForm";
+import { ReviewList } from "../../components/reviewList";
 import { Score } from "../../components/score";
 import {
   Container,
@@ -252,7 +253,11 @@ export const OwnerCafeDetail = () => {
             )}
           </MenuBox>
           <MapBox>map</MapBox>
-          <ReviewBox>review</ReviewBox>
+          <ReviewList
+            totalScore={cafe?.totalScore}
+            avgScore={cafe?.avgScore}
+            reviews={cafe?.reviews}
+          />
           <ReviewForm cafeId={+cafeId} />
         </ContentsBox>
       </Container>

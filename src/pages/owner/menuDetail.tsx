@@ -12,6 +12,8 @@ import { Container, MenuImage } from "../../components/styledComponent";
 import { siteName } from "../../constants";
 import { Category } from "../../__generated__/globalTypes";
 import { useMenuDetail } from "../../hooks/menuDetailQuery";
+import { ReviewList } from "../../components/reviewList";
+import { ReviewForm } from "../../components/reviewForm";
 
 const MenuContainer = styled.div`
   display: flex;
@@ -238,7 +240,12 @@ export const OwnerMenuDetail = () => {
                 <Nutrient nutrient={menu.nutrient} />
               </NutrientBox>
             )}
-            <ReviewBox></ReviewBox>
+            <ReviewList
+              totalScore={menu?.totalScore}
+              avgScore={menu?.avgScore}
+              reviews={menu?.reviews}
+            />
+            <ReviewForm cafeId={+cafeId} menuId={+menuId} />
           </ContentsBox>
         </MenuContainer>
       </Container>

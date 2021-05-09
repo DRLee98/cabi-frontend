@@ -128,10 +128,6 @@ interface FormProp {
   contents: string;
 }
 
-export const Review = () => {
-  return <h1>review</h1>;
-};
-
 export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
   const {
     register,
@@ -143,7 +139,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
   } = useForm<FormProp>({ mode: "onChange" });
   const client = useApolloClient();
 
-  const ratingArray = [5, 4, 3, 2, 1];
+  const ratingArray = [1, 2, 3, 4, 5];
   const [ratingValue, setRatingValue] = useState(3);
   const [showForm, setShowForm] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>();
@@ -179,7 +175,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
             ok,
             cafe: {
               ...cafe,
-              reviews: [...cafe.reviews, newReview],
+              reviews: [newReview, ...cafe.reviews],
             },
           },
           __typename: "Cafe",
@@ -223,7 +219,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
             ok,
             menu: {
               ...menu,
-              reviews: [...menu.reviews, newReview],
+              reviews: [newReview, ...menu.reviews],
             },
           },
           __typename: "Menu",
@@ -313,7 +309,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
                   key={rating}
                   icon={faStar}
                   onClick={() => setRatingValue(rating)}
-                  selected={rating >= ratingValue}
+                  selected={rating <= ratingValue}
                 ></Icon>
               ))}
             </RationgBox>

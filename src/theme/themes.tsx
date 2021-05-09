@@ -11,6 +11,7 @@ export const theme = {
   keywordColor: "#ffffff",
   keywordBgColor: "#08887d",
   whiteColor: "#ffffff",
+  blackColor: "#2d2d2d",
   headerHeight: "7vh",
   starYellow: "#ffe92a",
 };

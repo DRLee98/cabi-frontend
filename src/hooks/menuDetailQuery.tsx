@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import { MENU_FRAGMENT } from "../fragments";
 import { menuDetailQuery } from "../__generated__/menuDetailQuery";
 
-const MENU_DETAIL_QUERY = gql`
+export const MENU_DETAIL_QUERY = gql`
   query menuDetailQuery($input: MenuDetailInput!) {
     menuDetail(input: $input) {
       ok
