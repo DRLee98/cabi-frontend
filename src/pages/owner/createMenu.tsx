@@ -156,14 +156,8 @@ interface CreateMenuParams {
 }
 
 export const CreateMenu = () => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<CreateMenuProp>({ mode: "onChange" });
+  const { register, handleSubmit, errors, watch, getValues, formState } =
+    useForm<CreateMenuProp>({ mode: "onChange" });
   const history = useHistory();
   const client = useApolloClient();
   const { cafeId } = useParams<CreateMenuParams>();
@@ -172,6 +166,7 @@ export const CreateMenu = () => {
   const [additionalOptions, setAdditionalOptions] = useState<string[]>([]);
   const [optionWidth, setOptionWidth] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string | null>();
+  const [category, setCategory] = useState<Category>();
   const CategoryList = [
     { name: "☕️ 음료", value: Category.Beverage },
     { name: "🍨 디저트", value: Category.Dessert },
@@ -252,13 +247,6 @@ export const CreateMenu = () => {
       setTimeout(() => setErrorMsg(null), 2000);
     }
   };
-
-  const {
-    cafeDetail: { cafe },
-  } = client.readQuery({
-    query: CAFE_DETAIL_QUERY,
-    variables: { input: { id: +cafeId } },
-  });
 
   const [createMenuMutation, { loading }] = useMutation<
     createMenuMutation,
@@ -399,11 +387,10 @@ export const CreateMenu = () => {
                 error={errors.description?.message}
               />
               <Select
-                register={register({
-                  required: "설명은 필수 항목입니다",
-                })}
+                register={register()}
                 name="category"
                 options={CategoryList}
+                onchange={() => setCategory(getValues("category"))}
               />
               <OptionBox>
                 <OptionBtn onClick={addOption}>+ 옵션 추가하기</OptionBtn>
@@ -461,10 +448,9 @@ export const CreateMenu = () => {
                   </Slider>
                 )}
               </OptionBox>
-              {watch("category") !== Category.Etc &&
-                watch("category") !== Category.Goods && (
-                  <NutrientForm register={register} />
-                )}
+              {category !== Category.Etc && category !== Category.Goods && (
+                <NutrientForm register={register} />
+              )}
             </ContentsBox>
             <BtnBox>
               <Button

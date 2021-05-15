@@ -15,11 +15,11 @@ import { Container } from "../../components/styledComponent";
 import { siteName } from "../../constants";
 import { uploadFile } from "../../upload";
 import { Category } from "../../__generated__/globalTypes";
-import { CAFE_DETAIL_QUERY } from "../../hooks/cafeDetailQuery";
 import {
   editMenuMutation,
   editMenuMutationVariables,
 } from "../../__generated__/editMenuMutation";
+import { MENU_DETAIL_QUERY, useMenuDetail } from "../../hooks/menuDetailQuery";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -33,6 +33,7 @@ const FormBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: ${(prop) => prop.theme.headerHeight};
 `;
 
 const Form = styled.form`
@@ -138,39 +139,65 @@ interface EditMenuProp {
   price: number;
   category: Category;
   file: FileList;
-  volume?: number;
-  calorie?: number;
-  salt?: number;
-  carbohydrate?: number;
-  sugars?: number;
-  fat?: number;
-  transFat?: number;
-  saturatedFat?: number;
-  cholesterol?: number;
-  protein?: number;
+  volume?: number | null;
+  calorie?: number | null;
+  salt?: number | null;
+  carbohydrate?: number | null;
+  sugars?: number | null;
+  fat?: number | null;
+  transFat?: number | null;
+  saturatedFat?: number | null;
+  cholesterol?: number | null;
+  protein?: number | null;
 }
 
 interface EditMenuParams {
   cafeId: string;
+  menuId: string;
+}
+
+interface optionObj {
+  [key: string]: { name: string; price: number | null };
 }
 
 export const EditMenu = () => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<EditMenuProp>({ mode: "onChange" });
   const history = useHistory();
   const client = useApolloClient();
-  const { cafeId } = useParams<EditMenuParams>();
+  const { cafeId, menuId } = useParams<EditMenuParams>();
+  const { loading: menuLoading, data: menuData } = useMenuDetail(
+    +cafeId,
+    +menuId,
+  );
+
+  const menu = menuData?.menuDetail.menu;
+  const nutrient = menu?.nutrient;
+  const menuOptions = menu?.options;
+
+  const defaultOption: optionObj = {};
+  const defaultAdditionalOption: optionObj = {};
+
+  menuOptions?.map((option, i) => {
+    const optionKey = `${option.name + i}_option`;
+    const optionObj = { name: option.name, price: option.price };
+    defaultOption[optionKey] = optionObj;
+    if (option.optionItems && option.optionItems?.length > 0) {
+      option.optionItems.map((addOption) => {
+        const addOptionKey = `${optionKey}_${addOption.name}_optionItem`;
+        defaultAdditionalOption[addOptionKey] = addOption;
+      });
+    }
+  });
+
   const [menuImg, setMenuImg] = useState<string | undefined>("");
-  const [options, setOptions] = useState<string[]>([]);
-  const [additionalOptions, setAdditionalOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<string[]>(
+    Object.keys(defaultOption) || [],
+  );
+  const [additionalOptions, setAdditionalOptions] = useState<string[]>(
+    Object.keys(defaultAdditionalOption) || [],
+  );
   const [optionWidth, setOptionWidth] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string | null>();
+  const [category, setCategory] = useState<Category>();
   const CategoryList = [
     { name: "☕️ 음료", value: Category.Beverage },
     { name: "🍨 디저트", value: Category.Dessert },
@@ -179,6 +206,17 @@ export const EditMenu = () => {
     { name: "🎀 상품", value: Category.Goods },
     { name: "기타", value: Category.Etc },
   ];
+
+  const { register, handleSubmit, errors, watch, getValues, formState } =
+    useForm<EditMenuProp>({
+      mode: "onChange",
+      defaultValues: {
+        name: menu?.name,
+        description: menu?.description,
+        price: menu?.price,
+        category: menu?.category,
+      },
+    });
 
   const addOption = () => {
     const option = `${new Date().getTime()}_option`;
@@ -207,61 +245,76 @@ export const EditMenu = () => {
   };
 
   const onCompleted = (data: editMenuMutation) => {
-    console.log(data);
     const {
       editMenu: { ok, error },
     } = data;
     if (ok) {
-      const { name, description, category, price } = getValues();
-      const newMenu = {
-        avgScore: 0,
-        category,
-        description,
-        menuImg,
-        name,
-        price: +price,
-        totalScore: 0,
-        __typename: "Menu",
-      };
       const {
-        cafeDetail: { cafe },
+        name,
+        price,
+        description,
+        category,
+        volume,
+        calorie,
+        salt,
+        carbohydrate,
+        sugars,
+        fat,
+        transFat,
+        saturatedFat,
+        cholesterol,
+        protein,
+      } = getValues();
+      const optionList = getOption();
+      const {
+        menuDetail: { menu },
       } = client.readQuery({
-        query: CAFE_DETAIL_QUERY,
-        variables: { input: { id: +cafeId } },
+        query: MENU_DETAIL_QUERY,
+        variables: { input: { cafeId: +cafeId, menuId: +menuId } },
       });
       client.writeQuery({
-        query: CAFE_DETAIL_QUERY,
+        query: MENU_DETAIL_QUERY,
         data: {
           cafeDetail: {
             error,
             ok,
-            cafe: {
-              ...cafe,
-              menus: [...cafe.menus, newMenu],
+            menu: {
+              ...menu,
+              name,
+              price: +price,
+              ...(description && { description }),
+              category,
+              options: optionList,
+              ...(menuImg && { menuImg }),
+              editNutrient: {
+                ...(volume && { volume: +volume }),
+                ...(calorie && { calorie: +calorie }),
+                ...(salt && { salt: +salt }),
+                ...(carbohydrate && { carbohydrate: +carbohydrate }),
+                ...(sugars && { sugars: +sugars }),
+                ...(fat && { fat: +fat }),
+                ...(transFat && { transFat: +transFat }),
+                ...(saturatedFat && { saturatedFat: +saturatedFat }),
+                ...(cholesterol && { cholesterol: +cholesterol }),
+                ...(protein && { protein: +protein }),
+              },
             },
+            __typename: "MenuDetailOutput",
           },
-          __typename: "Cafe",
+          variables: { input: { cafeId: +cafeId, menuId: +menuId } },
         },
-        variables: { input: { id: +cafeId } },
       });
-      history.push(`/cafe/${cafeId}`);
+      history.push(`/cafe/${cafeId}/menu/${menuId}/`);
     } else {
       setErrorMsg(error);
       setTimeout(() => setErrorMsg(null), 2000);
     }
   };
 
-  const {
-    cafeDetail: { cafe },
-  } = client.readQuery({
-    query: CAFE_DETAIL_QUERY,
-    variables: { input: { id: +cafeId } },
-  });
-
   const [editMenuMutation, { loading }] = useMutation<
     editMenuMutation,
     editMenuMutationVariables
-  >(EDIT_MENU_MUTATION);
+  >(EDIT_MENU_MUTATION, { onCompleted });
 
   const getOption = () => {
     let list: {
@@ -331,13 +384,14 @@ export const EditMenu = () => {
         variables: {
           input: {
             cafeId: +cafeId,
+            menuId: +menuId,
             name,
             price: +price,
             description,
             category,
-            ...(optionList.length > 0 && { options: optionList }),
+            options: optionList,
             ...(url && { menuImg: url }),
-            nutrient: {
+            editNutrient: {
               ...(volume && { volume: +volume }),
               ...(calorie && { calorie: +calorie }),
               ...(salt && { salt: +salt }),
@@ -355,17 +409,19 @@ export const EditMenu = () => {
     }
   };
 
-  return (
+  return menuLoading ? (
+    <h1>loading</h1>
+  ) : (
     <>
       <Helmet>
-        <title>{siteName} | 메뉴 만들기</title>
+        <title>{siteName} | 메뉴 수정하기</title>
       </Helmet>
       <Container>
         <FormBox>
-          <Title>메뉴 만들기</Title>
+          <Title>메뉴 수정하기</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <MenuImageInput register={register} />
+              <MenuImageInput register={register} url={menu?.menuImg} />
             </ImageBox>
             <ContentsBox>
               <Input
@@ -397,11 +453,10 @@ export const EditMenu = () => {
                 error={errors.description?.message}
               />
               <Select
-                register={register({
-                  required: "설명은 필수 항목입니다",
-                })}
+                register={register()}
                 name="category"
                 options={CategoryList}
+                onchange={() => setCategory(getValues("category"))}
               />
               <OptionBox>
                 <OptionBtn onClick={addOption}>+ 옵션 추가하기</OptionBtn>
@@ -416,11 +471,13 @@ export const EditMenu = () => {
                           ref={register}
                           name={`${option}_name`}
                           placeholder={"옵션 이름"}
+                          value={defaultOption[option].name || ""}
                         />
                         <OptionInput
                           ref={register}
                           name={`${option}_price`}
                           placeholder={"옵션 가격"}
+                          value={defaultOption[option].price || ""}
                         />
                         <OptionDelBtn onClick={() => removeOption(option)}>
                           <FontAwesomeIcon icon={faTimes} />
@@ -440,11 +497,17 @@ export const EditMenu = () => {
                                   ref={register}
                                   name={`${item}_name`}
                                   placeholder={"추가 옵션 이름"}
+                                  value={
+                                    defaultAdditionalOption[item].name || ""
+                                  }
                                 />
                                 <OptionInput
                                   ref={register}
                                   name={`${item}_price`}
                                   placeholder={"추가 옵션 가격"}
+                                  value={
+                                    defaultAdditionalOption[item].price || ""
+                                  }
                                 />
                                 <OptionDelBtn
                                   onClick={() => removeOptionItem(item)}
@@ -459,16 +522,15 @@ export const EditMenu = () => {
                   </Slider>
                 )}
               </OptionBox>
-              {watch("category") !== Category.Etc &&
-                watch("category") !== Category.Goods && (
-                  <NutrientForm register={register} />
-                )}
+              {category !== Category.Etc && category !== Category.Goods && (
+                <NutrientForm register={register} value={nutrient} />
+              )}
             </ContentsBox>
             <BtnBox>
               <Button
                 loading={loading}
                 valid={formState.isValid}
-                text={"메뉴 만들기"}
+                text={"메뉴 수정하기"}
                 error={errorMsg}
               ></Button>
             </BtnBox>

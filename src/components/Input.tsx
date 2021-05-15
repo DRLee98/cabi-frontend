@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEventHandler, useState } from "react";
 import styled from "styled-components";
 import { UserRole } from "../__generated__/globalTypes";
 import { CoverImage, ErrorMsg, Image, MenuImage } from "./styledComponent";
@@ -196,6 +196,7 @@ interface SelectProps {
   register?: any;
   name: string;
   options: { name: string; value: string }[];
+  onchange?: ChangeEventHandler<HTMLSelectElement> | undefined;
 }
 
 interface TextareaProps {
@@ -270,9 +271,14 @@ export const RadioInput: React.FC<RadioInputProps> = ({
   );
 };
 
-export const Select: React.FC<SelectProps> = ({ register, name, options }) => {
+export const Select: React.FC<SelectProps> = ({
+  register,
+  name,
+  options,
+  onchange,
+}) => {
   return (
-    <SelectBox ref={register} name={name}>
+    <SelectBox ref={register} name={name} onChange={onchange}>
       {options.map((option) => (
         <Option key={option.value} value={option.value}>
           {option.name}
