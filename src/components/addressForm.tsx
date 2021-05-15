@@ -52,14 +52,14 @@ interface InputProps {
     React.SetStateAction<AddressData | undefined>
   >;
   addressResult: AddressData | undefined;
-  userAddress?: myProfileQuery_myProfile_user_address | undefined;
+  currentAddress?: myProfileQuery_myProfile_user_address | undefined;
 }
 
 export const AddressForm: React.FC<InputProps> = ({
   register,
   setAddressResult,
   addressResult,
-  userAddress,
+  currentAddress,
 }) => {
   const [postCodeLayer, setPostCodeLayer] = useState<Boolean>(false);
   const [zonecode, setZonecode] = useState<string | undefined>();
@@ -77,7 +77,7 @@ export const AddressForm: React.FC<InputProps> = ({
         ref={register}
         name="zonecode"
         placeholder="우편번호"
-        value={zonecode || userAddress?.zonecode || ""}
+        value={zonecode || currentAddress?.zonecode || ""}
         disabled
       />
       <SearchBtn onClick={() => setPostCodeLayer(true)}>
@@ -87,7 +87,7 @@ export const AddressForm: React.FC<InputProps> = ({
         ref={register}
         name="address"
         placeholder="주소"
-        value={address || userAddress?.address || ""}
+        value={address || currentAddress?.address || ""}
         disabled
       />
       {postCodeLayer && <Postcode setAddressResult={setAddressResult} />}

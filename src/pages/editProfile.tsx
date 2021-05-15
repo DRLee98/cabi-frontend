@@ -254,7 +254,7 @@ export const EditProfile = () => {
                 register={register}
                 setAddressResult={setAddressResult}
                 addressResult={addressResult}
-                userAddress={user?.address}
+                currentAddress={user?.address}
               ></AddressForm>
             </ContentsBox>
             <BtnBox>

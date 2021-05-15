@@ -181,6 +181,7 @@ interface KeywordInputProps {
   register?: any;
   name?: string;
   error?: string;
+  value?: string;
 }
 
 interface RadioInputProps {
@@ -233,11 +234,16 @@ export const KeywordInput: React.FC<KeywordInputProps> = ({
   register,
   name,
   error,
+  value,
 }) => {
   return (
     <KeywordInputBox>
       #
-      <KInput ref={register} name={name} type="text" />
+      {value ? (
+        <KInput ref={register} name={name} type="text" value={value} />
+      ) : (
+        <KInput ref={register} name={name} type="text" />
+      )}
       {error && <ErrorMsg>{error}</ErrorMsg>}
     </KeywordInputBox>
   );

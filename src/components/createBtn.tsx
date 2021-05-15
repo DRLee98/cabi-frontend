@@ -2,7 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const CreateBlock = styled.div``;
+const CreateBlock = styled.div`
+  width: 100%;
+`;
 
 const CreateLink = styled(Link)`
   display: block;

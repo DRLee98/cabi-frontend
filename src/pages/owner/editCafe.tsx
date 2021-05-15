@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import styled from "styled-components";
 import { AddressForm } from "../../components/addressForm";
 import { Button } from "../../components/button";
@@ -16,16 +16,15 @@ import {
   KeywordInput,
   Textarea,
 } from "../../components/Input";
-import { Container, ErrorMsg } from "../../components/styledComponent";
+import { Container } from "../../components/styledComponent";
 import { siteName } from "../../constants";
 import { uploadFile } from "../../upload";
-import {
-  createCafeMutation,
-  createCafeMutationVariables,
-} from "../../__generated__/createCafeMutation";
-import { MY_CAFES_QUERY } from "./myCafes";
-import { useMe } from "../../hooks/useMe";
 import { Slider } from "../../components/slider";
+import { CAFE_DETAIL_QUERY, useCafeDetail } from "../../hooks/cafeDetailQuery";
+import {
+  editCafeMutation,
+  editCafeMutationVariables,
+} from "../../__generated__/editCafeMutation";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -126,16 +125,20 @@ const KeywordItem = styled.li`
   }
 `;
 
-const CREATE_CAFE_MUTATION = gql`
-  mutation createCafeMutation($input: CreateCafeInput!) {
-    createCafe(input: $input) {
+const EDIT_CAFE_MUTATION = gql`
+  mutation editCafeMutation($input: EditCafeInput!) {
+    editCafe(input: $input) {
       ok
       error
     }
   }
 `;
 
-interface CreateCafeForm {
+interface editCafeParam {
+  cafeId: string;
+}
+
+interface editCafeForm {
   name: string;
   description: string;
   zonecode: string;
@@ -143,72 +146,30 @@ interface CreateCafeForm {
   file: FileList;
 }
 
-export const CreateCafe = () => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<CreateCafeForm>({ mode: "onChange" });
+interface keywordObj {
+  [key: string]: string;
+}
 
-  const { data } = useMe();
-  const userId = data?.myProfile.user?.id;
+export const EditCafe = () => {
+  const { cafeId } = useParams<editCafeParam>();
+  const { loading: cafeLoading, data: cafeData } = useCafeDetail(+cafeId);
+
+  const cafe = cafeData?.cafeDetail.cafe;
+  const cafeKeywords = cafe?.keywords;
+
+  const defaultKeyword: keywordObj = {};
+  cafeKeywords?.map(
+    (keyword) => (defaultKeyword[`${keyword.id}_keyword`] = keyword.name),
+  );
 
   const history = useHistory();
   const client = useApolloClient();
-
-  const onCompleted = (data: any) => {
-    const {
-      createCafe: { ok, error, cafeId },
-    } = data;
-    if (ok) {
-      const { name } = getValues();
-      let keywordList: { name: unknown; __typename: string }[] = [];
-      if (keywords.length > 0) {
-        keywordList = keywords.map((keyword) => ({
-          name: getValues(keyword),
-          __typename: "Keyword",
-        }));
-      }
-      const newCafe = {
-        id: cafeId,
-        __typename: "Cafe",
-        name,
-        coverImg,
-        totalScore: 0,
-        avgScore: 0,
-        keywords: keywordList,
-        owner: { __ref: `User:${userId}` },
-      };
-      const {
-        myCafes: { cafes },
-      } = client.readQuery({
-        query: MY_CAFES_QUERY,
-      });
-      client.writeQuery({
-        query: MY_CAFES_QUERY,
-        data: {
-          myProfile: {
-            error,
-            ok,
-            cafes: [...cafes, newCafe],
-            __typename: "SeeCafeOutput",
-          },
-        },
-      });
-      history.push("/");
-    } else {
-      setErrorMsg(error);
-      setTimeout(() => setErrorMsg(null), 2000);
-    }
-  };
   const [coverImg, setCoverImg] = useState<string | undefined>("");
   const [addressResult, setAddressResult] = useState<AddressData>();
-  const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState<string[]>(
+    Object.keys(defaultKeyword) || [],
+  );
   const [keywordWidth, setKeywordWidth] = useState<number>(0);
 
   const addKeyword = () => {
@@ -221,10 +182,74 @@ export const CreateCafe = () => {
     setKeywords(removedKeyword);
   };
 
-  const [createCafeMutation, { loading }] = useMutation<
-    createCafeMutation,
-    createCafeMutationVariables
-  >(CREATE_CAFE_MUTATION, { onCompleted });
+  const {
+    register,
+    handleSubmit,
+    errors,
+    watch,
+    getValues,
+    formState,
+  } = useForm<editCafeForm>({
+    mode: "onChange",
+    defaultValues: {
+      name: cafe?.name,
+      description: cafe?.description,
+    },
+  });
+
+  const onCompleted = (data: editCafeMutation) => {
+    const {
+      editCafe: { ok, error },
+    } = data;
+    if (ok) {
+      const { name, description } = getValues();
+      let keywordList: { name: unknown; __typename: string }[] = [];
+      if (keywords.length > 0) {
+        keywordList = keywords.map((keyword) => ({
+          name: getValues(keyword),
+          __typename: "Keyword",
+        }));
+      }
+      const {
+        cafeDetail: { cafe },
+      } = client.readQuery({
+        query: CAFE_DETAIL_QUERY,
+        variables: { input: { id: +cafeId } },
+      });
+      client.writeQuery({
+        query: CAFE_DETAIL_QUERY,
+        data: {
+          cafeDetail: {
+            error,
+            ok,
+            cafe: {
+              ...cafe,
+              ...(name && { name }),
+              ...(description && { description }),
+              ...(coverImg && { coverImg }),
+              keywords: keywordList,
+              address: {
+                ...cafe.address,
+                ...(addressResult && { address: addressResult.address }),
+                ...(addressResult && { zonecode: addressResult.zonecode }),
+              },
+            },
+            __typename: "CafeDetailOutput",
+          },
+        },
+        variables: { input: { id: +cafeId } },
+      });
+      history.push(`/cafe/${cafeId}`);
+    } else {
+      setErrorMsg(error);
+      setTimeout(() => setErrorMsg(null), 2000);
+    }
+  };
+
+  const [editCafeMutation, { loading }] = useMutation<
+    editCafeMutation,
+    editCafeMutationVariables
+  >(EDIT_CAFE_MUTATION, { onCompleted });
 
   const onSubmit = async () => {
     if (!loading) {
@@ -239,28 +264,27 @@ export const CreateCafe = () => {
           }
         });
       }
-      if (!addressResult) {
-        setAddressdError("주소를 입력해주세요");
-        return;
-      }
       if (file.length > 0) {
         ({ url: coverImgUrl } = await uploadFile(file[0]));
         setCoverImg(coverImgUrl);
       }
-      createCafeMutation({
+      editCafeMutation({
         variables: {
           input: {
+            cafeId: +cafeId,
             name,
             description,
-            address: {
-              zonecode: addressResult?.zonecode,
-              address: addressResult?.address,
-              sido: addressResult?.sido,
-              sigungu: addressResult?.sigungu,
-              sigunguCode: addressResult?.sigunguCode,
-              bname: addressResult?.bname,
-            },
-            coverImg: coverImgUrl,
+            ...(addressResult && {
+              address: {
+                zonecode: addressResult?.zonecode,
+                address: addressResult?.address,
+                sido: addressResult?.sido,
+                sigungu: addressResult?.sigungu,
+                sigunguCode: addressResult?.sigunguCode,
+                bname: addressResult?.bname,
+              },
+            }),
+            ...(coverImgUrl && { coverImg: coverImgUrl }),
             ...(keywordsName && { keywordsName }),
           },
         },
@@ -271,14 +295,14 @@ export const CreateCafe = () => {
   return (
     <>
       <Helmet>
-        <title>{siteName} | 카페 만들기</title>
+        <title>{siteName} | 카페 수정하기</title>
       </Helmet>
       <Container>
         <FormBox>
-          <Title>카페 만들기</Title>
+          <Title>카페 수정하기</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <CoverImageInput register={register} />
+              <CoverImageInput register={register} url={cafe?.coverImg} />
             </ImageBox>
             <ContentsBox>
               <NameBox>
@@ -307,8 +331,8 @@ export const CreateCafe = () => {
                   register={register}
                   setAddressResult={setAddressResult}
                   addressResult={addressResult}
+                  currentAddress={cafe?.address}
                 ></AddressForm>
-                {addressError && <ErrorMsg>{addressError}</ErrorMsg>}
               </AddressBox>
             </ContentsBox>
             <KeywordBox>
@@ -319,7 +343,11 @@ export const CreateCafe = () => {
                     key={keyword}
                     ref={(ref) => ref && setKeywordWidth(ref.offsetWidth)}
                   >
-                    <KeywordInput register={register} name={keyword} />
+                    <KeywordInput
+                      register={register}
+                      name={keyword}
+                      value={defaultKeyword[keyword]}
+                    />
                     <KeywordDelBtn onClick={() => removeKeyword(keyword)}>
                       <FontAwesomeIcon icon={faTimes} />
                     </KeywordDelBtn>
@@ -330,8 +358,8 @@ export const CreateCafe = () => {
             <BtnBox>
               <Button
                 loading={loading}
-                valid={formState.isValid && Boolean(addressResult)}
-                text={"카페 만들기"}
+                valid={formState.isValid}
+                text={"카페 수정하기"}
                 error={errorMsg}
               ></Button>
             </BtnBox>

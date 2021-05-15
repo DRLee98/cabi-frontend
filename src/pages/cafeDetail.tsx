@@ -10,6 +10,8 @@ import { ReviewList } from "../components/reviewList";
 import {
   Container,
   CoverImage,
+  SLink,
+  FlexBox,
   Image,
   MenuImage,
 } from "../components/styledComponent";
@@ -133,8 +135,6 @@ const MenuItem = styled.li``;
 
 const MenuName = styled.span``;
 
-const MenuLink = styled(Link)``;
-
 interface OwnerBoxProp {
   width: number;
 }
@@ -225,11 +225,17 @@ export const CafeDetail = () => {
           <Keywords keywords={keywords} />
         </KeywordBox>
         <Description>{cafe?.description}</Description>
-        {isOwner && (
-          <CreateButton
-            link={`/cafe/${cafe?.id}/create-menu`}
-            text={"+ 메뉴 만들기"}
-          />
+        {isOwner && cafe?.owner.id === (user && user.id) && (
+          <FlexBox>
+            <CreateButton
+              link={`/cafe/${cafe?.id}/create-menu`}
+              text={"+ 메뉴 만들기"}
+            />
+            <CreateButton
+              link={`/cafe/${cafe?.id}/edit`}
+              text={"+ 카페 수정하기"}
+            />
+          </FlexBox>
         )}
         <ContentsBox>
           <MenuBox>
@@ -242,13 +248,13 @@ export const CafeDetail = () => {
                     <MenuList>
                       {category.menu.map((menu) => (
                         <MenuItem>
-                          <MenuLink to={`/cafe/${cafeId}/menu/${menu.id}`}>
+                          <SLink to={`/cafe/${cafeId}/menu/${menu.id}`}>
                             <MenuImage
                               sizes={"100%"}
                               src={menu.menuImg || undefined}
                             />
                             <MenuName>{menu.name}</MenuName>
-                          </MenuLink>
+                          </SLink>
                         </MenuItem>
                       ))}
                     </MenuList>

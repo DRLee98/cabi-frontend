@@ -84,6 +84,7 @@ export const MENU_FRAGMENT = gql`
     description
     price
     menuImg
+    ownerId
     category
     totalScore
     avgScore

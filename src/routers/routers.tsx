@@ -21,6 +21,8 @@ import { CreateCafe } from "../pages/owner/createCafe";
 import { CreateMenu } from "../pages/owner/createMenu";
 import { CafeDetail } from "../pages/cafeDetail";
 import { MenuDetail } from "../pages/menuDetail";
+import { EditCafe } from "../pages/owner/editCafe";
+import { EditMenu } from "../pages/owner/editMenu";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
@@ -30,8 +32,6 @@ export const Routers = () => {
   const loginRouters = [
     { path: "/profile", component: <Profile /> },
     { path: "/edit-profile", component: <EditProfile /> },
-    { path: "/cafe/:cafeId", component: <CafeDetail /> },
-    { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail /> },
   ];
 
   const logoutRouters = [
@@ -43,9 +43,18 @@ export const Routers = () => {
     { path: "/", component: <MyCafes /> },
     { path: "/create-cafe", component: <CreateCafe /> },
     { path: "/cafe/:cafeId/create-menu", component: <CreateMenu /> },
+    { path: "/cafe/:cafeId/edit", component: <EditCafe /> },
+    { path: "/cafe/:cafeId/menu/:menuId/edit", component: <EditMenu /> },
   ];
 
   const clientRouters = [{ path: "/", component: <Home /> }];
+
+  const commonRouters = [
+    { path: "/", component: <Home /> },
+    { path: "/search-cafes/:word", component: <Home /> },
+    { path: "/cafe/:cafeId", component: <CafeDetail /> },
+    { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail /> },
+  ];
 
   return (
     <Router>
@@ -71,20 +80,26 @@ export const Routers = () => {
                     {router.component}
                   </Route>
                 ))}
+              {commonRouters.map((router) => (
+                <Route key={router.path} path={router.path} exact>
+                  {router.component}
+                </Route>
+              ))}
             </>
           ) : (
-            logoutRouters.map((router) => (
-              <Route key={router.path} path={router.path} exact>
-                {router.component}
-              </Route>
-            ))
+            <>
+              {logoutRouters.map((router) => (
+                <Route key={router.path} path={router.path} exact>
+                  {router.component}
+                </Route>
+              ))}
+              {commonRouters.map((router) => (
+                <Route key={router.path} path={router.path} exact>
+                  {router.component}
+                </Route>
+              ))}
+            </>
           )}
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="/search-cafes/:word" exact>
-            <Home />
-          </Route>
           <Redirect to="/" />
         </Switch>
       </Wrap>

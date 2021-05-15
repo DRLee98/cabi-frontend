@@ -74,6 +74,12 @@ export const PrevBtn = styled.span`
   }
 `;
 
+export const SLink = styled(Link)``;
+
+export const FlexBox = styled.div`
+  display: flex;
+`;
+
 interface ImageProps {
   size: number;
 }

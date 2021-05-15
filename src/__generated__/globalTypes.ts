@@ -112,6 +112,40 @@ export interface CreateReplyInput {
   reviewId: number;
 }
 
+export interface EditCafeInput {
+  name?: string | null;
+  description?: string | null;
+  coverImg?: string | null;
+  cafeId: number;
+  address?: AddressInputType | null;
+  keywordsName?: string[] | null;
+}
+
+export interface EditMenuInput {
+  name?: string | null;
+  description?: string | null;
+  price?: number | null;
+  menuImg?: string | null;
+  category?: Category | null;
+  options?: OptionInputType[] | null;
+  cafeId: number;
+  menuId: number;
+  editNutrient?: EditNutrientInput | null;
+}
+
+export interface EditNutrientInput {
+  volume?: number | null;
+  calorie?: number | null;
+  salt?: number | null;
+  carbohydrate?: number | null;
+  sugars?: number | null;
+  fat?: number | null;
+  transFat?: number | null;
+  saturatedFat?: number | null;
+  cholesterol?: number | null;
+  protein?: number | null;
+}
+
 export interface EditProfileInput {
   name?: string | null;
   password?: string | null;
@@ -141,6 +175,7 @@ export interface MenuInputType {
   description: string;
   price: number;
   menuImg?: string | null;
+  ownerId?: number | null;
   category: Category;
   cafe: CafeInputType;
   nutrient?: NutrientInputType | null;

@@ -11,6 +11,7 @@ import { useMenuDetail } from "../hooks/menuDetailQuery";
 import { ReviewList } from "../components/reviewList";
 import { ReviewForm } from "../components/reviewForm";
 import { useMe } from "../hooks/useMe";
+import { CreateButton } from "../components/createBtn";
 
 const MenuContainer = styled.div`
   display: flex;
@@ -40,7 +41,10 @@ const NameBox = styled.div`
   margin-bottom: 10px;
 `;
 
-const Box = styled.div``;
+const Box = styled.div`
+  display: flex;
+  align-items: flex-end;
+`;
 
 const Name = styled.strong`
   font-size: x-large;
@@ -74,6 +78,7 @@ const OptionList = styled.ul`
 `;
 
 const OptionContentsBox = styled.div`
+  padding: 0.8em;
   display: flex;
   justify-content: space-between;
 `;
@@ -85,15 +90,17 @@ const OptionPrice = styled.span`
 `;
 
 const OptionItemBox = styled.div`
-  position: absolute;
-  overflow: hidden;
   top: 100%;
-  bottom: 0;
   left: 0;
-  right: 0;
-  border-radius: 3px;
+  padding: 5px;
+  margin-top: 3px;
   min-width: 100%;
   width: max-content;
+  max-height: 100px;
+  overflow-y: auto;
+  border-radius: 0 0 3px 3px;
+  border-top: 1px solid ${(prop) => prop.theme.keywordBgColor};
+  background-color: ${(prop) => prop.theme.keywordColor};
   transition: all 0.5s ease;
 `;
 
@@ -109,7 +116,6 @@ const Option = styled.li`
   position: relative;
   min-width: 120px;
   height: fit-content;
-  padding: 0.8em;
   border-radius: 3px;
   position: relative;
   color: ${(prop) => prop.theme.keywordBgColor};
@@ -117,17 +123,19 @@ const Option = styled.li`
   & + & {
     margin-left: 10px;
   }
-  &:hover ${OptionItemBox} {
-    bottom: unset;
-    margin-top: 3px;
-    padding: 5px;
-    border: 1px solid ${(prop) => prop.theme.keywordBgColor};
-    background-color: ${(prop) => prop.theme.keywordColor};
-  }
 `;
 
 const NutrientBox = styled.div`
   margin: 2em 0;
+`;
+
+const EditBtn = styled.span`
+  display: inline-block;
+  margin-left: 10px;
+  & a {
+    margin: 0;
+    padding: 5px;
+  }
 `;
 
 interface MenuDetailParams {
@@ -165,6 +173,8 @@ export const MenuDetail = () => {
     }
   };
 
+  console.log(menu);
+
   return loading ? (
     <h1>loading</h1>
   ) : (
@@ -186,6 +196,22 @@ export const MenuDetail = () => {
                 <CategoryName>
                   {menu && getCategoryName(menu?.category)}
                 </CategoryName>
+                {isOwner && menu?.ownerId === (user && user.id) && (
+                  <EditBtn>
+                    <CreateButton
+                      link={`/cafe/${cafeId}/menu/${menuId}/edit`}
+                      text={"+ 메뉴 수정하기"}
+                    />
+                  </EditBtn>
+                )}
+                {isOwner && (
+                  <EditBtn>
+                    <CreateButton
+                      link={`/cafe/${cafeId}/menu/${menuId}/edit`}
+                      text={"+ 메뉴 수정하기"}
+                    />
+                  </EditBtn>
+                )}
               </Box>
               <Price>{menu?.price} 원</Price>
             </NameBox>

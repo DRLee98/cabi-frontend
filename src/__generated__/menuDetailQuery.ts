@@ -85,6 +85,7 @@ export interface menuDetailQuery_menuDetail_menu {
   description: string;
   price: number;
   menuImg: string | null;
+  ownerId: number | null;
   category: Category;
   totalScore: number;
   avgScore: number;
