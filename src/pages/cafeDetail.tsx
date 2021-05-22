@@ -1,20 +1,23 @@
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { KakaoMap } from "../api/kakaoMap";
 import { CreateButton } from "../components/createBtn";
 import { Keywords } from "../components/keywords";
 import { ReviewForm } from "../components/reviewForm";
 import { ReviewList } from "../components/reviewList";
+import { Slider } from "../components/slider";
 import {
   Container,
   CoverImage,
   SLink,
   FlexBox,
-  Image,
   MenuImage,
 } from "../components/styledComponent";
+import { UserCircleDetail, UserCircle } from "../components/userCircleBox";
 import { siteName } from "../constants";
 import { useCafeDetail } from "../hooks/cafeDetailQuery";
 import { useMe } from "../hooks/useMe";
@@ -47,48 +50,58 @@ const Title = styled.h1`
 `;
 
 const OwnerInfo = styled.div`
-  padding: 0;
-  width: 0;
-  overflow: hidden;
-  box-sizing: content-box;
-  transition: all 0.5s ease;
-`;
-
-const OwnerName = styled.h3`
-  font-size: 22px;
-  min-width: max-content;
-  margin-bottom: 0.5em;
-`;
-
-const OwnerEmail = styled.p`
-  font-size: 12px;
-  min-width: max-content;
-`;
-
-const OwnerBox = styled.div<OwnerBoxProp>`
   position: absolute;
-  display: flex;
-  align-items: center;
   bottom: 20px;
   right: 20px;
-  border-radius: 999px;
-  border: 4px solid rgb(255 255 255 / 50%);
-  background-color: rgb(255 255 255 / 50%);
-  &:hover ${OwnerInfo} {
-    padding: 1em;
-    width: ${(prop) => prop.width}px;
+`;
+
+const MidBox = styled.div`
+  display: grid;
+  grid-template:
+    "keyword likeUser" 2fr
+    "description likeUser" 1fr / 2fr 1fr;
+`;
+
+const LikeUserList = styled.ul`
+  grid-area: likeUser;
+  & + & {
+    margin-right: 8px;
+  }
+  & ul {
+    margin-left: auto;
   }
 `;
 
-const KeywordBox = styled.div``;
+const LikeUserTitle = styled.strong`
+  display: block;
+  text-align: right;
+  padding: 8px;
+`;
+
+const HeartIcon = styled(FontAwesomeIcon)`
+  margin-left: 8px;
+  font-size: 15px;
+  color: red;
+`;
+
+const LikeUser = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const KeywordBox = styled.div`
+  grid-area: keyword;
+`;
 
 const Description = styled.p`
   padding: 0.5em 1.5em;
   font-size: small;
+  grid-area: description;
 `;
 
 const ContentsBox = styled.main`
-  margin-top: 3em;
+  margin-top: 1em;
   display: grid;
   grid-gap: 10px;
   grid-template:
@@ -135,10 +148,6 @@ const MenuItem = styled.li``;
 
 const MenuName = styled.span``;
 
-interface OwnerBoxProp {
-  width: number;
-}
-
 interface cafeDetailParam {
   cafeId: string;
 }
@@ -151,8 +160,6 @@ interface categoryProp {
 
 export const CafeDetail = () => {
   const { data: me } = useMe();
-  const [ownerNameWidth, setOwnerNameWidth] = useState<number>(0);
-  const [ownerEmailWidth, setOwnerEmailWidth] = useState<number>(0);
 
   const { cafeId } = useParams<cafeDetailParam>();
   const { loading, data } = useCafeDetail(+cafeId);
@@ -199,32 +206,30 @@ export const CafeDetail = () => {
             <CoverImage src={cafe?.coverImg || ""} />
           </ImageBox>
           <Title>{cafe?.name}</Title>
-          <OwnerBox
-            width={
-              ownerNameWidth > ownerEmailWidth
-                ? ownerNameWidth
-                : ownerEmailWidth
-            }
-          >
-            <Image src={cafe?.owner.profileImg || ""} sizes={"5rem"} />
-            <OwnerInfo>
-              <OwnerName
-                ref={(ref) => ref && setOwnerNameWidth(ref.offsetWidth)}
-              >
-                {cafe?.owner.name}
-              </OwnerName>
-              <OwnerEmail
-                ref={(ref) => ref && setOwnerEmailWidth(ref.offsetWidth)}
-              >
-                {cafe?.owner.email}
-              </OwnerEmail>
-            </OwnerInfo>
-          </OwnerBox>
+          <OwnerInfo>
+            <UserCircleDetail user={cafe?.owner} />
+          </OwnerInfo>
         </InfoBox>
-        <KeywordBox>
-          <Keywords keywords={keywords} />
-        </KeywordBox>
-        <Description>{cafe?.description}</Description>
+        <MidBox>
+          <KeywordBox>
+            <Keywords keywords={keywords} />
+          </KeywordBox>
+          <Description>{cafe?.description}</Description>
+          <LikeUserList>
+            <LikeUserTitle>
+              소중한 손님들
+              <HeartIcon icon={faHeart} />
+              {cafe?.likedUsers?.length}분
+            </LikeUserTitle>
+            <Slider slideWidth={200}>
+              {cafe?.likedUsers?.map((user) => (
+                <LikeUser key={user.email}>
+                  <UserCircle user={user} />
+                </LikeUser>
+              ))}
+            </Slider>
+          </LikeUserList>
+        </MidBox>
         {isOwner && cafe?.owner.id === (user && user.id) && (
           <FlexBox>
             <CreateButton
@@ -262,7 +267,7 @@ export const CafeDetail = () => {
                 ),
             )}
           </MenuBox>
-          <MapBox>map</MapBox>
+          <MapBox>{/* <KakaoMap address={cafe?.address} /> */}</MapBox>
           <ReviewBox>
             <ReviewList
               me={me}

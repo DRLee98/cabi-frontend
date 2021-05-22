@@ -70,7 +70,6 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
   const [likeCafesId, setLikeCafesId] = useState(likeCafeId() || []);
 
   const toggleLikeCafe = (id: number) => {
-    console.log(likeCafesId);
     if (likeCafesId?.includes(id)) {
       setLikeCafesId((ids) => ids.filter((likeId) => likeId !== id));
     } else {
@@ -81,7 +80,7 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
   return (
     <GridBox>
       {cafes?.map((cafe) => (
-        <Link to={`cafe/${cafe.id}`} key={cafe.id}>
+        <Link to={`/cafe/${cafe.id}`} key={cafe.id}>
           <CafeBox>
             <CafeImg image={cafe.coverImg}>
               {!owner && (

@@ -1,18 +1,18 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
 import { Helmet } from "react-helmet-async";
+import { useLocation, useParams } from "react-router";
 import { GridCafe } from "../components/cafes";
-import { CafesRank } from "../components/cafesRank";
 import { Keywords } from "../components/keywords";
 import { Container } from "../components/styledComponent";
 import { siteName } from "../constants";
 import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
-import { seeCafesQuery } from "../__generated__/seeCafesQuery";
+import { searchCafesKeywordQuery } from "../__generated__/searchCafesKeywordQuery";
 
-const SEE_CAFES_QUERY = gql`
-  query seeCafesQuery {
-    seeCafes {
+const SEARCH_CAFES_KEYWORD_QUERY = gql`
+  query searchCafesKeywordQuery($input: SearchCafesKeywordInput!) {
+    searchCafesKeyword(input: $input) {
       ok
       error
       cafes {
@@ -23,20 +23,31 @@ const SEE_CAFES_QUERY = gql`
   ${SIMPLE_CAFE_FRAGMENT}
 `;
 
-export const Home = () => {
-  const { data, loading } = useQuery<seeCafesQuery>(SEE_CAFES_QUERY);
+interface SearchKeywordCafeParams {
+  slug: string;
+}
+
+export const SearchKeywordCafe = () => {
+  const { slug } = useParams<SearchKeywordCafeParams>();
+
+  const { data, loading } = useQuery<searchCafesKeywordQuery>(
+    SEARCH_CAFES_KEYWORD_QUERY,
+    {
+      variables: { input: { slug } },
+    },
+  );
   const { data: getkeywords } = useKeywords();
+
   const keywords = getkeywords?.viewKeywords.keywords;
-  const cafes = data?.seeCafes.cafes;
-  console.log(cafes);
+  const cafes = data?.searchCafesKeyword.cafes;
+
   return (
     <>
       <Helmet>
         <title>{siteName}</title>
       </Helmet>
       <Container>
-        <CafesRank />
-        <Keywords keywords={keywords} />
+        <Keywords keywords={keywords} selectedKeyword={slug} />
         <GridCafe cafes={cafes} />
       </Container>
     </>

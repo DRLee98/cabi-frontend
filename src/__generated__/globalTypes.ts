@@ -53,6 +53,11 @@ export interface CafeInputType {
   avgScore: number;
 }
 
+export interface ChatRoomInputType {
+  users: UserInputType[];
+  messages?: MessageInputType[] | null;
+}
+
 export interface CreateAccountInput {
   name: string;
   email: string;
@@ -186,6 +191,12 @@ export interface MenuInputType {
   avgScore: number;
 }
 
+export interface MessageInputType {
+  context: string;
+  writer: UserInputType;
+  chatRoom: ChatRoomInputType;
+}
+
 export interface NutrientInputType {
   volume?: number | null;
   calorie?: number | null;
@@ -233,6 +244,14 @@ export interface ReviewInputType {
   menu?: MenuInputType | null;
 }
 
+export interface SearchCafesInput {
+  word: string;
+}
+
+export interface SearchCafesKeywordInput {
+  slug: string;
+}
+
 export interface UserInputType {
   name: string;
   email: string;
@@ -244,6 +263,8 @@ export interface UserInputType {
   likeCafes?: CafeInputType[] | null;
   review?: ReviewInputType[] | null;
   reply?: ReplyInputType[] | null;
+  chatRooms?: ChatRoomInputType[] | null;
+  messages?: MessageInputType[] | null;
 }
 
 //==============================================================

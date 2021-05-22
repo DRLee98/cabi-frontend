@@ -3,10 +3,14 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Slider } from "./slider";
 
-const Keyword = styled.li`
+const Keyword = styled.li<KeywordProp>`
   display: inline-block;
-  color: ${(prop) => prop.theme.keywordBgColor};
-  border: 1px solid ${(prop) => prop.theme.keywordBgColor};
+  color: ${(prop) =>
+    prop.selectedKeyword ? prop.theme.keywordColor : prop.theme.keywordBgColor};
+  background-color: ${(prop) =>
+    prop.selectedKeyword && prop.theme.selectKeywordBgColor};
+  border: 1px solid
+    ${(prop) => !prop.selectedKeyword && prop.theme.keywordBgColor};
   border-radius: 999px;
   padding: 0.3em 0.5em;
   transition: all 0.3s ease;
@@ -26,21 +30,32 @@ const KeywordContainer = styled.div`
 `;
 
 interface KeywordProp {
+  selectedKeyword?: boolean;
+}
+
+interface IKeyword {
   name: string;
   slug: string;
 }
 
 interface KeywordsProp {
-  keywords: KeywordProp[] | undefined | null;
+  keywords: IKeyword[] | undefined | null;
+  selectedKeyword?: string;
 }
 
-export const Keywords: React.FC<KeywordsProp> = ({ keywords }) => {
+export const Keywords: React.FC<KeywordsProp> = ({
+  keywords,
+  selectedKeyword,
+}) => {
   return (
     <KeywordContainer>
       <Slider slideWidth={200}>
         {keywords?.map((keyword: { slug: string; name: string }) => (
-          <Keyword key={keyword.slug}>
-            <KeywordLink to={`keyword/${keyword.slug}`}>
+          <Keyword
+            key={keyword.slug}
+            selectedKeyword={keyword.slug === selectedKeyword}
+          >
+            <KeywordLink to={`/keyword/${keyword.slug}`}>
               # {keyword.name}
             </KeywordLink>
           </Keyword>

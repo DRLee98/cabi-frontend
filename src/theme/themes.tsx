@@ -10,6 +10,7 @@ export const theme = {
   lightBgColor: "#ffe5c1",
   keywordColor: "#ffffff",
   keywordBgColor: "#08887d",
+  selectKeywordBgColor: "#00bfaf",
   whiteColor: "#ffffff",
   blackColor: "#2d2d2d",
   headerHeight: "7vh",
