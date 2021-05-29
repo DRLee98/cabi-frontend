@@ -86,14 +86,8 @@ interface ICreateAccountForm {
 }
 
 export const CreateAccount = () => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<ICreateAccountForm>({ mode: "onChange" });
+  const { register, handleSubmit, errors, watch, getValues, formState } =
+    useForm<ICreateAccountForm>({ mode: "onChange" });
   const history = useHistory();
   const onCompleted = (data: createAccountMutation) => {
     const {
@@ -116,14 +110,16 @@ export const CreateAccount = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let profileImg;
+      let originalProfileImg;
+      let smallProfileImg;
       const { email, name, password, role, file } = getValues();
       if (!addressResult) {
         setAddressdError("주소를 입력해주세요");
         return;
       }
       if (file.length > 0) {
-        ({ url: profileImg } = await uploadFile(file[0]));
+        ({ originalImage: originalProfileImg, smallImage: smallProfileImg } =
+          await uploadFile(file[0], 200, 200));
       }
       createAccountMutation({
         variables: {
@@ -140,7 +136,8 @@ export const CreateAccount = () => {
               sigunguCode: addressResult?.sigunguCode,
               bname: addressResult?.bname,
             },
-            ...(profileImg && { profileImg }),
+            ...(originalProfileImg && { originalProfileImg }),
+            ...(smallProfileImg && { smallProfileImg }),
           },
         },
       });
@@ -163,7 +160,8 @@ export const CreateAccount = () => {
               <Input
                 register={register({
                   required: "이메일은 필수 항목입니다",
-                  pattern: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+                  pattern:
+                    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
                 })}
                 name={"email"}
                 label={"이메일 계정"}

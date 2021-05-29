@@ -18,7 +18,8 @@ export const MY_PROFILE_QUERY = gql`
         name
         email
         role
-        profileImg
+        smallProfileImg
+        originalProfileImg
         createdAt
         updatedAt
         address {

@@ -4,22 +4,22 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: ReplyFragment
+// GraphQL fragment: RankCafeFragment
 // ====================================================
 
-export interface ReplyFragment_writer {
+export interface RankCafeFragment_likedUsers {
   __typename: "User";
   id: number;
-  name: string;
-  email: string;
-  smallProfileImg: string | null;
 }
 
-export interface ReplyFragment {
-  __typename: "Reply";
+export interface RankCafeFragment {
+  __typename: "Cafe";
   id: number;
-  contents: string;
+  name: string;
+  originalCoverImg: string | null;
+  totalScore: number;
+  avgScore: number;
   createdAt: any;
   updatedAt: any;
-  writer: ReplyFragment_writer;
+  likedUsers: RankCafeFragment_likedUsers[] | null;
 }

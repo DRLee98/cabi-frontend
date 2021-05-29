@@ -28,8 +28,8 @@ import { SearchKeywordCafe } from "../pages/searchKeywordCafe";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
-  const { data } = useMe();
-  const user = data?.myProfile.user;
+  const { data: me } = useMe();
+  const user = me?.myProfile.user;
 
   const loginRouters = [
     { path: "/profile", component: <Profile /> },
@@ -55,7 +55,7 @@ export const Routers = () => {
     { path: "/", component: <Home /> },
     { path: "/search-cafes", component: <SearchCafe /> },
     { path: "/keyword/:slug", component: <SearchKeywordCafe /> },
-    { path: "/cafe/:cafeId", component: <CafeDetail /> },
+    { path: "/cafe/:cafeId", component: <CafeDetail me={me} /> },
     { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail /> },
   ];
 
@@ -77,17 +77,14 @@ export const Routers = () => {
                     {router.component}
                   </Route>
                 ))}
-              {/* {user?.role === UserRole.Client &&
-                clientRouters.map((router) => (
-                  <Route key={router.path} path={router.path} exact>
-                    {router.component}
-                  </Route>
-                ))} */}
               {commonRouters.map((router) => {
-                if (user?.role !== UserRole.Owner && router.path !== "/")
-                  <Route key={router.path} path={router.path} exact>
-                    {router.component}
-                  </Route>;
+                if (user?.role !== UserRole.Owner || router.path !== "/") {
+                  return (
+                    <Route key={router.path} path={router.path} exact>
+                      {router.component}
+                    </Route>
+                  );
+                }
               })}
             </>
           ) : (

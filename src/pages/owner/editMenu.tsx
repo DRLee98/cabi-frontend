@@ -188,7 +188,8 @@ export const EditMenu = () => {
     }
   });
 
-  const [menuImg, setMenuImg] = useState<string | undefined>("");
+  const [originalMenuImg, setOriginalMenuImg] =
+    useState<string | undefined>("");
   const [options, setOptions] = useState<string[]>(
     Object.keys(defaultOption) || [],
   );
@@ -275,7 +276,7 @@ export const EditMenu = () => {
       client.writeQuery({
         query: MENU_DETAIL_QUERY,
         data: {
-          cafeDetail: {
+          menuDetail: {
             error,
             ok,
             menu: {
@@ -285,7 +286,7 @@ export const EditMenu = () => {
               ...(description && { description }),
               category,
               options: optionList,
-              ...(menuImg && { menuImg }),
+              ...(originalMenuImg && { originalMenuImg }),
               editNutrient: {
                 ...(volume && { volume: +volume }),
                 ...(calorie && { calorie: +calorie }),
@@ -357,7 +358,8 @@ export const EditMenu = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let url;
+      let originalMenuImgUrl;
+      let smallMenuImgUrl;
       const {
         name,
         price,
@@ -377,8 +379,9 @@ export const EditMenu = () => {
       } = getValues();
       const optionList = getOption();
       if (file.length > 0) {
-        ({ url } = await uploadFile(file[0]));
-        setMenuImg(url);
+        ({ originalImage: originalMenuImgUrl, smallImage: smallMenuImgUrl } =
+          await uploadFile(file[0], 400, 500));
+        setOriginalMenuImg(originalMenuImgUrl);
       }
       editMenuMutation({
         variables: {
@@ -390,7 +393,8 @@ export const EditMenu = () => {
             description,
             category,
             options: optionList,
-            ...(url && { menuImg: url }),
+            ...(originalMenuImgUrl && { originalMenuImg: originalMenuImgUrl }),
+            ...(smallMenuImgUrl && { smallMenuImg: smallMenuImgUrl }),
             editNutrient: {
               ...(volume && { volume: +volume }),
               ...(calorie && { calorie: +calorie }),
@@ -421,7 +425,7 @@ export const EditMenu = () => {
           <Title>메뉴 수정하기</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <MenuImageInput register={register} url={menu?.menuImg} />
+              <MenuImageInput register={register} url={menu?.originalMenuImg} />
             </ImageBox>
             <ContentsBox>
               <Input

@@ -13,6 +13,7 @@ export interface createCafeMutation_createCafe {
   __typename: "CreateCafeOutput";
   ok: boolean;
   error: string | null;
+  cafeId: number | null;
 }
 
 export interface createCafeMutation {

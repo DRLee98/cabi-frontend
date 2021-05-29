@@ -12,5 +12,5 @@ export interface UserFragment {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }

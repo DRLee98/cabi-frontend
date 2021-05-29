@@ -80,22 +80,16 @@ export const EditProfile = () => {
   const user = data?.myProfile.user;
   const [profileImg, setProfileImg] = useState<string | undefined>("");
   const client = useApolloClient();
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<IEditProfiletForm>({
-    mode: "onChange",
-    defaultValues: {
-      email: user?.email,
-      name: user?.name,
-      address: user?.address.address,
-      zonecode: user?.address.zonecode,
-    },
-  });
+  const { register, handleSubmit, errors, watch, getValues, formState } =
+    useForm<IEditProfiletForm>({
+      mode: "onChange",
+      defaultValues: {
+        email: user?.email,
+        name: user?.name,
+        address: user?.address.address,
+        zonecode: user?.address.zonecode,
+      },
+    });
 
   const history = useHistory();
 
@@ -119,7 +113,7 @@ export const EditProfile = () => {
             user: {
               ...user,
               ...(name && { name }),
-              ...(profileImg && { profileImg }),
+              ...(profileImg && { originalProfileImg: profileImg }),
               address: {
                 ...user.address,
                 ...(addressResult && { address: addressResult.address }),
@@ -145,11 +139,13 @@ export const EditProfile = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let url;
+      let originalProfileImg;
+      let smallProfileImg;
       const { name, oldPassword, password, file } = getValues();
       if (file && file.length > 0) {
-        ({ url } = await uploadFile(file[0]));
-        setProfileImg(url);
+        ({ originalImage: originalProfileImg, smallImage: smallProfileImg } =
+          await uploadFile(file[0], 200, 200));
+        setProfileImg(originalProfileImg);
       }
       editProfiletMutation({
         variables: {
@@ -166,7 +162,8 @@ export const EditProfile = () => {
                 bname: addressResult?.bname,
               },
             }),
-            ...(url && { profileImg: url }),
+            ...(originalProfileImg && { originalProfileImg }),
+            ...(smallProfileImg && { smallProfileImg }),
           },
         },
       });
@@ -183,7 +180,7 @@ export const EditProfile = () => {
           <Title>회원정보 변경</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <ImageInput register={register} url={user?.profileImg} />
+              <ImageInput register={register} url={user?.originalProfileImg} />
             </ImageBox>
             <ContentsBox>
               <Input

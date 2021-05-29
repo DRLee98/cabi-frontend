@@ -41,7 +41,8 @@ export interface CafeDetailInput {
 export interface CafeInputType {
   name: string;
   description: string;
-  coverImg?: string | null;
+  originalCoverImg?: string | null;
+  smallCoverImg?: string | null;
   address: AddressInputType;
   keywords?: KeywordInputType[] | null;
   owner: UserInputType;
@@ -64,14 +65,16 @@ export interface CreateAccountInput {
   password: string;
   role: UserRole;
   address: AddressInputType;
-  profileImg?: string | null;
+  originalProfileImg?: string | null;
+  smallProfileImg?: string | null;
 }
 
 export interface CreateCafeInput {
   name: string;
   description: string;
   address: AddressInputType;
-  coverImg?: string | null;
+  originalCoverImg?: string | null;
+  smallCoverImg?: string | null;
   keywordsName?: string[] | null;
 }
 
@@ -88,7 +91,8 @@ export interface CreateMenuInput {
   category: Category;
   options?: OptionInputType[] | null;
   cafeId: number;
-  menuImg?: string | null;
+  originalMenuImg?: string | null;
+  smallMenuImg?: string | null;
   nutrient?: CreateNutrientInput | null;
 }
 
@@ -117,10 +121,20 @@ export interface CreateReplyInput {
   reviewId: number;
 }
 
+export interface DeleteCafeInput {
+  id: number;
+}
+
+export interface DeleteMenuInput {
+  cafeId: number;
+  menuId: number;
+}
+
 export interface EditCafeInput {
   name?: string | null;
   description?: string | null;
-  coverImg?: string | null;
+  originalCoverImg?: string | null;
+  smallCoverImg?: string | null;
   cafeId: number;
   address?: AddressInputType | null;
   keywordsName?: string[] | null;
@@ -130,7 +144,8 @@ export interface EditMenuInput {
   name?: string | null;
   description?: string | null;
   price?: number | null;
-  menuImg?: string | null;
+  originalMenuImg?: string | null;
+  smallMenuImg?: string | null;
   category?: Category | null;
   options?: OptionInputType[] | null;
   cafeId: number;
@@ -154,7 +169,8 @@ export interface EditNutrientInput {
 export interface EditProfileInput {
   name?: string | null;
   password?: string | null;
-  profileImg?: string | null;
+  originalProfileImg?: string | null;
+  smallProfileImg?: string | null;
   oldPassword?: string | null;
   address?: AddressInputType | null;
 }
@@ -179,7 +195,8 @@ export interface MenuInputType {
   name: string;
   description: string;
   price: number;
-  menuImg?: string | null;
+  originalMenuImg?: string | null;
+  smallMenuImg?: string | null;
   ownerId?: number | null;
   category: Category;
   cafe: CafeInputType;
@@ -252,12 +269,17 @@ export interface SearchCafesKeywordInput {
   slug: string;
 }
 
+export interface ToggleLikeCafeInput {
+  cafeId: number;
+}
+
 export interface UserInputType {
   name: string;
   email: string;
   password: string;
   role: UserRole;
-  profileImg?: string | null;
+  originalProfileImg?: string | null;
+  smallProfileImg?: string | null;
   address: AddressInputType;
   cafes?: CafeInputType[] | null;
   likeCafes?: CafeInputType[] | null;

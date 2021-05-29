@@ -17,7 +17,7 @@ export interface myCafesQuery_myCafes_cafes_owner {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myCafesQuery_myCafes_cafes_likedUsers {
@@ -29,7 +29,7 @@ export interface myCafesQuery_myCafes_cafes {
   __typename: "Cafe";
   id: number;
   name: string;
-  coverImg: string | null;
+  smallCoverImg: string | null;
   totalScore: number;
   avgScore: number;
   createdAt: any;

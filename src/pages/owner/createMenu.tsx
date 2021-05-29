@@ -161,7 +161,7 @@ export const CreateMenu = () => {
   const history = useHistory();
   const client = useApolloClient();
   const { cafeId } = useParams<CreateMenuParams>();
-  const [menuImg, setMenuImg] = useState<string | undefined>("");
+  const [smallMenuImg, setSmallMenuImg] = useState<string | undefined>("");
   const [options, setOptions] = useState<string[]>([]);
   const [additionalOptions, setAdditionalOptions] = useState<string[]>([]);
   const [optionWidth, setOptionWidth] = useState<number>(0);
@@ -214,7 +214,7 @@ export const CreateMenu = () => {
         category,
         description,
         id: menuId,
-        menuImg,
+        smallMenuImg,
         name,
         price: +price,
         totalScore: 0,
@@ -294,7 +294,8 @@ export const CreateMenu = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let url;
+      let originalMenuImgUrl;
+      let smallMenuImgUrl;
       const {
         name,
         price,
@@ -314,8 +315,9 @@ export const CreateMenu = () => {
       } = getValues();
       const optionList = getOption();
       if (file.length > 0) {
-        ({ url } = await uploadFile(file[0]));
-        setMenuImg(url);
+        ({ originalImage: originalMenuImgUrl, smallImage: smallMenuImgUrl } =
+          await uploadFile(file[0], 400, 500));
+        setSmallMenuImg(smallMenuImgUrl);
       }
       createMenuMutation({
         variables: {
@@ -326,7 +328,8 @@ export const CreateMenu = () => {
             description,
             category,
             ...(optionList.length > 0 && { options: optionList }),
-            ...(url && { menuImg: url }),
+            ...(originalMenuImgUrl && { originalMenuImg: originalMenuImgUrl }),
+            ...(smallMenuImgUrl && { smallMenuImg: smallMenuImgUrl }),
             nutrient: {
               ...(volume && { volume: +volume }),
               ...(calorie && { calorie: +calorie }),

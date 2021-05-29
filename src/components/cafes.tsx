@@ -82,7 +82,7 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
       {cafes?.map((cafe) => (
         <Link to={`/cafe/${cafe.id}`} key={cafe.id}>
           <CafeBox>
-            <CafeImg image={cafe.coverImg}>
+            <CafeImg image={cafe.smallCoverImg}>
               {!owner && (
                 <LikeIcon
                   icon={faHeart}

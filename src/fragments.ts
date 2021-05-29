@@ -5,7 +5,7 @@ export const USER_FRAGMENT = gql`
     id
     name
     email
-    profileImg
+    smallProfileImg
   }
 `;
 
@@ -83,7 +83,7 @@ export const MENU_FRAGMENT = gql`
     name
     description
     price
-    menuImg
+    originalMenuImg
     ownerId
     category
     totalScore
@@ -109,7 +109,7 @@ export const SIMPLE_MENU_FRAGMENT = gql`
   fragment SimpleMenuFragment on Menu {
     id
     name
-    menuImg
+    smallMenuImg
     category
   }
 `;
@@ -119,7 +119,7 @@ export const CAFE_FRAGMENT = gql`
     id
     name
     description
-    coverImg
+    originalCoverImg
     totalScore
     avgScore
     createdAt
@@ -155,7 +155,7 @@ export const SIMPLE_CAFE_FRAGMENT = gql`
   fragment SimpleCafeFragment on Cafe {
     id
     name
-    coverImg
+    smallCoverImg
     totalScore
     avgScore
     createdAt
@@ -171,4 +171,19 @@ export const SIMPLE_CAFE_FRAGMENT = gql`
     }
   }
   ${USER_FRAGMENT}
+`;
+
+export const RANK_CAFE_FRAGMENT = gql`
+  fragment RankCafeFragment on Cafe {
+    id
+    name
+    originalCoverImg
+    totalScore
+    avgScore
+    createdAt
+    updatedAt
+    likedUsers {
+      id
+    }
+  }
 `;

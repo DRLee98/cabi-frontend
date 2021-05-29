@@ -26,6 +26,7 @@ import {
 import { MY_CAFES_QUERY } from "./myCafes";
 import { useMe } from "../../hooks/useMe";
 import { Slider } from "../../components/slider";
+import { imageResize } from "../../imageResize";
 
 const Title = styled.h2`
   margin-bottom: 2em;
@@ -131,6 +132,7 @@ const CREATE_CAFE_MUTATION = gql`
     createCafe(input: $input) {
       ok
       error
+      cafeId
     }
   }
 `;
@@ -144,14 +146,8 @@ interface CreateCafeForm {
 }
 
 export const CreateCafe = () => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<CreateCafeForm>({ mode: "onChange" });
+  const { register, handleSubmit, errors, watch, getValues, formState } =
+    useForm<CreateCafeForm>({ mode: "onChange" });
 
   const { data } = useMe();
   const userId = data?.myProfile.user?.id;
@@ -176,7 +172,7 @@ export const CreateCafe = () => {
         id: cafeId,
         __typename: "Cafe",
         name,
-        coverImg,
+        smallCoverImgUrl,
         totalScore: 0,
         avgScore: 0,
         keywords: keywordList,
@@ -190,7 +186,7 @@ export const CreateCafe = () => {
       client.writeQuery({
         query: MY_CAFES_QUERY,
         data: {
-          myProfile: {
+          myCafes: {
             error,
             ok,
             cafes: [...cafes, newCafe],
@@ -204,7 +200,8 @@ export const CreateCafe = () => {
       setTimeout(() => setErrorMsg(null), 2000);
     }
   };
-  const [coverImg, setCoverImg] = useState<string | undefined>("");
+  const [smallCoverImgUrl, setSmallCoverImgUrl] =
+    useState<string | undefined>("");
   const [addressResult, setAddressResult] = useState<AddressData>();
   const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
@@ -228,7 +225,8 @@ export const CreateCafe = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let coverImgUrl;
+      let originalCoverImgUrl;
+      let smallCoverImgUrl;
       let keywordsName: string[] = [];
       const { name, description, file } = getValues();
       if (keywords.length > 0) {
@@ -244,8 +242,9 @@ export const CreateCafe = () => {
         return;
       }
       if (file.length > 0) {
-        ({ url: coverImgUrl } = await uploadFile(file[0]));
-        setCoverImg(coverImgUrl);
+        ({ originalImage: originalCoverImgUrl, smallImage: smallCoverImgUrl } =
+          await uploadFile(file[0], 300, 200));
+        setSmallCoverImgUrl(smallCoverImgUrl);
       }
       createCafeMutation({
         variables: {
@@ -260,7 +259,8 @@ export const CreateCafe = () => {
               sigunguCode: addressResult?.sigunguCode,
               bname: addressResult?.bname,
             },
-            coverImg: coverImgUrl,
+            originalCoverImg: originalCoverImgUrl,
+            smallCoverImg: smallCoverImgUrl,
             ...(keywordsName && { keywordsName }),
           },
         },

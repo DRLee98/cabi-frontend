@@ -87,7 +87,7 @@ export const Profile = () => {
       <Container>
         <ProfileBox>
           <SideBox>
-            <Image src={user?.profileImg || undefined} />
+            <Image src={user?.originalProfileImg || undefined} />
           </SideBox>
           <ContentsBox>
             <Name>{user?.name} 님</Name>

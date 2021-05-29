@@ -58,7 +58,7 @@ export const UserCircleDetail: React.FC<UserCircleProp> = ({ user }) => {
     <UserDetailBox
       width={userNameWidth > userEmailWidth ? userNameWidth : userEmailWidth}
     >
-      <Image src={user?.profileImg || ""} sizes={"5rem"} />
+      <Image src={user?.smallProfileImg || ""} sizes={"5rem"} />
       <UserInfo>
         <UserName ref={(ref) => ref && setUserNameWidth(ref.offsetWidth)}>
           {user?.name}
@@ -74,7 +74,7 @@ export const UserCircleDetail: React.FC<UserCircleProp> = ({ user }) => {
 export const UserCircle: React.FC<UserCircleProp> = ({ user }) => {
   return (
     <UserBox>
-      <Image src={user?.profileImg || ""} sizes={"4rem"} />
+      <Image src={user?.smallProfileImg || ""} sizes={"4rem"} />
     </UserBox>
   );
 };

@@ -194,14 +194,8 @@ export const ReviewList: React.FC<ReviewListProp> = ({
   avgScore,
   reviews,
 }) => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<ReplyFormProp>({ mode: "onChange" });
+  const { register, handleSubmit, getValues, formState } =
+    useForm<ReplyFormProp>({ mode: "onChange" });
   const client = useApolloClient();
   const [reviewId, setReviewId] = useState<number>(-1);
   const [viewReply, setViewReply] = useState<number[]>([]);
@@ -282,7 +276,10 @@ export const ReviewList: React.FC<ReviewListProp> = ({
           <Review key={review.id}>
             <ReviewBox>
               <ImageBox>
-                <Image src={review.writer.profileImg || ""} sizes={"100%"} />
+                <Image
+                  src={review.writer.smallProfileImg || ""}
+                  sizes={"100%"}
+                />
               </ImageBox>
               <ContentsBox>
                 <WriterName>
@@ -318,7 +315,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
               {me && reviewId === review.id && (
                 <ReplyForm onSubmit={handleSubmit(onSubmit)}>
                   <ImageBox size={"2em"}>
-                    <Image src={user?.profileImg || ""} sizes={"100%"} />
+                    <Image src={user?.smallProfileImg || ""} sizes={"100%"} />
                   </ImageBox>
                   <ReplyInput
                     ref={register({
@@ -343,7 +340,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                         <Reply key={reply.id}>
                           <ImageBox size={"2em"}>
                             <Image
-                              src={reply.writer.profileImg || ""}
+                              src={reply.writer.smallProfileImg || ""}
                               sizes={"100%"}
                             />
                           </ImageBox>

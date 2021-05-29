@@ -164,7 +164,8 @@ export const EditCafe = () => {
 
   const history = useHistory();
   const client = useApolloClient();
-  const [coverImg, setCoverImg] = useState<string | undefined>("");
+  const [originalCoverImg, setOriginalCoverImg] =
+    useState<string | undefined>("");
   const [addressResult, setAddressResult] = useState<AddressData>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [keywords, setKeywords] = useState<string[]>(
@@ -182,20 +183,14 @@ export const EditCafe = () => {
     setKeywords(removedKeyword);
   };
 
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<editCafeForm>({
-    mode: "onChange",
-    defaultValues: {
-      name: cafe?.name,
-      description: cafe?.description,
-    },
-  });
+  const { register, handleSubmit, errors, watch, getValues, formState } =
+    useForm<editCafeForm>({
+      mode: "onChange",
+      defaultValues: {
+        name: cafe?.name,
+        description: cafe?.description,
+      },
+    });
 
   const onCompleted = (data: editCafeMutation) => {
     const {
@@ -226,7 +221,7 @@ export const EditCafe = () => {
               ...cafe,
               ...(name && { name }),
               ...(description && { description }),
-              ...(coverImg && { coverImg }),
+              ...(originalCoverImg && { originalCoverImg }),
               keywords: keywordList,
               address: {
                 ...cafe.address,
@@ -253,7 +248,8 @@ export const EditCafe = () => {
 
   const onSubmit = async () => {
     if (!loading) {
-      let coverImgUrl;
+      let originalCoverImgUrl;
+      let smallCoverImgUrl;
       let keywordsName: string[] = [];
       const { name, description, file } = getValues();
       if (keywords.length > 0) {
@@ -265,8 +261,9 @@ export const EditCafe = () => {
         });
       }
       if (file.length > 0) {
-        ({ url: coverImgUrl } = await uploadFile(file[0]));
-        setCoverImg(coverImgUrl);
+        ({ originalImage: originalCoverImgUrl, smallImage: smallCoverImgUrl } =
+          await uploadFile(file[0], 300, 200));
+        setOriginalCoverImg(originalCoverImgUrl);
       }
       editCafeMutation({
         variables: {
@@ -284,7 +281,10 @@ export const EditCafe = () => {
                 bname: addressResult?.bname,
               },
             }),
-            ...(coverImgUrl && { coverImg: coverImgUrl }),
+            ...(originalCoverImgUrl && {
+              originalCoverImg: originalCoverImgUrl,
+            }),
+            ...(smallCoverImgUrl && { smallCoverImg: smallCoverImgUrl }),
             ...(keywordsName && { keywordsName }),
           },
         },
@@ -302,7 +302,10 @@ export const EditCafe = () => {
           <Title>카페 수정하기</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <CoverImageInput register={register} url={cafe?.coverImg} />
+              <CoverImageInput
+                register={register}
+                url={cafe?.originalCoverImg}
+              />
             </ImageBox>
             <ContentsBox>
               <NameBox>

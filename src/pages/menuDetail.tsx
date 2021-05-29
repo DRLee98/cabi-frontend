@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import styled from "styled-components";
 import { Nutrient } from "../components/nutrient";
 import { Slider } from "../components/slider";
@@ -12,6 +12,15 @@ import { ReviewList } from "../components/reviewList";
 import { ReviewForm } from "../components/reviewForm";
 import { useMe } from "../hooks/useMe";
 import { CreateButton } from "../components/createBtn";
+import gql from "graphql-tag";
+import { useApolloClient, useMutation } from "@apollo/client";
+import {
+  deleteMenuMutation,
+  deleteMenuMutationVariables,
+} from "../__generated__/deleteMenuMutation";
+import { cafeDetailQuery_cafeDetail_cafe_menus } from "../__generated__/cafeDetailQuery";
+import { DeleteButton } from "../components/deleteBtn";
+import { CAFE_DETAIL_QUERY } from "../hooks/cafeDetailQuery";
 
 const MenuContainer = styled.div`
   display: flex;
@@ -138,12 +147,33 @@ const EditBtn = styled.span`
   }
 `;
 
+const DeleteBtn = styled.span`
+  display: inline-block;
+  margin-left: 10px;
+  & button {
+    margin: 0;
+    padding: 5px;
+  }
+`;
+
+const DELETE_MENU_MUTATION = gql`
+  mutation deleteMenuMutation($input: DeleteMenuInput!) {
+    deleteMenu(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
 interface MenuDetailParams {
   cafeId: string;
   menuId: string;
 }
 
 export const MenuDetail = () => {
+  const history = useHistory();
+  const client = useApolloClient();
+
   const { data: me } = useMe();
   const { cafeId, menuId } = useParams<MenuDetailParams>();
   const { loading, data } = useMenuDetail(+cafeId, +menuId);
@@ -173,7 +203,54 @@ export const MenuDetail = () => {
     }
   };
 
-  console.log(menu);
+  const onCompleted = (data: deleteMenuMutation) => {
+    const {
+      deleteMenu: { ok, error },
+    } = data;
+    if (ok) {
+      const {
+        cafeDetail: { cafe },
+      } = client.readQuery({
+        query: CAFE_DETAIL_QUERY,
+        variables: { input: { id: +cafeId } },
+      });
+      const menus = cafe.menus.filter(
+        (menu: cafeDetailQuery_cafeDetail_cafe_menus) => menu.id !== +menuId,
+      );
+      client.writeQuery({
+        query: CAFE_DETAIL_QUERY,
+        data: {
+          cafeDetail: {
+            error,
+            ok,
+            cafe: {
+              ...cafe,
+              menus,
+            },
+            __typename: "CafeDetailOutput",
+          },
+          variables: { input: { cafeId: +cafeId } },
+        },
+      });
+      history.push(`/cafe/${cafeId}`);
+    } else {
+      alert(error);
+    }
+  };
+
+  const [deleteMenuMutation, { loading: deleteLoading }] = useMutation<
+    deleteMenuMutation,
+    deleteMenuMutationVariables
+  >(DELETE_MENU_MUTATION, { onCompleted });
+
+  const deleteMenu = () => {
+    const ok = window.confirm(`${menu?.name} 메뉴를 삭제하시겠습니까?`);
+    if (ok) {
+      deleteMenuMutation({
+        variables: { input: { cafeId: +cafeId, menuId: +menuId } },
+      });
+    }
+  };
 
   return loading ? (
     <h1>loading</h1>
@@ -187,7 +264,10 @@ export const MenuDetail = () => {
       <Container>
         <MenuContainer>
           <ImageBox>
-            <MenuImage sizes={"100%"} src={menu?.menuImg || undefined} />
+            <MenuImage
+              sizes={"100%"}
+              src={menu?.originalMenuImg || undefined}
+            />
           </ImageBox>
           <ContentsBox>
             <NameBox>
@@ -197,20 +277,30 @@ export const MenuDetail = () => {
                   {menu && getCategoryName(menu?.category)}
                 </CategoryName>
                 {isOwner && menu?.ownerId === (user && user.id) && (
-                  <EditBtn>
-                    <CreateButton
-                      link={`/cafe/${cafeId}/menu/${menuId}/edit`}
-                      text={"+ 메뉴 수정하기"}
-                    />
-                  </EditBtn>
+                  <>
+                    <EditBtn>
+                      <CreateButton
+                        link={`/cafe/${cafeId}/menu/${menuId}/edit`}
+                        text={"+ 수정하기"}
+                      />
+                    </EditBtn>
+                    <DeleteBtn>
+                      <DeleteButton onClick={deleteMenu} text={"- 삭제하기"} />
+                    </DeleteBtn>
+                  </>
                 )}
                 {isOwner && (
-                  <EditBtn>
-                    <CreateButton
-                      link={`/cafe/${cafeId}/menu/${menuId}/edit`}
-                      text={"+ 메뉴 수정하기"}
-                    />
-                  </EditBtn>
+                  <>
+                    <EditBtn>
+                      <CreateButton
+                        link={`/cafe/${cafeId}/menu/${menuId}/edit`}
+                        text={"+ 수정하기"}
+                      />
+                    </EditBtn>
+                    <DeleteBtn>
+                      <DeleteButton onClick={deleteMenu} text={"- 삭제하기"} />
+                    </DeleteBtn>
+                  </>
                 )}
               </Box>
               <Price>{menu?.price} 원</Price>
@@ -223,38 +313,45 @@ export const MenuDetail = () => {
                 <OptionTitle>옵션</OptionTitle>
                 <OptionList>
                   <Slider slideWidth={optionWidth}>
-                    {menu?.options.map((option) => (
-                      <Option
-                        key={option.name}
-                        ref={(ref) => ref && setOptionWidth(ref.offsetWidth)}
-                      >
-                        <OptionContentsBox>
-                          <OptionName>{option.name}</OptionName>
-                          <OptionPrice>
-                            {option.price && option.price > 0
-                              ? `+${option.price}원`
-                              : option.optionItems &&
-                                option.optionItems?.length > 0
-                              ? "+"
-                              : "-"}
-                          </OptionPrice>
-                        </OptionContentsBox>
-                        {option.optionItems && option.optionItems?.length > 0 && (
-                          <OptionItemBox>
-                            {option.optionItems.map((item) => (
-                              <OptionItem>
-                                <OptionName>{item.name}</OptionName>
-                                <OptionPrice>
-                                  {item.price && item.price > 0
-                                    ? `+${item.price}원`
-                                    : "-"}
-                                </OptionPrice>
-                              </OptionItem>
-                            ))}
-                          </OptionItemBox>
-                        )}
-                      </Option>
-                    ))}
+                    {menu?.options.map(
+                      (option: {
+                        name: string | null | undefined;
+                        price?: number | null | undefined;
+                        optionItems?: any[] | null;
+                      }) => (
+                        <Option
+                          key={option.name}
+                          ref={(ref) => ref && setOptionWidth(ref.offsetWidth)}
+                        >
+                          <OptionContentsBox>
+                            <OptionName>{option.name}</OptionName>
+                            <OptionPrice>
+                              {option.price && option.price > 0
+                                ? `+${option.price}원`
+                                : option.optionItems &&
+                                  option.optionItems?.length > 0
+                                ? "+"
+                                : "-"}
+                            </OptionPrice>
+                          </OptionContentsBox>
+                          {option.optionItems &&
+                            option.optionItems?.length > 0 && (
+                              <OptionItemBox>
+                                {option.optionItems.map((item) => (
+                                  <OptionItem>
+                                    <OptionName>{item.name}</OptionName>
+                                    <OptionPrice>
+                                      {item.price && item.price > 0
+                                        ? `+${item.price}원`
+                                        : "-"}
+                                    </OptionPrice>
+                                  </OptionItem>
+                                ))}
+                              </OptionItemBox>
+                            )}
+                        </Option>
+                      ),
+                    )}
                   </Slider>
                 </OptionList>
               </OptionBox>

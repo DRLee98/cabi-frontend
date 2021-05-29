@@ -1,5 +1,6 @@
 import React, { ChangeEventHandler, useState } from "react";
 import styled from "styled-components";
+import { imageResize } from "../imageResize";
 import { UserRole } from "../__generated__/globalTypes";
 import { CoverImage, ErrorMsg, Image, MenuImage } from "./styledComponent";
 
@@ -338,10 +339,11 @@ export const CoverImageInput: React.FC<ImageInputProps> = ({
   const [previewUrl, setPreviewUrl] = useState<any>();
 
   const handleOnChange = (e: any) => {
-    const file = e?.target?.files[0];
+    let files = e?.target.files;
+    const file = files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = () => {
+    reader.onloadend = async () => {
       setPreviewUrl(reader.result);
     };
   };

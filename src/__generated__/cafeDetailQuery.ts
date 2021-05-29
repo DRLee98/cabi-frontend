@@ -28,7 +28,7 @@ export interface cafeDetailQuery_cafeDetail_cafe_owner {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface cafeDetailQuery_cafeDetail_cafe_likedUsers {
@@ -36,14 +36,14 @@ export interface cafeDetailQuery_cafeDetail_cafe_likedUsers {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface cafeDetailQuery_cafeDetail_cafe_menus {
   __typename: "Menu";
   id: number;
   name: string;
-  menuImg: string | null;
+  smallMenuImg: string | null;
   category: Category;
 }
 
@@ -57,7 +57,7 @@ export interface cafeDetailQuery_cafeDetail_cafe_reviews_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface cafeDetailQuery_cafeDetail_cafe_reviews_reply_writer {
@@ -65,7 +65,7 @@ export interface cafeDetailQuery_cafeDetail_cafe_reviews_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface cafeDetailQuery_cafeDetail_cafe_reviews_reply {
@@ -93,7 +93,7 @@ export interface cafeDetailQuery_cafeDetail_cafe {
   id: number;
   name: string;
   description: string;
-  coverImg: string | null;
+  originalCoverImg: string | null;
   totalScore: number;
   avgScore: number;
   createdAt: any;

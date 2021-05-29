@@ -35,7 +35,7 @@ export interface myProfileQuery_myProfile_user_likeCafes_owner {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_likeCafes_likedUsers {
@@ -43,14 +43,14 @@ export interface myProfileQuery_myProfile_user_likeCafes_likedUsers {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_likeCafes_menus {
   __typename: "Menu";
   id: number;
   name: string;
-  menuImg: string | null;
+  smallMenuImg: string | null;
   category: Category;
 }
 
@@ -64,7 +64,7 @@ export interface myProfileQuery_myProfile_user_likeCafes_reviews_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_likeCafes_reviews_reply_writer {
@@ -72,7 +72,7 @@ export interface myProfileQuery_myProfile_user_likeCafes_reviews_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_likeCafes_reviews_reply {
@@ -100,7 +100,7 @@ export interface myProfileQuery_myProfile_user_likeCafes {
   id: number;
   name: string;
   description: string;
-  coverImg: string | null;
+  originalCoverImg: string | null;
   totalScore: number;
   avgScore: number;
   createdAt: any;
@@ -132,7 +132,7 @@ export interface myProfileQuery_myProfile_user_cafes_owner {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_cafes_likedUsers {
@@ -140,14 +140,14 @@ export interface myProfileQuery_myProfile_user_cafes_likedUsers {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_cafes_menus {
   __typename: "Menu";
   id: number;
   name: string;
-  menuImg: string | null;
+  smallMenuImg: string | null;
   category: Category;
 }
 
@@ -161,7 +161,7 @@ export interface myProfileQuery_myProfile_user_cafes_reviews_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_cafes_reviews_reply_writer {
@@ -169,7 +169,7 @@ export interface myProfileQuery_myProfile_user_cafes_reviews_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_cafes_reviews_reply {
@@ -197,7 +197,7 @@ export interface myProfileQuery_myProfile_user_cafes {
   id: number;
   name: string;
   description: string;
-  coverImg: string | null;
+  originalCoverImg: string | null;
   totalScore: number;
   avgScore: number;
   createdAt: any;
@@ -220,7 +220,7 @@ export interface myProfileQuery_myProfile_user_review_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_review_reply_writer {
@@ -228,7 +228,7 @@ export interface myProfileQuery_myProfile_user_review_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_review_reply {
@@ -256,7 +256,7 @@ export interface myProfileQuery_myProfile_user_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface myProfileQuery_myProfile_user_reply {
@@ -274,7 +274,8 @@ export interface myProfileQuery_myProfile_user {
   name: string;
   email: string;
   role: UserRole;
-  profileImg: string | null;
+  smallProfileImg: string | null;
+  originalProfileImg: string | null;
   createdAt: any;
   updatedAt: any;
   address: myProfileQuery_myProfile_user_address;

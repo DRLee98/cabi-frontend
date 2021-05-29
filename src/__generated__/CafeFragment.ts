@@ -28,7 +28,7 @@ export interface CafeFragment_owner {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface CafeFragment_likedUsers {
@@ -36,14 +36,14 @@ export interface CafeFragment_likedUsers {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface CafeFragment_menus {
   __typename: "Menu";
   id: number;
   name: string;
-  menuImg: string | null;
+  smallMenuImg: string | null;
   category: Category;
 }
 
@@ -57,7 +57,7 @@ export interface CafeFragment_reviews_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface CafeFragment_reviews_reply_writer {
@@ -65,7 +65,7 @@ export interface CafeFragment_reviews_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface CafeFragment_reviews_reply {
@@ -93,7 +93,7 @@ export interface CafeFragment {
   id: number;
   name: string;
   description: string;
-  coverImg: string | null;
+  originalCoverImg: string | null;
   totalScore: number;
   avgScore: number;
   createdAt: any;

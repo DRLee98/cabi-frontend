@@ -13,6 +13,6 @@ export interface SimpleMenuFragment {
   __typename: "Menu";
   id: number;
   name: string;
-  menuImg: string | null;
+  smallMenuImg: string | null;
   category: Category;
 }

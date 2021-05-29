@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
+import { RANK_CAFE_FRAGMENT } from "../fragments";
 import { cafesRankQuery } from "../__generated__/cafesRankQuery";
 import { Score } from "./score";
 import { CoverImage } from "./styledComponent";
@@ -89,11 +89,11 @@ export const CAFES_RANK_QUERY = gql`
       ok
       error
       cafes {
-        ...SimpleCafeFragment
+        ...RankCafeFragment
       }
     }
   }
-  ${SIMPLE_CAFE_FRAGMENT}
+  ${RANK_CAFE_FRAGMENT}
 `;
 
 interface CafeImgProp {
@@ -154,13 +154,13 @@ export const CafesRank = () => {
       >
         {cafes?.map((cafe, i) => (
           <CafeImg
-            key={cafe.coverImg}
+            key={cafe.originalCoverImg}
             width={coverImgWidth || 0}
             height={coverImgHeight || 0}
             view={getView(i + 1)}
           >
             <Link to={`/cafe/${cafe.id}`}>
-              <CoverImage src={cafe.coverImg || ""} />
+              <CoverImage src={cafe.originalCoverImg || ""} />
             </Link>
           </CafeImg>
         ))}

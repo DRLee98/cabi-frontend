@@ -47,7 +47,7 @@ export interface MenuFragment_reviews_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface MenuFragment_reviews_reply_writer {
@@ -55,7 +55,7 @@ export interface MenuFragment_reviews_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface MenuFragment_reviews_reply {
@@ -84,7 +84,7 @@ export interface MenuFragment {
   name: string;
   description: string;
   price: number;
-  menuImg: string | null;
+  originalMenuImg: string | null;
   ownerId: number | null;
   category: Category;
   totalScore: number;

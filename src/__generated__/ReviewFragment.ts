@@ -17,7 +17,7 @@ export interface ReviewFragment_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface ReviewFragment_reply_writer {
@@ -25,7 +25,7 @@ export interface ReviewFragment_reply_writer {
   id: number;
   name: string;
   email: string;
-  profileImg: string | null;
+  smallProfileImg: string | null;
 }
 
 export interface ReviewFragment_reply {
