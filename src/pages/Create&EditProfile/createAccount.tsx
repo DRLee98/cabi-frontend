@@ -3,63 +3,27 @@ import gql from "graphql-tag";
 import React, { useState } from "react";
 import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
-import { FieldError, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
-import styled from "styled-components";
-import { AddressForm } from "../components/addressForm";
-import { Button } from "../components/button";
-import { ImageInput, Input, RadioInput } from "../components/Input";
-import { Container, ErrorMsg } from "../components/styledComponent";
-import { siteName } from "../constants";
-import { uploadFile } from "../upload";
+import { AddressForm } from "../../components/addressForm";
+import { Button } from "../../components/button";
+import { ImageInput, Input, RadioInput } from "../../components/Input";
+import { Container, ErrorMsg, Title } from "../../components/styledComponent";
+import { siteName } from "../../constants";
+import { uploadFile } from "../../upload";
 import {
   createAccountMutation,
   createAccountMutationVariables,
-} from "../__generated__/createAccountMutation";
-import { UserRole } from "../__generated__/globalTypes";
-
-const Title = styled.h2`
-  margin-bottom: 2em;
-  font-weight: bold;
-  font-size: x-large;
-`;
-
-const FormBox = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Form = styled.form`
-  display: grid;
-  grid-template:
-    "Image Contents" 6fr
-    "Button Button" 1fr/ 1fr 1fr;
-`;
-
-const RadioBox = styled.div<RadioBoxProps>`
-  display: flex;
-  margin-bottom: 2em;
-  ${(props) => props.error && "border-color: red"}
-`;
-
-const BtnBox = styled.div`
-  margin-top: 1em;
-  grid-area: Button;
-`;
-
-const ImageBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  grid-area: Image;
-`;
-
-const ContentsBox = styled.div`
-  grid-area: Contents;
-`;
+} from "../../__generated__/createAccountMutation";
+import { UserRole } from "../../__generated__/globalTypes";
+import {
+  FormBox,
+  Form,
+  ImageBox,
+  ContentsBox,
+  RadioBox,
+  BtnBox,
+} from "./styled";
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccountMutation($input: CreateAccountInput!) {
@@ -70,11 +34,7 @@ const CREATE_ACCOUNT_MUTATION = gql`
   }
 `;
 
-interface RadioBoxProps {
-  error?: FieldError;
-}
-
-interface ICreateAccountForm {
+interface CreateAccountFormProp {
   email: string;
   name: string;
   password: string;
@@ -87,7 +47,7 @@ interface ICreateAccountForm {
 
 export const CreateAccount = () => {
   const { register, handleSubmit, errors, watch, getValues, formState } =
-    useForm<ICreateAccountForm>({ mode: "onChange" });
+    useForm<CreateAccountFormProp>({ mode: "onChange" });
   const history = useHistory();
   const onCompleted = (data: createAccountMutation) => {
     const {

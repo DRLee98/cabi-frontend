@@ -1,11 +1,6 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
-import {
-  ADDRESS_FRAGMENT,
-  CAFE_FRAGMENT,
-  REPLY_FRAGMENT,
-  REVIEW_FRAGMENT,
-} from "../fragments";
+import { USER_FRAGMENT } from "../fragments";
 import { myProfileQuery } from "../__generated__/myProfileQuery";
 
 export const MY_PROFILE_QUERY = gql`
@@ -14,36 +9,11 @@ export const MY_PROFILE_QUERY = gql`
       ok
       error
       user {
-        id
-        name
-        email
-        role
-        smallProfileImg
-        originalProfileImg
-        createdAt
-        updatedAt
-        address {
-          ...AddressFragment
-        }
-        likeCafes {
-          ...CafeFragment
-        }
-        cafes {
-          ...CafeFragment
-        }
-        review {
-          ...ReviewFragment
-        }
-        reply {
-          ...ReplyFragment
-        }
+        ...UserFragment
       }
     }
   }
-  ${ADDRESS_FRAGMENT}
-  ${CAFE_FRAGMENT}
-  ${REVIEW_FRAGMENT}
-  ${REPLY_FRAGMENT}
+  ${USER_FRAGMENT}
 `;
 
 export const useMe = () => {

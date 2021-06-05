@@ -10,6 +10,7 @@ import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
 import { searchCafesQuery } from "../__generated__/searchCafesQuery";
 import queryString from "query-string";
+import { Loading } from "../components/loading";
 
 const SEARCH_CAFES_QUERY = gql`
   query searchCafesQuery($input: SearchCafesInput!) {
@@ -36,7 +37,9 @@ export const SearchCafe = () => {
   const keywords = getkeywords?.viewKeywords.keywords;
   const cafes = data?.searchCafes.cafes;
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Helmet>
         <title>{siteName}</title>

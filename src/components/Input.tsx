@@ -1,6 +1,5 @@
 import React, { ChangeEventHandler, useState } from "react";
 import styled from "styled-components";
-import { imageResize } from "../imageResize";
 import { UserRole } from "../__generated__/globalTypes";
 import { CoverImage, ErrorMsg, Image, MenuImage } from "./styledComponent";
 

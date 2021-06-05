@@ -1,9 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { useLocation, useParams } from "react-router";
+import { useParams } from "react-router";
 import { GridCafe } from "../components/cafes";
 import { Keywords } from "../components/keywords";
+import { Loading } from "../components/loading";
 import { Container } from "../components/styledComponent";
 import { siteName } from "../constants";
 import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
@@ -41,7 +42,9 @@ export const SearchKeywordCafe = () => {
   const keywords = getkeywords?.viewKeywords.keywords;
   const cafes = data?.searchCafesKeyword.cafes;
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Helmet>
         <title>{siteName}</title>

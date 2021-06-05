@@ -9,20 +9,20 @@ import {
 import { Header } from "../components/header";
 import { Home } from "../pages/home";
 import { isLoginVar } from "../apollo";
-import { CreateAccount } from "../pages/createAccount";
+import { CreateAccount } from "../pages/Create&EditProfile/createAccount";
 import { Wrap } from "../components/styledComponent";
 import { Login } from "../pages/login";
-import { Profile } from "../pages/profile";
-import { EditProfile } from "../pages/editProfile";
+import { MyProfile, Profile } from "../pages/profile";
+import { EditProfile } from "../pages/Create&EditProfile/editProfile";
 import { useMe } from "../hooks/useMe";
 import { UserRole } from "../__generated__/globalTypes";
 import { MyCafes } from "../pages/owner/myCafes";
-import { CreateCafe } from "../pages/owner/createCafe";
-import { CreateMenu } from "../pages/owner/createMenu";
-import { CafeDetail } from "../pages/cafeDetail";
-import { MenuDetail } from "../pages/menuDetail";
-import { EditCafe } from "../pages/owner/editCafe";
-import { EditMenu } from "../pages/owner/editMenu";
+import { CreateCafe } from "../pages/owner/Create&EditCafe/createCafe";
+import { CreateMenu } from "../pages/owner/Create&EditMenu/createMenu";
+import { CafeDetail } from "../pages/CafeDetail/cafeDetail";
+import { MenuDetail } from "../pages/MenuDetail/menuDetail";
+import { EditCafe } from "../pages/owner/Create&EditCafe/editCafe";
+import { EditMenu } from "../pages/owner/Create&EditMenu/editMenu";
 import { SearchCafe } from "../pages/searchCafe";
 import { SearchKeywordCafe } from "../pages/searchKeywordCafe";
 
@@ -32,7 +32,7 @@ export const Routers = () => {
   const user = me?.myProfile.user;
 
   const loginRouters = [
-    { path: "/profile", component: <Profile /> },
+    { path: "/my-profile", component: <MyProfile /> },
     { path: "/edit-profile", component: <EditProfile /> },
   ];
 
@@ -57,6 +57,7 @@ export const Routers = () => {
     { path: "/keyword/:slug", component: <SearchKeywordCafe /> },
     { path: "/cafe/:cafeId", component: <CafeDetail me={me} /> },
     { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail /> },
+    { path: "/profile/:id", component: <Profile /> },
   ];
 
   return (

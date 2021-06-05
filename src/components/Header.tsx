@@ -6,9 +6,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { isLoginVar, tokenVar } from "../apollo";
+import { isLoginVar } from "../apollo";
 import { TOKEN } from "../constants";
 import { Container } from "./styledComponent";
 
@@ -100,7 +100,7 @@ export const Header = () => {
   const isLogin = useReactiveVar(isLoginVar);
 
   const loginLinks = [
-    { path: "/profile", pathName: <FontAwesomeIcon icon={faUser} /> },
+    { path: "/my-profile", pathName: <FontAwesomeIcon icon={faUser} /> },
   ];
   const logoutLinks = [
     { path: "/login", pathName: "로그인" },

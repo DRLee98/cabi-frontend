@@ -1,11 +1,16 @@
+import { useQuery } from "@apollo/client";
+import gql from "graphql-tag";
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { Loading } from "../components/loading";
 import { Container, Image } from "../components/styledComponent";
 import { siteName } from "../constants";
+import { USER_FRAGMENT } from "../fragments";
 import { useMe } from "../hooks/useMe";
 import { UserRole } from "../__generated__/globalTypes";
+import { userProfileQuery } from "../__generated__/userProfileQuery";
 
 const ProfileBox = styled.section`
   display: grid;
@@ -74,7 +79,62 @@ const Address = styled.p`
   color: gray;
 `;
 
+const USER_PROFILE_QUERY = gql`
+  query userProfileQuery($input: UserProfileInput!) {
+    userProfile(input: $input) {
+      ok
+      error
+      user {
+        ...UserFragment
+      }
+    }
+  }
+  ${USER_FRAGMENT}
+`;
+
+interface ProfileParam {
+  id: string;
+}
+
 export const Profile = () => {
+  const { id } = useParams<ProfileParam>();
+  const { loading, data } = useQuery<userProfileQuery>(USER_PROFILE_QUERY, {
+    variables: { input: { id: +id } },
+  });
+
+  const user = data?.userProfile.user;
+
+  return loading ? (
+    <Loading />
+  ) : (
+    <>
+      <Helmet>
+        <title>{siteName} | 회원정보</title>
+      </Helmet>
+      <Container>
+        <ProfileBox>
+          <SideBox>
+            <Image src={user?.originalProfileImg || undefined} />
+          </SideBox>
+          <ContentsBox>
+            <Name>{user?.name} 님</Name>
+            <Email>{user?.email}</Email>
+            <Address>
+              {`(${user?.address.zonecode}) ${user?.address.address}`}
+            </Address>
+            <Box>
+              <Role>
+                {user?.role === UserRole.Client ? "고객님" : "사장님"}
+              </Role>
+            </Box>
+          </ContentsBox>
+        </ProfileBox>
+      </Container>
+    </>
+  );
+};
+
+export const MyProfile = () => {
   const { data } = useMe();
   const user = data?.myProfile.user;
   console.log(user);
@@ -93,7 +153,7 @@ export const Profile = () => {
             <Name>{user?.name} 님</Name>
             <Email>{user?.email}</Email>
             <Address>
-              {`(${user?.address.zonecode})` + " " + user?.address.address}
+              {`(${user?.address.zonecode}) ${user?.address.address}`}
             </Address>
             <Box>
               <Role>

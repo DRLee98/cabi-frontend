@@ -134,14 +134,9 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({
   cafeId,
   menuId,
 }) => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<FormProp>({ mode: "onChange" });
+  const { register, handleSubmit, getValues, formState } = useForm<FormProp>({
+    mode: "onChange",
+  });
   const client = useApolloClient();
 
   const ratingArray = [1, 2, 3, 4, 5];
@@ -237,21 +232,17 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({
     }
   };
 
-  const [
-    createCafeReviewMutation,
-    { loading: cafeReviewLoading },
-  ] = useMutation<createCafeReviewMutation, createCafeReviewMutationVariables>(
-    CREATE_CAFE_REVIEW_MUTATION,
-    { onCompleted: cafeReviewOnCompleted },
-  );
+  const [createCafeReviewMutation, { loading: cafeReviewLoading }] =
+    useMutation<createCafeReviewMutation, createCafeReviewMutationVariables>(
+      CREATE_CAFE_REVIEW_MUTATION,
+      { onCompleted: cafeReviewOnCompleted },
+    );
 
-  const [
-    createMenuReviewMutation,
-    { loading: menuReviewLoading },
-  ] = useMutation<createMenuReviewMutation, createMenuReviewMutationVariables>(
-    CREATE_MENU_REVIEW_MUTATION,
-    { onCompleted: menuReviewOnCompleted },
-  );
+  const [createMenuReviewMutation, { loading: menuReviewLoading }] =
+    useMutation<createMenuReviewMutation, createMenuReviewMutationVariables>(
+      CREATE_MENU_REVIEW_MUTATION,
+      { onCompleted: menuReviewOnCompleted },
+    );
 
   const onSubmit = async () => {
     const { contents } = getValues();

@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
-export const USER_FRAGMENT = gql`
-  fragment UserFragment on User {
+export const SIMPLE_USER_FRAGMENT = gql`
+  fragment SimpleUserFragment on User {
     id
     name
     email
@@ -16,10 +16,10 @@ export const REPLY_FRAGMENT = gql`
     createdAt
     updatedAt
     writer {
-      ...UserFragment
+      ...SimpleUserFragment
     }
   }
-  ${USER_FRAGMENT}
+  ${SIMPLE_USER_FRAGMENT}
 `;
 
 export const REVIEW_FRAGMENT = gql`
@@ -32,13 +32,13 @@ export const REVIEW_FRAGMENT = gql`
       score
     }
     writer {
-      ...UserFragment
+      ...SimpleUserFragment
     }
     reply {
       ...ReplyFragment
     }
   }
-  ${USER_FRAGMENT}
+  ${SIMPLE_USER_FRAGMENT}
   ${REPLY_FRAGMENT}
 `;
 
@@ -133,10 +133,10 @@ export const CAFE_FRAGMENT = gql`
       slug
     }
     owner {
-      ...UserFragment
+      ...SimpleUserFragment
     }
     likedUsers {
-      ...UserFragment
+      ...SimpleUserFragment
     }
     menus {
       ...SimpleMenuFragment
@@ -146,7 +146,7 @@ export const CAFE_FRAGMENT = gql`
     }
   }
   ${ADDRESS_FRAGMENT}
-  ${USER_FRAGMENT}
+  ${SIMPLE_USER_FRAGMENT}
   ${SIMPLE_MENU_FRAGMENT}
   ${REVIEW_FRAGMENT}
 `;
@@ -164,13 +164,13 @@ export const SIMPLE_CAFE_FRAGMENT = gql`
       name
     }
     owner {
-      ...UserFragment
+      ...SimpleUserFragment
     }
     likedUsers {
       id
     }
   }
-  ${USER_FRAGMENT}
+  ${SIMPLE_USER_FRAGMENT}
 `;
 
 export const RANK_CAFE_FRAGMENT = gql`
@@ -186,4 +186,36 @@ export const RANK_CAFE_FRAGMENT = gql`
       id
     }
   }
+`;
+
+export const USER_FRAGMENT = gql`
+  fragment UserFragment on User {
+    id
+    name
+    email
+    role
+    smallProfileImg
+    originalProfileImg
+    createdAt
+    updatedAt
+    address {
+      ...AddressFragment
+    }
+    likeCafes {
+      ...CafeFragment
+    }
+    cafes {
+      ...CafeFragment
+    }
+    review {
+      ...ReviewFragment
+    }
+    reply {
+      ...ReplyFragment
+    }
+  }
+  ${ADDRESS_FRAGMENT}
+  ${CAFE_FRAGMENT}
+  ${REVIEW_FRAGMENT}
+  ${REPLY_FRAGMENT}
 `;

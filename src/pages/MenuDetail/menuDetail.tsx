@@ -1,160 +1,51 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useHistory, useParams } from "react-router";
-import styled from "styled-components";
-import { Nutrient } from "../components/nutrient";
-import { Slider } from "../components/slider";
-import { Container, MenuImage } from "../components/styledComponent";
-import { siteName } from "../constants";
-import { Category, UserRole } from "../__generated__/globalTypes";
-import { useMenuDetail } from "../hooks/menuDetailQuery";
-import { ReviewList } from "../components/reviewList";
-import { ReviewForm } from "../components/reviewForm";
-import { useMe } from "../hooks/useMe";
-import { CreateButton } from "../components/createBtn";
+import { Nutrient } from "../../components/nutrient";
+import { Slider } from "../../components/slider";
+import { Container, MenuImage } from "../../components/styledComponent";
+import { siteName } from "../../constants";
+import { UserRole } from "../../__generated__/globalTypes";
+import { useMenuDetail } from "../../hooks/menuDetailQuery";
+import { ReviewList } from "../../components/reviewList";
+import { ReviewForm } from "../../components/reviewForm";
+import { useMe } from "../../hooks/useMe";
+import { CreateButton } from "../../components/createBtn";
 import gql from "graphql-tag";
 import { useApolloClient, useMutation } from "@apollo/client";
 import {
   deleteMenuMutation,
   deleteMenuMutationVariables,
-} from "../__generated__/deleteMenuMutation";
-import { cafeDetailQuery_cafeDetail_cafe_menus } from "../__generated__/cafeDetailQuery";
-import { DeleteButton } from "../components/deleteBtn";
-import { CAFE_DETAIL_QUERY } from "../hooks/cafeDetailQuery";
-
-const MenuContainer = styled.div`
-  display: flex;
-  padding: 5em;
-  width: 100%;
-  //height: 100%;
-`;
-
-const ImageBox = styled.div`
-  width: 50%;
-  height: 75vh;
-  position: sticky;
-  top: ${(prop) => prop.theme.headerHeight};
-`;
-
-const ContentsBox = styled.div`
-  width: 50%;
-  padding: 3em;
-`;
-
-const NameBox = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  border-bottom: 1px solid ${(prop) => prop.theme.disableBgColor};
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-`;
-
-const Box = styled.div`
-  display: flex;
-  align-items: flex-end;
-`;
-
-const Name = styled.strong`
-  font-size: x-large;
-`;
-
-const CategoryName = styled.small`
-  font-size: small;
-  margin-left: 5px;
-  color: ${(prop) => prop.theme.disableColor};
-`;
-
-const Price = styled.span``;
-
-const DescriptionBox = styled.div``;
-
-const Description = styled.p`
-  color: ${(prop) => prop.theme.disableColor};
-  font-weight: 100;
-`;
-
-const OptionBox = styled.div`
-  margin: 2em 0;
-`;
-
-const OptionTitle = styled.strong`
-  font-size: large;
-`;
-
-const OptionList = styled.ul`
-  margin: 1em 0;
-`;
-
-const OptionContentsBox = styled.div`
-  padding: 0.8em;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const OptionName = styled.span``;
-
-const OptionPrice = styled.span`
-  margin-left: 8px;
-`;
-
-const OptionItemBox = styled.div`
-  top: 100%;
-  left: 0;
-  padding: 5px;
-  margin-top: 3px;
-  min-width: 100%;
-  width: max-content;
-  max-height: 100px;
-  overflow-y: auto;
-  border-radius: 0 0 3px 3px;
-  border-top: 1px solid ${(prop) => prop.theme.keywordBgColor};
-  background-color: ${(prop) => prop.theme.keywordColor};
-  transition: all 0.5s ease;
-`;
-
-const OptionItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  & + & {
-    margin-top: 8px;
-  }
-`;
-
-const Option = styled.li`
-  position: relative;
-  min-width: 120px;
-  height: fit-content;
-  border-radius: 3px;
-  position: relative;
-  color: ${(prop) => prop.theme.keywordBgColor};
-  border: 1px solid ${(prop) => prop.theme.keywordBgColor};
-  & + & {
-    margin-left: 10px;
-  }
-`;
-
-const NutrientBox = styled.div`
-  margin: 2em 0;
-`;
-
-const EditBtn = styled.span`
-  display: inline-block;
-  margin-left: 10px;
-  & a {
-    margin: 0;
-    padding: 5px;
-  }
-`;
-
-const DeleteBtn = styled.span`
-  display: inline-block;
-  margin-left: 10px;
-  & button {
-    margin: 0;
-    padding: 5px;
-  }
-`;
+} from "../../__generated__/deleteMenuMutation";
+import { cafeDetailQuery_cafeDetail_cafe_menus } from "../../__generated__/cafeDetailQuery";
+import { DeleteButton } from "../../components/deleteBtn";
+import { CAFE_DETAIL_QUERY } from "../../hooks/cafeDetailQuery";
+import { Loading } from "../../components/loading";
+import {
+  MenuContainer,
+  ImageBox,
+  ContentsBox,
+  NameBox,
+  Box,
+  Name,
+  CategoryName,
+  EditBtn,
+  DeleteBtn,
+  Price,
+  DescriptionBox,
+  Description,
+  Option,
+  OptionBox,
+  OptionTitle,
+  OptionList,
+  OptionContentsBox,
+  OptionName,
+  OptionPrice,
+  OptionItemBox,
+  OptionItem,
+  NutrientBox,
+} from "./styled";
+import { getCategoryName } from "./common";
 
 const DELETE_MENU_MUTATION = gql`
   mutation deleteMenuMutation($input: DeleteMenuInput!) {
@@ -183,25 +74,6 @@ export const MenuDetail = () => {
   const user = me?.myProfile?.user;
 
   const isOwner = user && user.role === UserRole.Owner;
-
-  const getCategoryName = (category: string) => {
-    switch (category) {
-      case Category.Beverage:
-        return "음료";
-      case Category.Dessert:
-        return "디저트";
-      case Category.Bread:
-        return "빵";
-      case Category.Meal:
-        return "식사";
-      case Category.Goods:
-        return "상품";
-      case Category.Etc:
-        return "기타";
-      default:
-        return "기타";
-    }
-  };
 
   const onCompleted = (data: deleteMenuMutation) => {
     const {
@@ -245,7 +117,7 @@ export const MenuDetail = () => {
 
   const deleteMenu = () => {
     const ok = window.confirm(`${menu?.name} 메뉴를 삭제하시겠습니까?`);
-    if (ok) {
+    if (ok && !deleteLoading) {
       deleteMenuMutation({
         variables: { input: { cafeId: +cafeId, menuId: +menuId } },
       });
@@ -253,7 +125,7 @@ export const MenuDetail = () => {
   };
 
   return loading ? (
-    <h1>loading</h1>
+    <Loading />
   ) : (
     <>
       <Helmet>

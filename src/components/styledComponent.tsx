@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -13,6 +11,12 @@ export const Container = styled.div`
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+`;
+
+export const Title = styled.h2`
+  margin-bottom: 2em;
+  font-weight: bold;
+  font-size: x-large;
 `;
 
 export const ErrorMsg = styled.p`
@@ -79,7 +83,3 @@ export const SLink = styled(Link)``;
 export const FlexBox = styled.div`
   display: flex;
 `;
-
-interface ImageProps {
-  size: number;
-}

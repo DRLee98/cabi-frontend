@@ -6,123 +6,37 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router";
-import styled from "styled-components";
-import { Button } from "../../components/button";
-import { Input, MenuImageInput, Select } from "../../components/Input";
-import { NutrientForm } from "../../components/nutrient";
-import { Slider } from "../../components/slider";
-import { Container } from "../../components/styledComponent";
-import { siteName } from "../../constants";
-import { uploadFile } from "../../upload";
-import { Category } from "../../__generated__/globalTypes";
+import { Button } from "../../../components/button";
+import { Input, MenuImageInput, Select } from "../../../components/Input";
+import { NutrientForm } from "../../../components/nutrient";
+import { Slider } from "../../../components/slider";
+import { Container, Title } from "../../../components/styledComponent";
+import { siteName } from "../../../constants";
+import { uploadFile } from "../../../upload";
+import { Category } from "../../../__generated__/globalTypes";
 import {
   editMenuMutation,
   editMenuMutationVariables,
-} from "../../__generated__/editMenuMutation";
-import { MENU_DETAIL_QUERY, useMenuDetail } from "../../hooks/menuDetailQuery";
-
-const Title = styled.h2`
-  margin-bottom: 2em;
-  font-weight: bold;
-  font-size: x-large;
-`;
-
-const FormBox = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: ${(prop) => prop.theme.headerHeight};
-`;
-
-const Form = styled.form`
-  display: grid;
-  grid-template:
-    "Image Contents" 6fr
-    "Button Button" 1fr/ 1fr 1fr;
-`;
-
-const BtnBox = styled.div`
-  margin-top: 1em;
-  grid-area: Button;
-`;
-
-const ImageBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  grid-area: Image;
-`;
-
-const ContentsBox = styled.div`
-  grid-area: Contents;
-  max-width: 550px;
-`;
-
-const OptionBox = styled.div`
-  margin: 1em;
-`;
-
-const OptionBtn = styled.span`
-  display: inline-block;
-  cursor: pointer;
-  color: ${(prop) => prop.theme.keywordBgColor};
-  padding: 10px;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-  min-width: fit-content;
-  &:hover {
-    background-color: ${(prop) => prop.theme.keywordBgColor};
-    color: white;
-  }
-`;
-
-const OptionInput = styled.input`
-  display: block;
-  width: 100%;
-  min-width: 150px;
-  padding: 0.3em 0;
-  box-sizing: border-box;
-  margin-bottom: 0.2em;
-  border-bottom: 1px solid #c1c1c1;
-`;
-
-const OptionDelBtn = styled.span`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: small;
-  opacity: 0;
-  transition: all 0.5s ease;
-  &:hover {
-    color: red;
-  }
-`;
-
-const OptionItem = styled.li`
-  max-width: 200px;
-  padding: 0.3em;
-  max-height: 120px;
-  overflow-y: auto;
-  position: relative;
-  ${OptionBtn} {
-    display: block;
-  }
-  &:hover ${OptionDelBtn} {
-    opacity: 1;
-  }
-`;
-
-const Box = styled.div`
-  position: relative;
-  &:hover ${OptionDelBtn} {
-    opacity: 1;
-  }
-`;
+} from "../../../__generated__/editMenuMutation";
+import {
+  MENU_DETAIL_QUERY,
+  useMenuDetail,
+} from "../../../hooks/menuDetailQuery";
+import { Loading } from "../../../components/loading";
+import {
+  FormBox,
+  Form,
+  ImageBox,
+  ContentsBox,
+  OptionBox,
+  OptionBtn,
+  OptionItem,
+  OptionInput,
+  OptionDelBtn,
+  Box,
+  BtnBox,
+} from "./styled";
+import { CategoryList, getOption } from "./common";
 
 const EDIT_MENU_MUTATION = gql`
   mutation editMenuMutation($input: EditMenuInput!) {
@@ -199,14 +113,6 @@ export const EditMenu = () => {
   const [optionWidth, setOptionWidth] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [category, setCategory] = useState<Category>();
-  const CategoryList = [
-    { name: "☕️ 음료", value: Category.Beverage },
-    { name: "🍨 디저트", value: Category.Dessert },
-    { name: "🍞 빵", value: Category.Bread },
-    { name: "🍚 식사", value: Category.Meal },
-    { name: "🎀 상품", value: Category.Goods },
-    { name: "기타", value: Category.Etc },
-  ];
 
   const { register, handleSubmit, errors, watch, getValues, formState } =
     useForm<EditMenuProp>({
@@ -266,7 +172,7 @@ export const EditMenu = () => {
         cholesterol,
         protein,
       } = getValues();
-      const optionList = getOption();
+      const optionList = getOption(options, additionalOptions, getValues);
       const {
         menuDetail: { menu },
       } = client.readQuery({
@@ -317,45 +223,6 @@ export const EditMenu = () => {
     editMenuMutationVariables
   >(EDIT_MENU_MUTATION, { onCompleted });
 
-  const getOption = () => {
-    let list: {
-      name: string;
-      price?: number | undefined;
-      optionItems?: {}[] | undefined;
-    }[] = [];
-    if (options.length > 0) {
-      options.forEach((option) => {
-        let itemList: {}[] = [];
-        const name: string = getValues(`${option}_name`);
-        const price: number = getValues(`${option}_price`);
-        const items = additionalOptions.filter((item) => item.includes(option));
-        if (items.length > 0) {
-          items.forEach((item) => {
-            const itemName: string = getValues(`${item}_name`);
-            const itemPrice: string = getValues(`${item}_price`);
-            const itemObj = { name: itemName, price: +itemPrice };
-            if (itemName && itemName !== "") {
-              itemList.push(itemObj);
-            }
-          });
-        }
-        if (name && name !== "") {
-          let optionObj: {
-            name: string;
-            price?: number;
-            optionItems?: {}[];
-          } = {
-            name,
-            price: +price,
-            ...(itemList && itemList.length > 0 && { optionItems: itemList }),
-          };
-          list.push(optionObj);
-        }
-      });
-    }
-    return list;
-  };
-
   const onSubmit = async () => {
     if (!loading) {
       let originalMenuImgUrl;
@@ -377,7 +244,7 @@ export const EditMenu = () => {
         cholesterol,
         protein,
       } = getValues();
-      const optionList = getOption();
+      const optionList = getOption(options, additionalOptions, getValues);
       if (file.length > 0) {
         ({ originalImage: originalMenuImgUrl, smallImage: smallMenuImgUrl } =
           await uploadFile(file[0], 400, 500));
@@ -414,7 +281,7 @@ export const EditMenu = () => {
   };
 
   return menuLoading ? (
-    <h1>loading</h1>
+    <Loading />
   ) : (
     <>
       <Helmet>

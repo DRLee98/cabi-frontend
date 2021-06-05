@@ -1,4 +1,4 @@
-import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -86,7 +86,9 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
               {!owner && (
                 <LikeIcon
                   icon={faHeart}
-                  like={likeCafesId?.includes(cafe.id)}
+                  like={
+                    likeCafesId.length > 0 && likeCafesId?.includes(cafe.id)
+                  }
                   onClick={() => toggleLikeCafe(cafe.id)}
                 />
               )}

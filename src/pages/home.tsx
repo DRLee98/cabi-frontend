@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { GridCafe } from "../components/cafes";
 import { CafesRank } from "../components/cafesRank";
 import { Keywords } from "../components/keywords";
+import { Loading } from "../components/loading";
 import { Container } from "../components/styledComponent";
 import { siteName } from "../constants";
 import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
@@ -28,8 +29,9 @@ export const Home = () => {
   const { data: getkeywords } = useKeywords();
   const keywords = getkeywords?.viewKeywords.keywords;
   const cafes = data?.seeCafes.cafes;
-  console.log(cafes);
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Helmet>
         <title>{siteName}</title>

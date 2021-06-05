@@ -5,55 +5,18 @@ import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
-import styled from "styled-components";
-import { AddressForm } from "../components/addressForm";
-import { Button } from "../components/button";
-import { ImageInput, Input } from "../components/Input";
-import { Container } from "../components/styledComponent";
-import { siteName } from "../constants";
-import { MY_PROFILE_QUERY, useMe } from "../hooks/useMe";
-import { uploadFile } from "../upload";
+import { AddressForm } from "../../components/addressForm";
+import { Button } from "../../components/button";
+import { ImageInput, Input } from "../../components/Input";
+import { Container, Title } from "../../components/styledComponent";
+import { siteName } from "../../constants";
+import { MY_PROFILE_QUERY, useMe } from "../../hooks/useMe";
+import { uploadFile } from "../../upload";
 import {
   editProfiletMutation,
   editProfiletMutationVariables,
-} from "../__generated__/editProfiletMutation";
-
-const Title = styled.h2`
-  margin-bottom: 2em;
-  font-weight: bold;
-  font-size: x-large;
-`;
-
-const FormBox = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Form = styled.form`
-  display: grid;
-  grid-template:
-    "Image Contents" 6fr
-    "Button Button" 1fr/ 1fr 1fr;
-`;
-
-const BtnBox = styled.div`
-  margin-top: 1em;
-  grid-area: Button;
-`;
-
-const ImageBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  grid-area: Image;
-`;
-
-const ContentsBox = styled.div`
-  grid-area: Contents;
-`;
+} from "../../__generated__/editProfiletMutation";
+import { FormBox, Form, ImageBox, ContentsBox, BtnBox } from "./styled";
 
 const EDIT_PROFILE_MUTATION = gql`
   mutation editProfiletMutation($input: EditProfileInput!) {
@@ -64,7 +27,7 @@ const EDIT_PROFILE_MUTATION = gql`
   }
 `;
 
-interface IEditProfiletForm {
+interface EditProfiletFormProp {
   email: string;
   name?: string;
   oldPassword?: string;
@@ -81,7 +44,7 @@ export const EditProfile = () => {
   const [profileImg, setProfileImg] = useState<string | undefined>("");
   const client = useApolloClient();
   const { register, handleSubmit, errors, watch, getValues, formState } =
-    useForm<IEditProfiletForm>({
+    useForm<EditProfiletFormProp>({
       mode: "onChange",
       defaultValues: {
         email: user?.email,
@@ -124,7 +87,7 @@ export const EditProfile = () => {
           },
         },
       });
-      history.push("/profile");
+      history.push("/my-profile");
     } else {
       setErrorMsg(error);
       setTimeout(() => setErrorMsg(null), 2000);

@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { GridCafe } from "../../components/cafes";
 import { CreateButton } from "../../components/createBtn";
 import { Keywords } from "../../components/keywords";
+import { Loading } from "../../components/loading";
 import { Container } from "../../components/styledComponent";
 import { siteName } from "../../constants";
 import { SIMPLE_CAFE_FRAGMENT } from "../../fragments";
@@ -42,12 +43,17 @@ export const MY_CAFES_QUERY = gql`
 `;
 
 export const MyCafes = () => {
-  const { data, loading } = useQuery<myCafesQuery>(MY_CAFES_QUERY);
-  const { data: getkeywords } = useKeywords();
-  const keywords = getkeywords?.viewKeywords.keywords;
-  const cafes = data?.myCafes.cafes;
+  const { data: cafesData, loading } = useQuery<myCafesQuery>(MY_CAFES_QUERY);
+  const { data: keywordsData } = useKeywords();
+
+  const keywords = keywordsData?.viewKeywords.keywords;
+  const cafes = cafesData?.myCafes.cafes;
+
   console.log(cafes);
-  return (
+
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Helmet>
         <title>{siteName}</title>

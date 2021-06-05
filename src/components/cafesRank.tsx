@@ -142,7 +142,9 @@ export const CafesRank = () => {
     }
   };
 
-  return (
+  return loading ? (
+    <h1>loading</h1>
+  ) : (
     <CafeRankContainer>
       <CafeImgList
         ref={(ref) => {

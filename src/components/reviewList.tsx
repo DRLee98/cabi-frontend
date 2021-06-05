@@ -5,8 +5,6 @@ import gql from "graphql-tag";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { Button } from "./button";
-import { useMe } from "../hooks/useMe";
 import { ReviewFragment } from "../__generated__/ReviewFragment";
 import {
   createReplyMutation,
@@ -15,6 +13,7 @@ import {
 import { myProfileQuery } from "../__generated__/myProfileQuery";
 import { Image } from "../components/styledComponent";
 import { REVIEW_FRAGMENT } from "../fragments";
+import { Link } from "react-router-dom";
 
 const ReviewListBox = styled.div`
   padding-bottom: 3em;
@@ -62,7 +61,7 @@ const Review = styled.li`
   }
 `;
 
-const ReviewBox = styled.li`
+const ReviewBox = styled.div`
   display: flex;
   position: relative;
 `;
@@ -276,10 +275,12 @@ export const ReviewList: React.FC<ReviewListProp> = ({
           <Review key={review.id}>
             <ReviewBox>
               <ImageBox>
-                <Image
-                  src={review.writer.smallProfileImg || ""}
-                  sizes={"100%"}
-                />
+                <Link to={`/profile/${review.writer.id}`}>
+                  <Image
+                    src={review.writer.smallProfileImg || ""}
+                    sizes={"100%"}
+                  />
+                </Link>
               </ImageBox>
               <ContentsBox>
                 <WriterName>

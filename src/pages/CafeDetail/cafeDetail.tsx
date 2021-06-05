@@ -1,192 +1,69 @@
 import { useApolloClient, useMutation } from "@apollo/client";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useHistory, useParams } from "react-router";
-import styled from "styled-components";
-import { KakaoMap } from "../api/kakaoMap";
-import { CreateButton } from "../components/createBtn";
-import { Keywords } from "../components/keywords";
-import { ReviewForm } from "../components/reviewForm";
-import { ReviewList } from "../components/reviewList";
-import { Slider } from "../components/slider";
+import { KakaoMap } from "../../api/kakaoMap";
+import { CreateButton } from "../../components/createBtn";
+import { Keywords } from "../../components/keywords";
+import { ReviewForm } from "../../components/reviewForm";
+import { ReviewList } from "../../components/reviewList";
+import { Slider } from "../../components/slider";
 import {
   Container,
   CoverImage,
   SLink,
   FlexBox,
   MenuImage,
-} from "../components/styledComponent";
-import { UserCircleDetail, UserCircle } from "../components/userCircleBox";
-import { siteName } from "../constants";
-import { CAFE_DETAIL_QUERY, useCafeDetail } from "../hooks/cafeDetailQuery";
+} from "../../components/styledComponent";
+import { UserCircleDetail, UserCircle } from "../../components/userCircleBox";
+import { siteName } from "../../constants";
+import { CAFE_DETAIL_QUERY, useCafeDetail } from "../../hooks/cafeDetailQuery";
+import { cafeDetailQuery_cafeDetail_cafe_likedUsers } from "../../__generated__/cafeDetailQuery";
+import { UserRole } from "../../__generated__/globalTypes";
 import {
-  cafeDetailQuery_cafeDetail_cafe_menus,
-  cafeDetailQuery_cafeDetail_cafe_likedUsers,
-} from "../__generated__/cafeDetailQuery";
-import { Category, UserRole } from "../__generated__/globalTypes";
-import { myProfileQuery } from "../__generated__/myProfileQuery";
-import { MY_CAFES_QUERY } from "./owner/myCafes";
-import { myCafesQuery_myCafes_cafes } from "../__generated__/myCafesQuery";
-import { DeleteButton } from "../components/deleteBtn";
+  myProfileQuery,
+  myProfileQuery_myProfile_user,
+} from "../../__generated__/myProfileQuery";
+import { MY_CAFES_QUERY } from "../owner/myCafes";
+import { myCafesQuery_myCafes_cafes } from "../../__generated__/myCafesQuery";
+import { DeleteButton } from "../../components/deleteBtn";
 import {
   deleteCafeMutation,
   deleteCafeMutationVariables,
-} from "../__generated__/deleteCafeMutation";
-import { likeCafeId } from "../hooks/useMe";
+} from "../../__generated__/deleteCafeMutation";
 import {
   toggleLikeCafeMutation,
   toggleLikeCafeMutationVariables,
-} from "../__generated__/toggleLikeCafeMutation";
-
-const InfoBox = styled.div`
-  position: relative;
-  height: 35vh;
-  display: flex;
-  flex-direction: column;
-`;
-
-const ImageBox = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -1;
-`;
-
-const Title = styled.h1`
-  margin: 2em 0;
-  padding: 1em;
-  background-color: rgb(255 255 255 / 50%);
-  display: inline-block;
-  text-align: center;
-  font-size: 1em;
-`;
-
-const OwnerInfo = styled.div`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-`;
-
-const MidBox = styled.div`
-  display: grid;
-  grid-template:
-    "keyword likeUser" 2fr
-    "description likeUser" 1fr / 2fr 1fr;
-`;
-
-const LikeUserList = styled.ul`
-  grid-area: likeUser;
-  & + & {
-    margin-right: 8px;
-  }
-  & ul {
-    margin-left: auto;
-  }
-`;
-
-const LikeUserTitle = styled.strong`
-  display: block;
-  text-align: right;
-  padding: 8px;
-`;
-
-const LikeUserBox = styled.div`
-  display: flex;
-`;
-
-const HeartIcon = styled(FontAwesomeIcon)`
-  margin-left: 8px;
-  margin-right: 4px;
-  font-size: 15px;
-  color: red;
-`;
-
-const LikeUser = styled.li`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ToggleLikeBtn = styled.button<ToggleLikeBtnProp>`
-  cursor: pointer;
-  ${HeartIcon} {
-    margin: 4px 10px;
-    padding: 10px;
-    font-size: 4rem;
-    background-color: whitesmoke;
-    border-radius: 999px;
-    transition: all 0.2s ease;
-    color: ${(prop) =>
-      !prop.like ? prop.theme.disableColor : prop.theme.redColor};
-    &:hover {
-      color: ${(prop) =>
-        prop.like ? prop.theme.disableColor : prop.theme.redColor};
-    }
-  }
-`;
-
-const KeywordBox = styled.div`
-  grid-area: keyword;
-`;
-
-const Description = styled.p`
-  padding: 0.5em 1.5em;
-  font-size: small;
-  grid-area: description;
-`;
-
-const ContentsBox = styled.main`
-  margin-top: 1em;
-  display: grid;
-  grid-gap: 10px;
-  grid-template:
-    "menu map" 350px
-    "menu review" 1fr / 3fr 350px;
-`;
-
-const MenuBox = styled.section`
-  grid-area: menu;
-`;
-
-const MapBox = styled.section`
-  grid-area: map;
-  background-color: blue;
-`;
-
-const ReviewBox = styled.section`
-  grid-area: review;
-`;
-
-const CategoryBox = styled.div`
-  & + & {
-    margin-top: 2em;
-  }
-`;
-
-const CategoryTitle = styled.h2`
-  text-align: center;
-  font-size: 1.2em;
-  padding: 0.8em;
-  color: ${(prop) => prop.theme.signatureColor};
-  border-bottom: 1px solid ${(prop) => prop.theme.signatureBgColor};
-`;
-
-const MenuList = styled.ul`
-  margin-top: 1em;
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  grid-template-rows: minmax(180px, 250px);
-`;
-
-const MenuItem = styled.li``;
-
-const MenuName = styled.span``;
+} from "../../__generated__/toggleLikeCafeMutation";
+import { Loading } from "../../components/loading";
+import {
+  Title,
+  InfoBox,
+  ImageBox,
+  OwnerInfo,
+  MidBox,
+  KeywordBox,
+  Description,
+  LikeUserList,
+  LikeUserTitle,
+  HeartIcon,
+  LikeUserBox,
+  LikeUser,
+  ToggleLikeBtn,
+  ContentsBox,
+  MenuBox,
+  CategoryBox,
+  CategoryTitle,
+  MenuList,
+  MenuItem,
+  MenuName,
+  MapBox,
+  ReviewBox,
+} from "./styled";
+import { filterCategory, getIsLike } from "./common";
+import { SimpleUserFragment } from "../../__generated__/SimpleUserFragment";
 
 const DELETE_CAFE_MUTATION = gql`
   mutation deleteCafeMutation($input: DeleteCafeInput!) {
@@ -206,18 +83,8 @@ const TOGGLE_LIKE_CAFE_MUTATION = gql`
   }
 `;
 
-interface ToggleLikeBtnProp {
-  like: boolean;
-}
-
 interface cafeDetailParam {
   cafeId: string;
-}
-
-interface categoryProp {
-  key: string;
-  name: string;
-  menu: cafeDetailQuery_cafeDetail_cafe_menus[] | null | undefined;
 }
 
 interface CafeDetailProp {
@@ -237,34 +104,11 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
   const user = me?.myProfile.user;
   const isOwner = user && user.role === UserRole.Owner;
 
-  let isLike = false;
-  if (cafe && cafe.likedUsers) {
-    isLike =
-      cafe.likedUsers.filter(
-        (likeUser: cafeDetailQuery_cafeDetail_cafe_likedUsers) =>
-          user && likeUser.id === user.id,
-      ).length > 0;
-  }
+  const isLike = getIsLike(cafe, user);
+
   const [toggleLike, setToggleLike] = useState<boolean>(isLike);
 
-  const category: categoryProp[] = [
-    { key: Category.Beverage, name: "음료", menu: [] },
-    { key: Category.Dessert, name: "디저트", menu: [] },
-    { key: Category.Bread, name: "빵", menu: [] },
-    { key: Category.Meal, name: "식사", menu: [] },
-    { key: Category.Goods, name: "상품", menu: [] },
-    { key: Category.Etc, name: "기타", menu: [] },
-  ];
-
-  category.map(
-    (category) =>
-      (category.menu =
-        cafe &&
-        cafe.menus &&
-        cafe.menus.filter(
-          (menu: { category: string }) => menu.category === category.key,
-        )),
-  );
+  const category = filterCategory(cafe);
 
   const onCompleted = (data: deleteCafeMutation) => {
     const {
@@ -303,7 +147,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
 
   const deleteCafe = () => {
     const ok = window.confirm(`${cafe?.name} 카페를 삭제하시겠습니까?`);
-    if (ok) {
+    if (ok && !deleteLoading) {
       deleteCafeMutation({
         variables: { input: { id: +cafeId } },
       });
@@ -330,7 +174,6 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
             user && likeUser.id !== user.id,
         );
       }
-      console.log(likedUsers);
       client.writeQuery({
         query: CAFE_DETAIL_QUERY,
         data: {
@@ -366,7 +209,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
   console.log(cafe);
 
   return loading ? (
-    <h1>loading</h1>
+    <Loading />
   ) : (
     <>
       <Helmet>
@@ -381,7 +224,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
           </ImageBox>
           <Title>{cafe?.name}</Title>
           <OwnerInfo>
-            <UserCircleDetail user={cafe?.owner} />
+            <UserCircleDetail user={cafe && cafe?.owner} />
           </OwnerInfo>
         </InfoBox>
         <MidBox>
@@ -397,7 +240,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
             </LikeUserTitle>
             <LikeUserBox>
               <Slider slideWidth={200}>
-                {cafe?.likedUsers?.map((user) => (
+                {cafe?.likedUsers?.map((user: SimpleUserFragment) => (
                   <LikeUser key={user.email}>
                     <UserCircle user={user} />
                   </LikeUser>
@@ -434,7 +277,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
                     <CategoryTitle>{category.name}</CategoryTitle>
                     <MenuList>
                       {category.menu.map((menu) => (
-                        <MenuItem>
+                        <MenuItem key={menu.smallMenuImg}>
                           <SLink to={`/cafe/${cafeId}/menu/${menu.id}`}>
                             <MenuImage
                               sizes={"100%"}

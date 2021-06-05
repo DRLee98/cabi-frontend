@@ -1,7 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { Image } from "./styledComponent";
-import { UserFragment } from "../__generated__/UserFragment";
+import { Link } from "react-router-dom";
+import { SimpleUserFragment } from "../__generated__/SimpleUserFragment";
 
 const UserInfo = styled.div`
   padding: 0;
@@ -47,7 +48,7 @@ interface UserBoxProp {
 }
 
 interface UserCircleProp {
-  user: UserFragment | undefined;
+  user: SimpleUserFragment | null | undefined;
 }
 
 export const UserCircleDetail: React.FC<UserCircleProp> = ({ user }) => {
@@ -55,26 +56,30 @@ export const UserCircleDetail: React.FC<UserCircleProp> = ({ user }) => {
   const [userEmailWidth, setUserEmailWidth] = useState<number>(0);
 
   return (
-    <UserDetailBox
-      width={userNameWidth > userEmailWidth ? userNameWidth : userEmailWidth}
-    >
-      <Image src={user?.smallProfileImg || ""} sizes={"5rem"} />
-      <UserInfo>
-        <UserName ref={(ref) => ref && setUserNameWidth(ref.offsetWidth)}>
-          {user?.name}
-        </UserName>
-        <UserEmail ref={(ref) => ref && setUserEmailWidth(ref.offsetWidth)}>
-          {user?.email}
-        </UserEmail>
-      </UserInfo>
-    </UserDetailBox>
+    <Link to={`/profile/${user?.id}`}>
+      <UserDetailBox
+        width={userNameWidth > userEmailWidth ? userNameWidth : userEmailWidth}
+      >
+        <Image src={user?.smallProfileImg || ""} sizes={"5rem"} />
+        <UserInfo>
+          <UserName ref={(ref) => ref && setUserNameWidth(ref.offsetWidth)}>
+            {user?.name}
+          </UserName>
+          <UserEmail ref={(ref) => ref && setUserEmailWidth(ref.offsetWidth)}>
+            {user?.email}
+          </UserEmail>
+        </UserInfo>
+      </UserDetailBox>
+    </Link>
   );
 };
 
 export const UserCircle: React.FC<UserCircleProp> = ({ user }) => {
   return (
     <UserBox>
-      <Image src={user?.smallProfileImg || ""} sizes={"4rem"} />
+      <Link to={`/profile/${user?.id}`}>
+        <Image src={user?.smallProfileImg || ""} sizes={"4rem"} />
+      </Link>
     </UserBox>
   );
 };

@@ -289,6 +289,10 @@ export interface UserInputType {
   messages?: MessageInputType[] | null;
 }
 
+export interface UserProfileInput {
+  id: number;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

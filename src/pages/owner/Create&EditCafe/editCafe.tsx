@@ -7,123 +7,41 @@ import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router";
-import styled from "styled-components";
-import { AddressForm } from "../../components/addressForm";
-import { Button } from "../../components/button";
+import { AddressForm } from "../../../components/addressForm";
+import { Button } from "../../../components/button";
 import {
   CoverImageInput,
   Input,
   KeywordInput,
   Textarea,
-} from "../../components/Input";
-import { Container } from "../../components/styledComponent";
-import { siteName } from "../../constants";
-import { uploadFile } from "../../upload";
-import { Slider } from "../../components/slider";
-import { CAFE_DETAIL_QUERY, useCafeDetail } from "../../hooks/cafeDetailQuery";
+} from "../../../components/Input";
+import { Container, Title } from "../../../components/styledComponent";
+import { siteName } from "../../../constants";
+import { uploadFile } from "../../../upload";
+import { Slider } from "../../../components/slider";
+import {
+  CAFE_DETAIL_QUERY,
+  useCafeDetail,
+} from "../../../hooks/cafeDetailQuery";
 import {
   editCafeMutation,
   editCafeMutationVariables,
-} from "../../__generated__/editCafeMutation";
-
-const Title = styled.h2`
-  margin-bottom: 2em;
-  font-weight: bold;
-  font-size: x-large;
-`;
-
-const FormBox = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Form = styled.form`
-  width: 75%;
-  min-width: 750px;
-`;
-
-const BtnBox = styled.div`
-  margin-top: 1em;
-  grid-area: Button;
-`;
-
-const ImageBox = styled.div`
-  height: 30vh;
-  margin-bottom: 2em;
-`;
-
-const ContentsBox = styled.div`
-  display: grid;
-  grid-gap: 10px;
-  grid-template:
-    "name name" 1fr
-    "description address" 2fr/ 1fr 1fr;
-`;
-
-const NameBox = styled.div`
-  grid-area: name;
-  & input {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-`;
-
-const DescriptionBox = styled.div`
-  grid-area: description;
-`;
-
-const AddressBox = styled.div`
-  grid-area: address;
-`;
-
-const KeywordBox = styled.div`
-  margin: 1em 0;
-  display: flex;
-`;
-
-const KeywordBtn = styled.span`
-  cursor: pointer;
-  color: ${(prop) => prop.theme.keywordBgColor};
-  padding: 10px;
-  border-radius: 3px;
-  margin-right: 1em;
-  transition: all 0.3s ease;
-  min-width: fit-content;
-  &:hover {
-    background-color: ${(prop) => prop.theme.keywordBgColor};
-    color: white;
-  }
-`;
-
-const KeywordDelBtn = styled.span`
-  position: absolute;
-  right: 9px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: small;
-  opacity: 0;
-  transition: all 0.5s ease;
-  &:hover {
-    color: red;
-  }
-`;
-
-const KeywordItem = styled.li`
-  position: relative;
-  &:hover ${KeywordDelBtn} {
-    opacity: 1;
-  }
-  & + & {
-    margin-left: 5px;
-  }
-`;
+} from "../../../__generated__/editCafeMutation";
+import { Loading } from "../../../components/loading";
+import {
+  AddressBox,
+  BtnBox,
+  ContentsBox,
+  DescriptionBox,
+  Form,
+  FormBox,
+  ImageBox,
+  KeywordBox,
+  KeywordBtn,
+  KeywordDelBtn,
+  KeywordItem,
+  NameBox,
+} from "./styled";
 
 const EDIT_CAFE_MUTATION = gql`
   mutation editCafeMutation($input: EditCafeInput!) {
@@ -292,7 +210,9 @@ export const EditCafe = () => {
     }
   };
 
-  return (
+  return cafeLoading ? (
+    <Loading />
+  ) : (
     <>
       <Helmet>
         <title>{siteName} | 카페 수정하기</title>
