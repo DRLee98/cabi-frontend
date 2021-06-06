@@ -46,6 +46,7 @@ import {
   NutrientBox,
 } from "./styled";
 import { getCategoryName } from "./common";
+import { myProfileQuery } from "../../__generated__/myProfileQuery";
 
 const DELETE_MENU_MUTATION = gql`
   mutation deleteMenuMutation($input: DeleteMenuInput!) {
@@ -61,11 +62,14 @@ interface MenuDetailParams {
   menuId: string;
 }
 
-export const MenuDetail = () => {
+interface MenuDetailProp {
+  me: myProfileQuery | null | undefined;
+}
+
+export const MenuDetail: React.FC<MenuDetailProp> = ({ me }) => {
   const history = useHistory();
   const client = useApolloClient();
 
-  const { data: me } = useMe();
   const { cafeId, menuId } = useParams<MenuDetailParams>();
   const { loading, data } = useMenuDetail(+cafeId, +menuId);
   const [optionWidth, setOptionWidth] = useState<number>(0);

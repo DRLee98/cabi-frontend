@@ -10,6 +10,7 @@ import { siteName } from "../constants";
 import { USER_FRAGMENT } from "../fragments";
 import { useMe } from "../hooks/useMe";
 import { UserRole } from "../__generated__/globalTypes";
+import { UserFragment } from "../__generated__/UserFragment";
 import { userProfileQuery } from "../__generated__/userProfileQuery";
 
 const ProfileBox = styled.section`
@@ -96,6 +97,10 @@ interface ProfileParam {
   id: string;
 }
 
+interface MyProfileProp {
+  user: UserFragment | null | undefined;
+}
+
 export const Profile = () => {
   const { id } = useParams<ProfileParam>();
   const { loading, data } = useQuery<userProfileQuery>(USER_PROFILE_QUERY, {
@@ -134,9 +139,7 @@ export const Profile = () => {
   );
 };
 
-export const MyProfile = () => {
-  const { data } = useMe();
-  const user = data?.myProfile.user;
+export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
   console.log(user);
 
   return (

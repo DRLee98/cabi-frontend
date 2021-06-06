@@ -63,12 +63,13 @@ interface CreateCafeForm {
   file: FileList;
 }
 
-export const CreateCafe = () => {
+interface CreateCafeProp {
+  userId: number | null | undefined;
+}
+
+export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
   const { register, handleSubmit, errors, watch, getValues, formState } =
     useForm<CreateCafeForm>({ mode: "onChange" });
-
-  const { data } = useMe();
-  const userId = data?.myProfile.user?.id;
 
   const history = useHistory();
   const client = useApolloClient();

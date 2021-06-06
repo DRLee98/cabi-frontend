@@ -224,7 +224,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
           </ImageBox>
           <Title>{cafe?.name}</Title>
           <OwnerInfo>
-            <UserCircleDetail user={cafe && cafe?.owner} />
+            <UserCircleDetail user={cafe && cafe?.owner} me={user} />
           </OwnerInfo>
         </InfoBox>
         <MidBox>
@@ -240,9 +240,9 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
             </LikeUserTitle>
             <LikeUserBox>
               <Slider slideWidth={200}>
-                {cafe?.likedUsers?.map((user: SimpleUserFragment) => (
-                  <LikeUser key={user.email}>
-                    <UserCircle user={user} />
+                {cafe?.likedUsers?.map((writer: SimpleUserFragment) => (
+                  <LikeUser key={writer.email}>
+                    <UserCircle user={writer} me={user} />
                   </LikeUser>
                 ))}
               </Slider>

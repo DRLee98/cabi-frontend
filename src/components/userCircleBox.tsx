@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Image } from "./styledComponent";
 import { Link } from "react-router-dom";
 import { SimpleUserFragment } from "../__generated__/SimpleUserFragment";
+import { UserFragment } from "../__generated__/UserFragment";
 
 const UserInfo = styled.div`
   padding: 0;
@@ -49,14 +50,28 @@ interface UserBoxProp {
 
 interface UserCircleProp {
   user: SimpleUserFragment | null | undefined;
+  me: UserFragment | null | undefined;
 }
 
-export const UserCircleDetail: React.FC<UserCircleProp> = ({ user }) => {
+const getLink = (user: UserCircleProp["user"], me: UserCircleProp["me"]) => {
+  if (user) {
+    if (me && user.id === me.id) {
+      return "/my-profile";
+    } else {
+      return `/profile/${user?.id}`;
+    }
+  }
+  return "";
+};
+
+export const UserCircleDetail: React.FC<UserCircleProp> = ({ user, me }) => {
   const [userNameWidth, setUserNameWidth] = useState<number>(0);
   const [userEmailWidth, setUserEmailWidth] = useState<number>(0);
 
+  const toLink = getLink(user, me);
+
   return (
-    <Link to={`/profile/${user?.id}`}>
+    <Link to={toLink}>
       <UserDetailBox
         width={userNameWidth > userEmailWidth ? userNameWidth : userEmailWidth}
       >
@@ -74,10 +89,12 @@ export const UserCircleDetail: React.FC<UserCircleProp> = ({ user }) => {
   );
 };
 
-export const UserCircle: React.FC<UserCircleProp> = ({ user }) => {
+export const UserCircle: React.FC<UserCircleProp> = ({ user, me }) => {
+  const toLink = getLink(user, me);
+
   return (
     <UserBox>
-      <Link to={`/profile/${user?.id}`}>
+      <Link to={toLink}>
         <Image src={user?.smallProfileImg || ""} sizes={"4rem"} />
       </Link>
     </UserBox>

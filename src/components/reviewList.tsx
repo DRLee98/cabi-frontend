@@ -181,7 +181,7 @@ interface ReplyFormBtnProp {
 }
 
 interface ReviewListProp {
-  me?: myProfileQuery;
+  me: myProfileQuery | null | undefined;
   totalScore?: number;
   avgScore?: number;
   reviews?: ReviewFragment[] | null | undefined;
@@ -275,7 +275,13 @@ export const ReviewList: React.FC<ReviewListProp> = ({
           <Review key={review.id}>
             <ReviewBox>
               <ImageBox>
-                <Link to={`/profile/${review.writer.id}`}>
+                <Link
+                  to={
+                    user && review.writer.id === user.id
+                      ? "/my-profile"
+                      : `/profile/${review.writer.id}`
+                  }
+                >
                   <Image
                     src={review.writer.smallProfileImg || ""}
                     sizes={"100%"}
@@ -340,10 +346,18 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                       {review.reply.map((reply) => (
                         <Reply key={reply.id}>
                           <ImageBox size={"2em"}>
-                            <Image
-                              src={reply.writer.smallProfileImg || ""}
-                              sizes={"100%"}
-                            />
+                            <Link
+                              to={
+                                user && reply.writer.id === user.id
+                                  ? "/my-profile"
+                                  : `/profile/${reply.writer.id}`
+                              }
+                            >
+                              <Image
+                                src={reply.writer.smallProfileImg || ""}
+                                sizes={"100%"}
+                              />
+                            </Link>
                           </ImageBox>
                           <ContentsBox>
                             <WriterName>{reply.writer.name}</WriterName>

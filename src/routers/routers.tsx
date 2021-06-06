@@ -32,8 +32,8 @@ export const Routers = () => {
   const user = me?.myProfile.user;
 
   const loginRouters = [
-    { path: "/my-profile", component: <MyProfile /> },
-    { path: "/edit-profile", component: <EditProfile /> },
+    { path: "/my-profile", component: <MyProfile user={user} /> },
+    { path: "/edit-profile", component: <EditProfile user={user} /> },
   ];
 
   const logoutRouters = [
@@ -43,7 +43,7 @@ export const Routers = () => {
 
   const ownerRouters = [
     { path: "/", component: <MyCafes /> },
-    { path: "/create-cafe", component: <CreateCafe /> },
+    { path: "/create-cafe", component: <CreateCafe userId={user?.id} /> },
     { path: "/cafe/:cafeId/create-menu", component: <CreateMenu /> },
     { path: "/cafe/:cafeId/edit", component: <EditCafe /> },
     { path: "/cafe/:cafeId/menu/:menuId/edit", component: <EditMenu /> },
@@ -56,7 +56,7 @@ export const Routers = () => {
     { path: "/search-cafes", component: <SearchCafe /> },
     { path: "/keyword/:slug", component: <SearchKeywordCafe /> },
     { path: "/cafe/:cafeId", component: <CafeDetail me={me} /> },
-    { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail /> },
+    { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail me={me} /> },
     { path: "/profile/:id", component: <Profile /> },
   ];
 

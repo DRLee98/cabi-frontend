@@ -10,12 +10,13 @@ import { Button } from "../../components/button";
 import { ImageInput, Input } from "../../components/Input";
 import { Container, Title } from "../../components/styledComponent";
 import { siteName } from "../../constants";
-import { MY_PROFILE_QUERY, useMe } from "../../hooks/useMe";
+import { MY_PROFILE_QUERY } from "../../hooks/useMe";
 import { uploadFile } from "../../upload";
 import {
   editProfiletMutation,
   editProfiletMutationVariables,
 } from "../../__generated__/editProfiletMutation";
+import { UserFragment } from "../../__generated__/UserFragment";
 import { FormBox, Form, ImageBox, ContentsBox, BtnBox } from "./styled";
 
 const EDIT_PROFILE_MUTATION = gql`
@@ -27,7 +28,7 @@ const EDIT_PROFILE_MUTATION = gql`
   }
 `;
 
-interface EditProfiletFormProp {
+interface EditProfileFormProp {
   email: string;
   name?: string;
   oldPassword?: string;
@@ -38,13 +39,15 @@ interface EditProfiletFormProp {
   file?: FileList;
 }
 
-export const EditProfile = () => {
-  const { data } = useMe();
-  const user = data?.myProfile.user;
+interface EditProfileProp {
+  user: UserFragment | null | undefined;
+}
+
+export const EditProfile: React.FC<EditProfileProp> = ({ user }) => {
   const [profileImg, setProfileImg] = useState<string | undefined>("");
   const client = useApolloClient();
   const { register, handleSubmit, errors, watch, getValues, formState } =
-    useForm<EditProfiletFormProp>({
+    useForm<EditProfileFormProp>({
       mode: "onChange",
       defaultValues: {
         email: user?.email,
