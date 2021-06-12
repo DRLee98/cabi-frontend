@@ -1,37 +1,36 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { likeCafeId } from "../hooks/useMe";
 import { seeCafesQuery_seeCafes_cafes } from "../__generated__/seeCafesQuery";
+import { UserFragment } from "../__generated__/UserFragment";
+import { StackKeywords } from "./keywords";
 import { Score } from "./score";
+import { UserCircle } from "./userCircleBox";
 
 const GridBox = styled.ul`
   display: grid;
-  grid-gap: 1.2em;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 2em 1.2em;
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
 `;
 
-const CafeBox = styled.li``;
-
 const CafeImg = styled.div<CafeBoxProps>`
-  height: 150px;
+  height: 24vh;
+  min-height: 150px;
   background-position: center;
   background-size: cover;
   background-image: url(${(prop) => prop.image});
-  border-radius: 5px 5px 0 0;
+  border-radius: 10px 0 10px 0;
   position: relative;
+  overflow: hidden;
 `;
 
 const CafeContents = styled.div`
-  height: 50px;
-  padding: 5px 10px;
+  padding: 10px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  border-radius: 0 0 5px 5px;
-  border-bottom: 1px solid ${(prop) => prop.theme.keywordBgColor};
+  align-items: flex-end;
+  justify-content: space-between;
 `;
 
 const LikeIcon = styled(FontAwesomeIcon)<IconProps>`
@@ -45,13 +44,49 @@ const LikeIcon = styled(FontAwesomeIcon)<IconProps>`
   border: 1px solid white;
   transition: all 0.3s ease;
   z-index: 10;
-  color: ${(prop) => (prop.like ? "red" : prop.theme.disableColor)};
+  color: ${(prop) =>
+    prop.like ? prop.theme.redColor : prop.theme.disableColor};
   &:hover {
     background-color: white;
   }
 `;
 
-const CafeName = styled.span``;
+const CafeName = styled.strong`
+  font-weight: bold;
+  font-size: 18px;
+`;
+
+const CafeDim = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #33333380;
+  transition: all 0.3s ease;
+  z-index: 999;
+  opacity: 0;
+`;
+
+const KeywordsBox = styled.div`
+  width: 100%;
+`;
+
+const DimContents = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 10px;
+  height: 100%;
+`;
+
+const CafeBox = styled.li`
+  &:hover {
+    ${CafeDim} {
+      opacity: 1;
+    }
+  }
+`;
 
 interface CafeBoxProps {
   image: string | null;
@@ -64,19 +99,10 @@ interface IconProps {
 interface CafesProp {
   owner?: boolean;
   cafes: seeCafesQuery_seeCafes_cafes[] | null | undefined;
+  me: UserFragment | null | undefined;
 }
 
-export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
-  const [likeCafesId, setLikeCafesId] = useState(likeCafeId() || []);
-
-  const toggleLikeCafe = (id: number) => {
-    if (likeCafesId?.includes(id)) {
-      setLikeCafesId((ids) => ids.filter((likeId) => likeId !== id));
-    } else {
-      setLikeCafesId((ids) => [...ids, id]);
-    }
-  };
-
+export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes, me }) => {
   return (
     <GridBox>
       {cafes?.map((cafe) => (
@@ -87,11 +113,23 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes }) => {
                 <LikeIcon
                   icon={faHeart}
                   like={
-                    likeCafesId.length > 0 && likeCafesId?.includes(cafe.id)
+                    me &&
+                    me.likeCafes?.find((likeCafe) => likeCafe.id === cafe.id)
+                      ? true
+                      : false
                   }
-                  onClick={() => toggleLikeCafe(cafe.id)}
                 />
               )}
+              <CafeDim>
+                <DimContents>
+                  <KeywordsBox>
+                    <StackKeywords keywords={cafe.keywords} />
+                  </KeywordsBox>
+                  {cafe.owner.id !== me?.id && (
+                    <UserCircle user={cafe.owner} me={me} />
+                  )}
+                </DimContents>
+              </CafeDim>
             </CafeImg>
             <CafeContents>
               <CafeName>{cafe.name}</CafeName>

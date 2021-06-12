@@ -216,7 +216,7 @@ export const CreateMenu = () => {
   return (
     <>
       <Helmet>
-        <title>{siteName} | 메뉴 만들기</title>
+        <title>{`${siteName} | 메뉴 만들기`}</title>
       </Helmet>
       <Container>
         <FormBox>

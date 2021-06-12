@@ -2,21 +2,21 @@ import styled from "styled-components";
 
 export const MenuContainer = styled.div`
   display: flex;
-  padding: 5em;
-  width: 100%;
-  //height: 100%;
+  margin: 0 5em;
 `;
 
 export const ImageBox = styled.div`
   width: 50%;
-  height: 75vh;
+  height: 85vh;
   position: sticky;
   top: ${(prop) => prop.theme.headerHeight};
+  padding-top: 5em;
 `;
 
 export const ContentsBox = styled.div`
   width: 50%;
   padding: 3em;
+  margin-top: 5em;
 `;
 
 export const NameBox = styled.div`

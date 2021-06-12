@@ -11,6 +11,7 @@ import { useKeywords } from "../hooks/useKeywords";
 import { searchCafesQuery } from "../__generated__/searchCafesQuery";
 import queryString from "query-string";
 import { Loading } from "../components/loading";
+import { UserFragment } from "../__generated__/UserFragment";
 
 const SEARCH_CAFES_QUERY = gql`
   query searchCafesQuery($input: SearchCafesInput!) {
@@ -25,7 +26,11 @@ const SEARCH_CAFES_QUERY = gql`
   ${SIMPLE_CAFE_FRAGMENT}
 `;
 
-export const SearchCafe = () => {
+interface SearchCafeProp {
+  user: UserFragment | null | undefined;
+}
+
+export const SearchCafe: React.FC<SearchCafeProp> = ({ user }) => {
   const { search } = useLocation();
   const { word } = queryString.parse(search);
 
@@ -46,7 +51,7 @@ export const SearchCafe = () => {
       </Helmet>
       <Container>
         <Keywords keywords={keywords} />
-        <GridCafe cafes={cafes} />
+        <GridCafe cafes={cafes} me={user} />
       </Container>
     </>
   );

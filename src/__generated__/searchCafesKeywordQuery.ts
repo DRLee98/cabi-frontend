@@ -12,6 +12,7 @@ import { SearchCafesKeywordInput } from "./globalTypes";
 export interface searchCafesKeywordQuery_searchCafesKeyword_cafes_keywords {
   __typename: "Keyword";
   name: string;
+  slug: string;
 }
 
 export interface searchCafesKeywordQuery_searchCafesKeyword_cafes_owner {

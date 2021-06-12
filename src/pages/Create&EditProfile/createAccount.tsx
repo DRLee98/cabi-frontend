@@ -107,7 +107,7 @@ export const CreateAccount = () => {
   return (
     <>
       <Helmet>
-        <title>{siteName} | 회원가입</title>
+        <title>{`${siteName} | 회원가입`}</title>
       </Helmet>
       <Container>
         <FormBox>

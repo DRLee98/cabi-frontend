@@ -162,6 +162,7 @@ export const SIMPLE_CAFE_FRAGMENT = gql`
     updatedAt
     keywords {
       name
+      slug
     }
     owner {
       ...SimpleUserFragment
@@ -202,10 +203,10 @@ export const USER_FRAGMENT = gql`
       ...AddressFragment
     }
     likeCafes {
-      ...CafeFragment
+      ...SimpleCafeFragment
     }
     cafes {
-      ...CafeFragment
+      ...SimpleCafeFragment
     }
     review {
       ...ReviewFragment
@@ -215,7 +216,7 @@ export const USER_FRAGMENT = gql`
     }
   }
   ${ADDRESS_FRAGMENT}
-  ${CAFE_FRAGMENT}
+  ${SIMPLE_CAFE_FRAGMENT}
   ${REVIEW_FRAGMENT}
   ${REPLY_FRAGMENT}
 `;

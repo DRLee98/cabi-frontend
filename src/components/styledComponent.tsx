@@ -39,8 +39,8 @@ export const CoverImage = styled.img`
 `;
 
 export const MenuImage = styled.img`
-  width: ${(prop) => (prop.sizes ? prop.sizes : "20rem")};
-  height: ${(prop) => (prop.sizes ? prop.sizes : "20rem")};
+  width: ${(prop) => (prop.sizes ? prop.sizes : "30rem")};
+  height: ${(prop) => (prop.sizes ? prop.sizes : "35rem")};
   background-color: lightgray;
 `;
 

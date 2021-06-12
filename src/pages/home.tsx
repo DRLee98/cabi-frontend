@@ -10,6 +10,7 @@ import { siteName } from "../constants";
 import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
 import { seeCafesQuery } from "../__generated__/seeCafesQuery";
+import { UserFragment } from "../__generated__/UserFragment";
 
 const SEE_CAFES_QUERY = gql`
   query seeCafesQuery {
@@ -24,11 +25,18 @@ const SEE_CAFES_QUERY = gql`
   ${SIMPLE_CAFE_FRAGMENT}
 `;
 
-export const Home = () => {
+interface HomeProp {
+  user: UserFragment | null | undefined;
+}
+
+export const Home: React.FC<HomeProp> = ({ user }) => {
   const { data, loading } = useQuery<seeCafesQuery>(SEE_CAFES_QUERY);
   const { data: getkeywords } = useKeywords();
   const keywords = getkeywords?.viewKeywords.keywords;
   const cafes = data?.seeCafes.cafes;
+
+  console.log(cafes);
+
   return loading ? (
     <Loading />
   ) : (
@@ -39,7 +47,7 @@ export const Home = () => {
       <Container>
         <CafesRank />
         <Keywords keywords={keywords} />
-        <GridCafe cafes={cafes} />
+        <GridCafe cafes={cafes} me={user} />
       </Container>
     </>
   );

@@ -110,6 +110,7 @@ export const Header = () => {
   const logout = () => {
     localStorage.setItem(TOKEN, "");
     window.location.reload();
+    window.location.href = "/";
   };
 
   return (

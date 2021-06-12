@@ -42,13 +42,10 @@ export const getIsLike = (
   user: myProfileQuery_myProfile_user | null | undefined,
 ): boolean => {
   let isLike = false;
-  if (cafe && cafe.likedUsers) {
-    isLike =
-      cafe.likedUsers.filter(
-        (likeUser: cafeDetailQuery_cafeDetail_cafe_likedUsers) =>
-          user && likeUser.id === user.id,
-      ).length > 0;
+  if (cafe && user) {
+    isLike = user?.likeCafes?.find((likeCafe) => likeCafe.id === cafe.id)
+      ? true
+      : false;
   }
-
   return isLike;
 };

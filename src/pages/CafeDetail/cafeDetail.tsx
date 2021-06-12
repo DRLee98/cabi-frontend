@@ -1,7 +1,7 @@
 import { useApolloClient, useMutation } from "@apollo/client";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import gql from "graphql-tag";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useHistory, useParams } from "react-router";
 import { KakaoMap } from "../../api/kakaoMap";
@@ -22,10 +22,7 @@ import { siteName } from "../../constants";
 import { CAFE_DETAIL_QUERY, useCafeDetail } from "../../hooks/cafeDetailQuery";
 import { cafeDetailQuery_cafeDetail_cafe_likedUsers } from "../../__generated__/cafeDetailQuery";
 import { UserRole } from "../../__generated__/globalTypes";
-import {
-  myProfileQuery,
-  myProfileQuery_myProfile_user,
-} from "../../__generated__/myProfileQuery";
+import { myProfileQuery } from "../../__generated__/myProfileQuery";
 import { MY_CAFES_QUERY } from "../owner/myCafes";
 import { myCafesQuery_myCafes_cafes } from "../../__generated__/myCafesQuery";
 import { DeleteButton } from "../../components/deleteBtn";
@@ -115,21 +112,21 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
       deleteCafe: { ok, error },
     } = data;
     if (ok) {
-      const {
-        myCafes: { cafes: originCafes },
-      } = client.readQuery({
+      const { myCafes: originalData } = client.readQuery({
         query: MY_CAFES_QUERY,
       });
-      const cafes = originCafes.filter(
+      const originCafes = originalData.myCafes;
+      const myCafes = originCafes.filter(
         (cafe: myCafesQuery_myCafes_cafes) => cafe.id !== +cafeId,
       );
       client.writeQuery({
         query: MY_CAFES_QUERY,
         data: {
           myCafes: {
+            ...originalData,
             error,
             ok,
-            cafes,
+            myCafes,
             __typename: "SeeCafeOutput",
           },
         },
@@ -208,14 +205,16 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
 
   console.log(cafe);
 
+  useEffect(() => {
+    setToggleLike(isLike);
+  }, [isLike]);
+
   return loading ? (
     <Loading />
   ) : (
     <>
       <Helmet>
-        <title>
-          {siteName} | {cafe?.name}
-        </title>
+        <title>{`${siteName} | ${cafe?.name}`}</title>
       </Helmet>
       <Container>
         <InfoBox>

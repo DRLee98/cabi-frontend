@@ -10,6 +10,7 @@
 export interface SimpleCafeFragment_keywords {
   __typename: "Keyword";
   name: string;
+  slug: string;
 }
 
 export interface SimpleCafeFragment_owner {

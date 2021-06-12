@@ -7,9 +7,43 @@
 // GraphQL query operation: myCafesQuery
 // ====================================================
 
+export interface myCafesQuery_myCafes_myCafes_keywords {
+  __typename: "Keyword";
+  name: string;
+  slug: string;
+}
+
+export interface myCafesQuery_myCafes_myCafes_owner {
+  __typename: "User";
+  id: number;
+  name: string;
+  email: string;
+  smallProfileImg: string | null;
+}
+
+export interface myCafesQuery_myCafes_myCafes_likedUsers {
+  __typename: "User";
+  id: number;
+}
+
+export interface myCafesQuery_myCafes_myCafes {
+  __typename: "Cafe";
+  id: number;
+  name: string;
+  smallCoverImg: string | null;
+  totalScore: number;
+  avgScore: number;
+  createdAt: any;
+  updatedAt: any;
+  keywords: myCafesQuery_myCafes_myCafes_keywords[] | null;
+  owner: myCafesQuery_myCafes_myCafes_owner;
+  likedUsers: myCafesQuery_myCafes_myCafes_likedUsers[] | null;
+}
+
 export interface myCafesQuery_myCafes_cafes_keywords {
   __typename: "Keyword";
   name: string;
+  slug: string;
 }
 
 export interface myCafesQuery_myCafes_cafes_owner {
@@ -43,6 +77,7 @@ export interface myCafesQuery_myCafes {
   __typename: "SeeCafeOutput";
   ok: boolean;
   error: string | null;
+  myCafes: myCafesQuery_myCafes_myCafes[] | null;
   cafes: myCafesQuery_myCafes_cafes[] | null;
 }
 

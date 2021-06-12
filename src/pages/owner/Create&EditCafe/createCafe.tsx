@@ -97,18 +97,17 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
         keywords: keywordList,
         owner: { __ref: `User:${userId}` },
       };
-      const {
-        myCafes: { cafes },
-      } = client.readQuery({
+      const { myCafes } = client.readQuery({
         query: MY_CAFES_QUERY,
       });
       client.writeQuery({
         query: MY_CAFES_QUERY,
         data: {
           myCafes: {
+            ...myCafes,
             error,
             ok,
-            cafes: [...cafes, newCafe],
+            myCafes: [...myCafes.myCafes, newCafe],
             __typename: "SeeCafeOutput",
           },
         },
@@ -191,7 +190,7 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
   return (
     <>
       <Helmet>
-        <title>{siteName} | 카페 만들기</title>
+        <title>{`${siteName} | 카페 만들기`}</title>
       </Helmet>
       <Container>
         <FormBox>

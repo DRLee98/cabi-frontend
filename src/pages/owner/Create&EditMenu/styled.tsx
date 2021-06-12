@@ -31,6 +31,7 @@ export const ImageBox = styled.div`
 export const ContentsBox = styled.div`
   grid-area: Contents;
   max-width: 550px;
+  padding: 10px;
 `;
 
 export const OptionBox = styled.div`

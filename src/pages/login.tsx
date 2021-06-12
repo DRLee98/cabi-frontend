@@ -51,14 +51,8 @@ interface ILoginForm {
 }
 
 export const Login = () => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    getValues,
-    formState,
-  } = useForm<ILoginForm>({ mode: "onChange" });
+  const { register, handleSubmit, errors, watch, getValues, formState } =
+    useForm<ILoginForm>({ mode: "onChange" });
   const history = useHistory();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const onCompleted = (data: loginMutation) => {
@@ -100,7 +94,7 @@ export const Login = () => {
   return (
     <>
       <Helmet>
-        <title>{siteName} | 로그인</title>
+        <title>{`${siteName} | 로그인`}</title>
       </Helmet>
       <Container>
         <FormBox>
@@ -109,7 +103,8 @@ export const Login = () => {
             <Input
               register={register({
                 required: "이메일은 필수 항목입니다",
-                pattern: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+                pattern:
+                  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
               })}
               name={"email"}
               label={"이메일 계정"}

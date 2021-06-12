@@ -285,7 +285,7 @@ export const EditMenu = () => {
   ) : (
     <>
       <Helmet>
-        <title>{siteName} | 메뉴 수정하기</title>
+        <title>{`${siteName} | 메뉴 수정하기`}</title>
       </Helmet>
       <Container>
         <FormBox>
@@ -342,13 +342,21 @@ export const EditMenu = () => {
                           ref={register}
                           name={`${option}_name`}
                           placeholder={"옵션 이름"}
-                          value={defaultOption[option].name || ""}
+                          defaultValue={
+                            defaultOption[option]
+                              ? defaultOption[option].name
+                              : ""
+                          }
                         />
                         <OptionInput
                           ref={register}
                           name={`${option}_price`}
                           placeholder={"옵션 가격"}
-                          value={defaultOption[option].price || ""}
+                          defaultValue={
+                            defaultOption[option]
+                              ? defaultOption[option].price || ""
+                              : ""
+                          }
                         />
                         <OptionDelBtn onClick={() => removeOption(option)}>
                           <FontAwesomeIcon icon={faTimes} />
@@ -368,16 +376,21 @@ export const EditMenu = () => {
                                   ref={register}
                                   name={`${item}_name`}
                                   placeholder={"추가 옵션 이름"}
-                                  value={
-                                    defaultAdditionalOption[item].name || ""
+                                  defaultValue={
+                                    defaultAdditionalOption[item]
+                                      ? defaultAdditionalOption[item].name
+                                      : ""
                                   }
                                 />
                                 <OptionInput
                                   ref={register}
                                   name={`${item}_price`}
                                   placeholder={"추가 옵션 가격"}
-                                  value={
-                                    defaultAdditionalOption[item].price || ""
+                                  defaultValue={
+                                    defaultAdditionalOption[item]
+                                      ? defaultAdditionalOption[item].price ||
+                                        ""
+                                      : ""
                                   }
                                 />
                                 <OptionDelBtn

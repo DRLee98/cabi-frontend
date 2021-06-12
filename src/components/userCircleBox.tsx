@@ -91,7 +91,6 @@ export const UserCircleDetail: React.FC<UserCircleProp> = ({ user, me }) => {
 
 export const UserCircle: React.FC<UserCircleProp> = ({ user, me }) => {
   const toLink = getLink(user, me);
-
   return (
     <UserBox>
       <Link to={toLink}>

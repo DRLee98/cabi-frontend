@@ -19,9 +19,3 @@ export const MY_PROFILE_QUERY = gql`
 export const useMe = () => {
   return useQuery<myProfileQuery>(MY_PROFILE_QUERY);
 };
-
-export const likeCafeId = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { data } = useMe();
-  return data?.myProfile.user?.likeCafes?.map((likeCafe) => likeCafe.id);
-};

@@ -215,7 +215,7 @@ export const EditCafe = () => {
   ) : (
     <>
       <Helmet>
-        <title>{siteName} | 카페 수정하기</title>
+        <title>{`${siteName} | 카페 수정하기`}</title>
       </Helmet>
       <Container>
         <FormBox>

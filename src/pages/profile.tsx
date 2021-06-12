@@ -4,11 +4,11 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { GridCafe } from "../components/cafes";
 import { Loading } from "../components/loading";
 import { Container, Image } from "../components/styledComponent";
 import { siteName } from "../constants";
 import { USER_FRAGMENT } from "../fragments";
-import { useMe } from "../hooks/useMe";
 import { UserRole } from "../__generated__/globalTypes";
 import { UserFragment } from "../__generated__/UserFragment";
 import { userProfileQuery } from "../__generated__/userProfileQuery";
@@ -80,6 +80,16 @@ const Address = styled.p`
   color: gray;
 `;
 
+const CafesBox = styled.section``;
+
+const CafesTitle = styled.strong`
+  display: block;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  font-size: 20px;
+  border-bottom: 1px solid ${(props) => props.theme.signatureColor};
+`;
+
 const USER_PROFILE_QUERY = gql`
   query userProfileQuery($input: UserProfileInput!) {
     userProfile(input: $input) {
@@ -101,7 +111,7 @@ interface MyProfileProp {
   user: UserFragment | null | undefined;
 }
 
-export const Profile = () => {
+export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
   const { id } = useParams<ProfileParam>();
   const { loading, data } = useQuery<userProfileQuery>(USER_PROFILE_QUERY, {
     variables: { input: { id: +id } },
@@ -134,6 +144,20 @@ export const Profile = () => {
             </Box>
           </ContentsBox>
         </ProfileBox>
+        <CafesBox>
+          <CafesTitle>
+            {user?.role === UserRole.Client ? "단골 카페" : "사장님의 카페"}
+          </CafesTitle>
+          {user?.role === UserRole.Client ? (
+            <GridCafe cafes={user?.likeCafes} me={me} />
+          ) : (
+            <GridCafe
+              owner={me?.role === UserRole.Owner}
+              cafes={user?.cafes}
+              me={me}
+            />
+          )}
+        </CafesBox>
       </Container>
     </>
   );
@@ -145,7 +169,7 @@ export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
   return (
     <>
       <Helmet>
-        <title>{siteName} | 회원정보</title>
+        <title>{`${siteName} | 회원정보`}</title>
       </Helmet>
       <Container>
         <ProfileBox>
@@ -166,6 +190,16 @@ export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
             </Box>
           </ContentsBox>
         </ProfileBox>
+        <CafesBox>
+          <CafesTitle>
+            {user?.role === UserRole.Client ? "단골 카페" : "사장님의 카페"}
+          </CafesTitle>
+          {user?.role === UserRole.Client ? (
+            <GridCafe cafes={user?.likeCafes} me={user} />
+          ) : (
+            <GridCafe owner={true} cafes={user?.cafes} me={user} />
+          )}
+        </CafesBox>
       </Container>
     </>
   );

@@ -139,7 +139,7 @@ export const EditProfile: React.FC<EditProfileProp> = ({ user }) => {
   return (
     <>
       <Helmet>
-        <title>{siteName} | 회원정보 변경</title>
+        <title>{`${siteName} | 회원정보 변경`}</title>
       </Helmet>
       <Container>
         <FormBox>

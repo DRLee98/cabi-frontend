@@ -9,7 +9,6 @@ import { UserRole } from "../../__generated__/globalTypes";
 import { useMenuDetail } from "../../hooks/menuDetailQuery";
 import { ReviewList } from "../../components/reviewList";
 import { ReviewForm } from "../../components/reviewForm";
-import { useMe } from "../../hooks/useMe";
 import { CreateButton } from "../../components/createBtn";
 import gql from "graphql-tag";
 import { useApolloClient, useMutation } from "@apollo/client";
@@ -133,9 +132,7 @@ export const MenuDetail: React.FC<MenuDetailProp> = ({ me }) => {
   ) : (
     <>
       <Helmet>
-        <title>
-          {siteName} | {menu?.name}
-        </title>
+        <title>{`${siteName} | ${menu?.name}`}</title>
       </Helmet>
       <Container>
         <MenuContainer>
@@ -153,19 +150,6 @@ export const MenuDetail: React.FC<MenuDetailProp> = ({ me }) => {
                   {menu && getCategoryName(menu?.category)}
                 </CategoryName>
                 {isOwner && menu?.ownerId === (user && user.id) && (
-                  <>
-                    <EditBtn>
-                      <CreateButton
-                        link={`/cafe/${cafeId}/menu/${menuId}/edit`}
-                        text={"+ 수정하기"}
-                      />
-                    </EditBtn>
-                    <DeleteBtn>
-                      <DeleteButton onClick={deleteMenu} text={"- 삭제하기"} />
-                    </DeleteBtn>
-                  </>
-                )}
-                {isOwner && (
                   <>
                     <EditBtn>
                       <CreateButton

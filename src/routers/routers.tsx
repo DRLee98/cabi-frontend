@@ -42,22 +42,22 @@ export const Routers = () => {
   ];
 
   const ownerRouters = [
-    { path: "/", component: <MyCafes /> },
+    { path: "/", component: <MyCafes user={user} /> },
     { path: "/create-cafe", component: <CreateCafe userId={user?.id} /> },
     { path: "/cafe/:cafeId/create-menu", component: <CreateMenu /> },
     { path: "/cafe/:cafeId/edit", component: <EditCafe /> },
     { path: "/cafe/:cafeId/menu/:menuId/edit", component: <EditMenu /> },
   ];
 
-  const clientRouters = [{ path: "/", component: <Home /> }];
+  const clientRouters = [{ path: "/", component: <Home user={user} /> }];
 
   const commonRouters = [
-    { path: "/", component: <Home /> },
-    { path: "/search-cafes", component: <SearchCafe /> },
-    { path: "/keyword/:slug", component: <SearchKeywordCafe /> },
+    { path: "/", component: <Home user={user} /> },
+    { path: "/search-cafes", component: <SearchCafe user={user} /> },
+    { path: "/keyword/:slug", component: <SearchKeywordCafe user={user} /> },
     { path: "/cafe/:cafeId", component: <CafeDetail me={me} /> },
     { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail me={me} /> },
-    { path: "/profile/:id", component: <Profile /> },
+    { path: "/profile/:id", component: <Profile user={user} /> },
   ];
 
   return (
