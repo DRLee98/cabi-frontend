@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import { Button } from "../components/button";
+import Button from "../components/button";
 import { Input } from "../components/Input";
 import { Container } from "../components/styledComponent";
 import { siteName, TOKEN } from "../constants";

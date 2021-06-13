@@ -5,7 +5,7 @@ import gql from "graphql-tag";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { Button } from "./button";
+import Button from "./button";
 import {
   createCafeReviewMutation,
   createCafeReviewMutationVariables,

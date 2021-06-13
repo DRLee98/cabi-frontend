@@ -32,12 +32,7 @@ interface ButtonProps {
   error?: string | null;
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  valid,
-  loading,
-  text,
-  error,
-}) => {
+const Button: React.FC<ButtonProps> = ({ valid, loading, text, error }) => {
   const active = valid && !loading;
   return (
     <SButton active={active} error={error}>
@@ -45,3 +40,5 @@ export const Button: React.FC<ButtonProps> = ({
     </SButton>
   );
 };
+
+export default Button;

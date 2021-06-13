@@ -96,7 +96,7 @@ const SearchButton = styled.button`
   }
 `;
 
-export const Header = () => {
+const Header = () => {
   const isLogin = useReactiveVar(isLoginVar);
 
   const loginLinks = [
@@ -154,3 +154,5 @@ export const Header = () => {
     </SHeader>
   );
 };
+
+export default Header;
