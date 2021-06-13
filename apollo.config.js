@@ -3,8 +3,8 @@ module.exports = {
     includes: ["./src/**/*.{tsx,ts}"],
     tagName: "gql",
     service: {
-      name: "cabia-backend",
-      url: "https://cabia-backend.herokuapp.com/graphql",
+      name: "cabi-backend",
+      url: "https://cabi-backend.herokuapp.com/graphql",
     },
   },
 };
