@@ -9,7 +9,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { isLoginVar } from "../apollo";
-import { TOKEN } from "../constants";
+import { siteName, TOKEN } from "../constants";
 import { Container } from "./styledComponent";
 
 const SHeader = styled.header`
@@ -120,7 +120,7 @@ const Header = () => {
           <TitleBox>
             {/* <FontAwesomeIcon icon={faCoffee} /> */}
             <Link to="/">
-              <Title>까비아</Title>
+              <Title>{siteName}</Title>
             </Link>
           </TitleBox>
           <LInkBox>
