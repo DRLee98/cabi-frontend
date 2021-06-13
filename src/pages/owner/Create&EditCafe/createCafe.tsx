@@ -127,6 +127,10 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
   const [keywords, setKeywords] = useState<string[]>([]);
   const [keywordWidth, setKeywordWidth] = useState<number>(0);
 
+  const setAddress = (data: AddressData) => {
+    setAddressResult(data);
+  };
+
   const addKeyword = () => {
     const keywordTarget = `${new Date().getTime()}_keyword`;
     setKeywords((keywords) => [...keywords, keywordTarget]);
@@ -224,7 +228,7 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
               <AddressBox>
                 <AddressForm
                   register={register}
-                  setAddressResult={setAddressResult}
+                  setAddressResult={setAddress}
                   addressResult={addressResult}
                 ></AddressForm>
                 {addressError && <ErrorMsg>{addressError}</ErrorMsg>}

@@ -283,7 +283,9 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                   }
                 >
                   <Image
-                    src={review.writer.smallProfileImg || ""}
+                    src={
+                      review.writer.smallProfileImg || "/image/user_basic.png"
+                    }
                     sizes={"100%"}
                   />
                 </Link>
@@ -322,7 +324,10 @@ export const ReviewList: React.FC<ReviewListProp> = ({
               {me && reviewId === review.id && (
                 <ReplyForm onSubmit={handleSubmit(onSubmit)}>
                   <ImageBox size={"2em"}>
-                    <Image src={user?.smallProfileImg || ""} sizes={"100%"} />
+                    <Image
+                      src={user?.smallProfileImg || "/image/user_basic.png"}
+                      sizes={"100%"}
+                    />
                   </ImageBox>
                   <ReplyInput
                     ref={register({
@@ -354,7 +359,10 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                               }
                             >
                               <Image
-                                src={reply.writer.smallProfileImg || ""}
+                                src={
+                                  reply.writer.smallProfileImg ||
+                                  "/image/user_basic.png"
+                                }
                                 sizes={"100%"}
                               />
                             </Link>

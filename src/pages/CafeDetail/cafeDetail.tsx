@@ -219,7 +219,9 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
       <Container>
         <InfoBox>
           <ImageBox>
-            <CoverImage src={cafe?.originalCoverImg || ""} />
+            <CoverImage
+              src={cafe?.originalCoverImg || "/image/background_basic.png"}
+            />
           </ImageBox>
           <Title>{cafe?.name}</Title>
           <OwnerInfo>
@@ -291,7 +293,9 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
                 ),
             )}
           </MenuBox>
-          <MapBox>{/* <KakaoMap address={cafe?.address} /> */}</MapBox>
+          <MapBox>
+            <KakaoMap address={cafe?.address} />
+          </MapBox>
           <ReviewBox>
             <ReviewList
               me={me}

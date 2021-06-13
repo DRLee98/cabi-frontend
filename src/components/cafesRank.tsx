@@ -162,7 +162,9 @@ export const CafesRank = () => {
             view={getView(i + 1)}
           >
             <Link to={`/cafe/${cafe.id}`}>
-              <CoverImage src={cafe.originalCoverImg || ""} />
+              <CoverImage
+                src={cafe.originalCoverImg || "/image/background_basic.png"}
+              />
             </Link>
           </CafeImg>
         ))}

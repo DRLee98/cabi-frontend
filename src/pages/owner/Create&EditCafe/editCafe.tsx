@@ -91,6 +91,10 @@ export const EditCafe = () => {
   );
   const [keywordWidth, setKeywordWidth] = useState<number>(0);
 
+  const setAddress = (data: AddressData) => {
+    setAddressResult(data);
+  };
+
   const addKeyword = () => {
     const keywordTarget = `${new Date().getTime()}_keyword`;
     setKeywords((keywords) => [...keywords, keywordTarget]);
@@ -224,7 +228,7 @@ export const EditCafe = () => {
             <ImageBox>
               <CoverImageInput
                 register={register}
-                url={cafe?.originalCoverImg}
+                url={cafe?.originalCoverImg || "/image/background_basic.png"}
               />
             </ImageBox>
             <ContentsBox>
@@ -252,7 +256,7 @@ export const EditCafe = () => {
               <AddressBox>
                 <AddressForm
                   register={register}
-                  setAddressResult={setAddressResult}
+                  setAddressResult={setAddress}
                   addressResult={addressResult}
                   currentAddress={cafe?.address}
                 ></AddressForm>

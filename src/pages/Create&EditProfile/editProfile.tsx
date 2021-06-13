@@ -103,6 +103,10 @@ export const EditProfile: React.FC<EditProfileProp> = ({ user }) => {
     editProfiletMutationVariables
   >(EDIT_PROFILE_MUTATION, { onCompleted });
 
+  const setAddress = (data: AddressData) => {
+    setAddressResult(data);
+  };
+
   const onSubmit = async () => {
     if (!loading) {
       let originalProfileImg;
@@ -215,7 +219,7 @@ export const EditProfile: React.FC<EditProfileProp> = ({ user }) => {
               />
               <AddressForm
                 register={register}
-                setAddressResult={setAddressResult}
+                setAddressResult={setAddress}
                 addressResult={addressResult}
                 currentAddress={user?.address}
               ></AddressForm>

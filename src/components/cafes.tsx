@@ -20,7 +20,8 @@ const CafeImg = styled.div<CafeBoxProps>`
   min-height: 150px;
   background-position: center;
   background-size: cover;
-  background-image: url(${(prop) => prop.image});
+  background-image: url(${(prop) =>
+    prop.image ? prop.image : "/image/background_basic.png"});
   border-radius: 10px 0 10px 0;
   position: relative;
   overflow: hidden;

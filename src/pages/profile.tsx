@@ -129,14 +129,14 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
       <Container>
         <ProfileBox>
           <SideBox>
-            <Image src={user?.originalProfileImg || undefined} />
+            <Image src={user?.originalProfileImg || "/image/user_basic.png"} />
           </SideBox>
           <ContentsBox>
             <Name>{user?.name} 님</Name>
             <Email>{user?.email}</Email>
-            <Address>
+            {/* <Address>
               {`(${user?.address.zonecode}) ${user?.address.address}`}
-            </Address>
+            </Address> */}
             <Box>
               <Role>
                 {user?.role === UserRole.Client ? "고객님" : "사장님"}
@@ -164,8 +164,6 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
 };
 
 export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
-  console.log(user);
-
   return (
     <>
       <Helmet>
@@ -174,7 +172,7 @@ export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
       <Container>
         <ProfileBox>
           <SideBox>
-            <Image src={user?.originalProfileImg || undefined} />
+            <Image src={user?.originalProfileImg || "/image/user_basic.png"} />
           </SideBox>
           <ContentsBox>
             <Name>{user?.name} 님</Name>

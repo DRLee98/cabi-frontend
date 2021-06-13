@@ -68,6 +68,10 @@ export const CreateAccount = () => {
     createAccountMutationVariables
   >(CREATE_ACCOUNT_MUTATION, { onCompleted });
 
+  const setAddress = (data: AddressData) => {
+    setAddressResult(data);
+  };
+
   const onSubmit = async () => {
     if (!loading) {
       let originalProfileImg;
@@ -196,7 +200,7 @@ export const CreateAccount = () => {
               </RadioBox>
               <AddressForm
                 register={register}
-                setAddressResult={setAddressResult}
+                setAddressResult={setAddress}
                 addressResult={addressResult}
               ></AddressForm>
               {addressError && <ErrorMsg>{addressError}</ErrorMsg>}

@@ -4,7 +4,7 @@ module.exports = {
     tagName: "gql",
     service: {
       name: "cabia-backend",
-      url: "http://localhost:4000/graphql",
+      url: "https://cabia-backend.herokuapp.com/graphql",
     },
   },
 };

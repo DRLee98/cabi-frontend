@@ -48,9 +48,7 @@ interface InputStyleProps {
 
 interface InputProps {
   register: any;
-  setAddressResult: React.Dispatch<
-    React.SetStateAction<AddressData | undefined>
-  >;
+  setAddressResult: Function;
   addressResult: AddressData | undefined;
   currentAddress?: myProfileQuery_myProfile_user_address | undefined;
 }
@@ -64,6 +62,10 @@ export const AddressForm: React.FC<InputProps> = ({
   const [postCodeLayer, setPostCodeLayer] = useState<Boolean>(false);
   const [zonecode, setZonecode] = useState<string | undefined>();
   const [address, setAddress] = useState<string | undefined>();
+
+  const closePostcode = () => {
+    setPostCodeLayer(false);
+  };
 
   useEffect(() => {
     setPostCodeLayer(false);
@@ -90,7 +92,12 @@ export const AddressForm: React.FC<InputProps> = ({
         value={address || currentAddress?.address || ""}
         disabled
       />
-      {postCodeLayer && <Postcode setAddressResult={setAddressResult} />}
+      {postCodeLayer && (
+        <Postcode
+          setAddressResult={setAddressResult}
+          closePostcode={closePostcode}
+        />
+      )}
     </AddressBox>
   );
 };
