@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { AddressFragment } from "../__generated__/AddressFragment";
 
-const Map = styled.div``;
+const Map = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 declare global {
   interface Window {
@@ -15,9 +18,9 @@ interface KakaoMapProp {
 }
 
 export const KakaoMap: React.FC<KakaoMapProp> = ({ address }) => {
-  window.onload = () => {
+  useEffect(() => {
     const mapContainer = document.getElementById("map"); // 지도를 표시할 div
-    var options = {
+    const options = {
       //지도를 생성할 때 필요한 기본 옵션
       center: new window.kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
       level: 3, //지도의 레벨(확대, 축소 정도)
@@ -50,6 +53,6 @@ export const KakaoMap: React.FC<KakaoMapProp> = ({ address }) => {
         },
       );
     }
-  };
+  }, []);
   return <Map id="map"></Map>;
 };
