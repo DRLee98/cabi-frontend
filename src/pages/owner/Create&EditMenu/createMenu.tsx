@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router";
-import Button from "../../../components/button";
+import Button from "../../../components/Button";
 import { Input, MenuImageInput, Select } from "../../../components/Input";
 import { NutrientForm } from "../../../components/nutrient";
 import { Slider } from "../../../components/slider";

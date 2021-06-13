@@ -8,7 +8,7 @@ import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import { AddressForm } from "../../../components/addressForm";
-import Button from "../../../components/button";
+import Button from "../../../components/Button";
 import {
   CoverImageInput,
   Input,

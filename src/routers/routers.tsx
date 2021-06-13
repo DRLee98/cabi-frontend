@@ -6,7 +6,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import Header from "../components/header";
+import Header from "../components/Header";
 import { Home } from "../pages/home";
 import { isLoginVar } from "../apollo";
 import { CreateAccount } from "../pages/Create&EditProfile/createAccount";
