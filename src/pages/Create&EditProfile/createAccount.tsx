@@ -1,10 +1,10 @@
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import React, { useState } from "react";
-import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
+import { NewAddressData } from "types";
 import { AddressForm } from "../../components/addressForm";
 import Button from "../../components/Button";
 import { ImageInput, Input, RadioInput } from "../../components/Input";
@@ -60,7 +60,7 @@ export const CreateAccount = () => {
       setTimeout(() => setErrorMsg(null), 2000);
     }
   };
-  const [addressResult, setAddressResult] = useState<AddressData>();
+  const [addressResult, setAddressResult] = useState<NewAddressData>();
   const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [createAccountMutation, { loading }] = useMutation<
@@ -68,7 +68,7 @@ export const CreateAccount = () => {
     createAccountMutationVariables
   >(CREATE_ACCOUNT_MUTATION, { onCompleted });
 
-  const setAddress = (data: AddressData) => {
+  const setAddress = (data: NewAddressData) => {
     setAddressResult(data);
   };
 
@@ -99,6 +99,8 @@ export const CreateAccount = () => {
               sigungu: addressResult?.sigungu,
               sigunguCode: addressResult?.sigunguCode,
               bname: addressResult?.bname,
+              lat: addressResult?.lat,
+              lng: addressResult?.lng,
             },
             ...(originalProfileImg && { originalProfileImg }),
             ...(smallProfileImg && { smallProfileImg }),

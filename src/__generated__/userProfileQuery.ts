@@ -14,6 +14,8 @@ export interface userProfileQuery_userProfile_user_address {
   id: number;
   zonecode: string;
   address: string | null;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface userProfileQuery_userProfile_user_likeCafes_keywords {

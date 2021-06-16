@@ -12,4 +12,6 @@ export interface AddressFragment {
   id: number;
   zonecode: string;
   address: string | null;
+  lat: number | null;
+  lng: number | null;
 }

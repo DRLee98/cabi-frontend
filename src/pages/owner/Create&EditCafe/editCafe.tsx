@@ -3,7 +3,6 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import React, { useState } from "react";
-import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router";
@@ -42,6 +41,7 @@ import {
   KeywordItem,
   NameBox,
 } from "./styled";
+import { NewAddressData } from "types";
 
 const EDIT_CAFE_MUTATION = gql`
   mutation editCafeMutation($input: EditCafeInput!) {
@@ -84,14 +84,14 @@ export const EditCafe = () => {
   const client = useApolloClient();
   const [originalCoverImg, setOriginalCoverImg] =
     useState<string | undefined>("");
-  const [addressResult, setAddressResult] = useState<AddressData>();
+  const [addressResult, setAddressResult] = useState<NewAddressData>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [keywords, setKeywords] = useState<string[]>(
     Object.keys(defaultKeyword) || [],
   );
   const [keywordWidth, setKeywordWidth] = useState<number>(0);
 
-  const setAddress = (data: AddressData) => {
+  const setAddress = (data: NewAddressData) => {
     setAddressResult(data);
   };
 
@@ -201,6 +201,8 @@ export const EditCafe = () => {
                 sigungu: addressResult?.sigungu,
                 sigunguCode: addressResult?.sigunguCode,
                 bname: addressResult?.bname,
+                lat: addressResult?.lat,
+                lng: addressResult?.lng,
               },
             }),
             ...(originalCoverImgUrl && {

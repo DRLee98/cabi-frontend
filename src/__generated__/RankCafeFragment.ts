@@ -12,6 +12,15 @@ export interface RankCafeFragment_likedUsers {
   id: number;
 }
 
+export interface RankCafeFragment_address {
+  __typename: "Address";
+  id: number;
+  zonecode: string;
+  address: string | null;
+  lat: number | null;
+  lng: number | null;
+}
+
 export interface RankCafeFragment {
   __typename: "Cafe";
   id: number;
@@ -22,4 +31,5 @@ export interface RankCafeFragment {
   createdAt: any;
   updatedAt: any;
   likedUsers: RankCafeFragment_likedUsers[] | null;
+  address: RankCafeFragment_address;
 }

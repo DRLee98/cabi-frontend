@@ -47,6 +47,8 @@ export const ADDRESS_FRAGMENT = gql`
     id
     zonecode
     address
+    lat
+    lng
   }
 `;
 
@@ -186,7 +188,11 @@ export const RANK_CAFE_FRAGMENT = gql`
     likedUsers {
       id
     }
+    address {
+      ...AddressFragment
+    }
   }
+  ${ADDRESS_FRAGMENT}
 `;
 
 export const USER_FRAGMENT = gql`

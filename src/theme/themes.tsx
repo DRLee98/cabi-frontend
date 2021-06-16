@@ -16,6 +16,7 @@ export const theme = {
   headerHeight: "7vh",
   starYellow: "#ffe92a",
   redColor: "#f44336",
+  grayColor: "#545252ab",
 };
 
 const themeBlue = {

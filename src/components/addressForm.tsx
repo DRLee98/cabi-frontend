@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { AddressData } from "react-daum-postcode";
 import styled from "styled-components";
+import { NewAddressData } from "types";
 import { Postcode } from "../api/postCode";
 import { myProfileQuery_myProfile_user_address } from "../__generated__/myProfileQuery";
 
@@ -49,7 +49,7 @@ interface InputStyleProps {
 interface InputProps {
   register: any;
   setAddressResult: Function;
-  addressResult: AddressData | undefined;
+  addressResult: NewAddressData | undefined;
   currentAddress?: myProfileQuery_myProfile_user_address | undefined;
 }
 

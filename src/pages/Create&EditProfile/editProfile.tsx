@@ -1,10 +1,10 @@
 import { useApolloClient, useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import React, { useState } from "react";
-import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
+import { NewAddressData } from "types";
 import { AddressForm } from "../../components/addressForm";
 import Button from "../../components/Button";
 import { ImageInput, Input } from "../../components/Input";
@@ -96,14 +96,14 @@ export const EditProfile: React.FC<EditProfileProp> = ({ user }) => {
       setTimeout(() => setErrorMsg(null), 2000);
     }
   };
-  const [addressResult, setAddressResult] = useState<AddressData>();
+  const [addressResult, setAddressResult] = useState<NewAddressData>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [editProfiletMutation, { loading }] = useMutation<
     editProfiletMutation,
     editProfiletMutationVariables
   >(EDIT_PROFILE_MUTATION, { onCompleted });
 
-  const setAddress = (data: AddressData) => {
+  const setAddress = (data: NewAddressData) => {
     setAddressResult(data);
   };
 
@@ -130,6 +130,8 @@ export const EditProfile: React.FC<EditProfileProp> = ({ user }) => {
                 sigungu: addressResult?.sigungu,
                 sigunguCode: addressResult?.sigunguCode,
                 bname: addressResult?.bname,
+                lat: addressResult?.lat,
+                lng: addressResult?.lng,
               },
             }),
             ...(originalProfileImg && { originalProfileImg }),

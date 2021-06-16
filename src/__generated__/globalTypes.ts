@@ -197,7 +197,7 @@ export interface MenuInputType {
   price: number;
   originalMenuImg?: string | null;
   smallMenuImg?: string | null;
-  ownerId?: number | null;
+  ownerId: number;
   category: Category;
   cafe: CafeInputType;
   nutrient?: NutrientInputType | null;

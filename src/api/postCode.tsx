@@ -1,6 +1,7 @@
 import React, { MouseEventHandler } from "react";
-import DaumPostcode from "react-daum-postcode";
+import DaumPostcode, { AddressData } from "react-daum-postcode";
 import styled from "styled-components";
+import { getLatLng } from "./kakaoMap";
 
 const LayerBackGround = styled.div`
   position: absolute;
@@ -38,8 +39,9 @@ export const Postcode: React.FC<PostcodeProps> = ({
   setAddressResult,
   closePostcode,
 }) => {
-  const handleComplete = (data: any) => {
-    setAddressResult(data);
+  const handleComplete = async (data: AddressData) => {
+    const { lat, lng } = await getLatLng(data.address);
+    setAddressResult({ ...data, lat, lng });
   };
 
   const styles = { maxWidth: "750px" } as React.CSSProperties;

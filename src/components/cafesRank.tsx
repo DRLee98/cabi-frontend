@@ -12,7 +12,7 @@ const CafeRankContainer = styled.div`
   height: 45vh;
   display: flex;
   justify-content: space-between;
-  border: 2px solid ${(prop) => prop.theme.signatureColor};
+  // border: 2px solid ${(prop) => prop.theme.signatureColor};
 `;
 
 const CafeImgList = styled.ul`
@@ -63,14 +63,11 @@ const RankLink = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  & div {
-    align-self: auto;
-  }
 `;
 
 const Rank = styled.span<RankProp>`
   margin-right: 5px;
-  ${(prop) => prop.rank < 4 && "font-size: large"};
+  ${(prop) => prop.rank < 4 && "font-size: 25px"};
   color: ${(prop) =>
     prop.rank === 1
       ? "gold"
@@ -81,7 +78,24 @@ const Rank = styled.span<RankProp>`
       : "gray"};
 `;
 
-const CafeName = styled.span``;
+const CafeInfo = styled.div``;
+
+const CafeName = styled.strong`
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  display: inline-block;
+`;
+
+const CafeAddress = styled.address`
+  font-size: 14px;
+  font-weight: normal;
+  color: ${(prop) => prop.theme.grayColor};
+`;
+
+const ScoreBox = styled.div`
+  align-self: auto;
+`;
 
 export const CAFES_RANK_QUERY = gql`
   query cafesRankQuery {
@@ -173,15 +187,18 @@ export const CafesRank = () => {
         {cafes?.map((cafe, i) => (
           <RankItem key={cafe.createdAt} currentView={currentView === i + 1}>
             <RankLink to={`/cafe/${cafe.id}`}>
-              <CafeName>
+              <CafeInfo>
                 <Rank rank={i + 1}>{i + 1}.</Rank>
-                {cafe.name}
-              </CafeName>
-              <Score
-                totalScore={cafe.totalScore}
-                avgScore={cafe.avgScore}
-                likedUsers={cafe.likedUsers?.length || 0}
-              />
+                <CafeName>{cafe.name}</CafeName>
+                <CafeAddress>{cafe.address.address}</CafeAddress>
+              </CafeInfo>
+              <ScoreBox>
+                <Score
+                  totalScore={cafe.totalScore}
+                  avgScore={cafe.avgScore}
+                  likedUsers={cafe.likedUsers?.length || 0}
+                />
+              </ScoreBox>
             </RankLink>
           </RankItem>
         ))}

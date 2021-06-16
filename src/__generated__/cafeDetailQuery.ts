@@ -14,6 +14,8 @@ export interface cafeDetailQuery_cafeDetail_cafe_address {
   id: number;
   zonecode: string;
   address: string | null;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface cafeDetailQuery_cafeDetail_cafe_keywords {

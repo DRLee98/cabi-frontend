@@ -85,7 +85,7 @@ export interface MenuFragment {
   description: string;
   price: number;
   originalMenuImg: string | null;
-  ownerId: number | null;
+  ownerId: number;
   category: Category;
   totalScore: number;
   avgScore: number;

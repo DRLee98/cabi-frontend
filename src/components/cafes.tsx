@@ -65,7 +65,7 @@ const CafeDim = styled.div`
   right: 0;
   background-color: #33333380;
   transition: all 0.3s ease;
-  z-index: 999;
+  z-index: 99;
   opacity: 0;
 `;
 

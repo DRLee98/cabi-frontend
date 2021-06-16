@@ -14,6 +14,8 @@ export interface CafeFragment_address {
   id: number;
   zonecode: string;
   address: string | null;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface CafeFragment_keywords {

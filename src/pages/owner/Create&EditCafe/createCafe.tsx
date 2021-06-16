@@ -3,7 +3,6 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import React, { useState } from "react";
-import { AddressData } from "react-daum-postcode";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router";
@@ -44,6 +43,7 @@ import {
   KeywordItem,
   NameBox,
 } from "./styled";
+import { NewAddressData } from "types";
 
 const CREATE_CAFE_MUTATION = gql`
   mutation createCafeMutation($input: CreateCafeInput!) {
@@ -121,13 +121,13 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
 
   const [smallCoverImgUrl, setSmallCoverImgUrl] =
     useState<string | undefined>("");
-  const [addressResult, setAddressResult] = useState<AddressData>();
+  const [addressResult, setAddressResult] = useState<NewAddressData>();
   const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [keywords, setKeywords] = useState<string[]>([]);
   const [keywordWidth, setKeywordWidth] = useState<number>(0);
 
-  const setAddress = (data: AddressData) => {
+  const setAddress = (data: NewAddressData) => {
     setAddressResult(data);
   };
 
@@ -181,6 +181,8 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
               sigungu: addressResult?.sigungu,
               sigunguCode: addressResult?.sigunguCode,
               bname: addressResult?.bname,
+              lat: addressResult?.lat,
+              lng: addressResult?.lng,
             },
             originalCoverImg: originalCoverImgUrl,
             smallCoverImg: smallCoverImgUrl,
