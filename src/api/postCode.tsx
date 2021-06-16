@@ -13,6 +13,7 @@ const LayerBackGround = styled.div`
   align-items: center;
   justify-content: center;
   background-color: rgb(37 37 37 / 60%);
+  z-index: 99;
 `;
 
 const PostcodeBox = styled.div`

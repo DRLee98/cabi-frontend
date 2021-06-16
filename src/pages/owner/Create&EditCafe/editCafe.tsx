@@ -201,8 +201,8 @@ export const EditCafe = () => {
                 sigungu: addressResult?.sigungu,
                 sigunguCode: addressResult?.sigunguCode,
                 bname: addressResult?.bname,
-                lat: addressResult?.lat,
-                lng: addressResult?.lng,
+                lat: +addressResult?.lat,
+                lng: +addressResult?.lng,
               },
             }),
             ...(originalCoverImgUrl && {
