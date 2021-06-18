@@ -72,12 +72,12 @@ const SLink = styled(Link)`
 
 const Box = styled.div`
   display: flex;
-  margin-top: 1.5rem;
 `;
 
 const Address = styled.p`
   font-size: 18px;
   color: gray;
+  margin-bottom: 1.5rem;
 `;
 
 const CafesBox = styled.section``;

@@ -18,8 +18,8 @@ export const theme = {
   grayColor: "#545252ab",
   headerHeight: "7vh",
   footerHeight: "10vh",
-  footerBgColor: "#ffd19433",
-  footerColor: "#ce903e73",
+  footerBgColor: "#f1f1f180",
+  footerColor: "#9a9a9a66",
 };
 
 const themeBlue = {

@@ -41,6 +41,7 @@ const ReviewFormBox = styled.div<ReviewFormViewProp>`
   background-color: ${(prop) => prop.theme.signaturelightBgColor};
   border-radius: 10px 10px 0 0;
   transition: all 0.5s ease;
+  z-index: 10;
 `;
 
 const TitleBox = styled.div`
