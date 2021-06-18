@@ -25,6 +25,8 @@ import { EditCafe } from "../pages/owner/Create&EditCafe/editCafe";
 import { EditMenu } from "../pages/owner/Create&EditMenu/editMenu";
 import { SearchCafe } from "../pages/searchCafe";
 import { SearchKeywordCafe } from "../pages/searchKeywordCafe";
+import Footer from "components/Footer";
+import { Map } from "pages/map";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
@@ -58,6 +60,7 @@ export const Routers = () => {
     { path: "/cafe/:cafeId", component: <CafeDetail me={me} /> },
     { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail me={me} /> },
     { path: "/profile/:id", component: <Profile user={user} /> },
+    { path: "/map", component: <Map user={user} /> },
   ];
 
   return (
@@ -105,6 +108,7 @@ export const Routers = () => {
           <Redirect to="/" />
         </Switch>
       </Wrap>
+      <Footer />
     </Router>
   );
 };

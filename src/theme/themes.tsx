@@ -13,10 +13,13 @@ export const theme = {
   selectKeywordBgColor: "#00bfaf",
   whiteColor: "#ffffff",
   blackColor: "#2d2d2d",
-  headerHeight: "7vh",
   starYellow: "#ffe92a",
   redColor: "#f44336",
   grayColor: "#545252ab",
+  headerHeight: "7vh",
+  footerHeight: "10vh",
+  footerBgColor: "#ffd19433",
+  footerColor: "#ce903e73",
 };
 
 const themeBlue = {

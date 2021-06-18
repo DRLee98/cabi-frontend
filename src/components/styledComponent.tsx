@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Wrap = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   padding-top: ${(prop) => prop.theme.headerHeight};
+  margin-bottom: 15px;
 `;
 
 export const Container = styled.div`

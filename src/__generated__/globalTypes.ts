@@ -269,6 +269,13 @@ export interface SearchCafesKeywordInput {
   slug: string;
 }
 
+export interface SearchCafesLatLngInput {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+
 export interface ToggleLikeCafeInput {
   cafeId: number;
 }

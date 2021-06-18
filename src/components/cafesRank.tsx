@@ -29,7 +29,7 @@ const CafeImg = styled.li<CafeImgProp>`
     prop.view === "current"
       ? "top: 0; left: 0px;"
       : prop.view === "next"
-      ? `top: 0; left:-${prop.width}px;`
+      ? `top: 0; left:-${prop.width}px; z-index: -1;`
       : prop.view === "prev"
       ? `top: 0; left:${prop.width}px;`
       : "z-index: -10;"};
@@ -139,7 +139,7 @@ export const CafesRank = () => {
       } else {
         setCurrentView(1);
       }
-    }, 7000);
+    }, 6000);
   }, [cafes, currentView]);
 
   const getView = (i: number) => {

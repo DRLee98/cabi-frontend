@@ -176,6 +176,27 @@ export const SIMPLE_CAFE_FRAGMENT = gql`
   ${SIMPLE_USER_FRAGMENT}
 `;
 
+export const MAP_VIEW_CAFE_FRAGMENT = gql`
+  fragment MapViewCafeFragment on Cafe {
+    id
+    name
+    smallCoverImg
+    totalScore
+    avgScore
+    owner {
+      ...SimpleUserFragment
+    }
+    likedUsers {
+      id
+    }
+    address {
+      ...AddressFragment
+    }
+  }
+  ${ADDRESS_FRAGMENT}
+  ${SIMPLE_USER_FRAGMENT}
+`;
+
 export const RANK_CAFE_FRAGMENT = gql`
   fragment RankCafeFragment on Cafe {
     id

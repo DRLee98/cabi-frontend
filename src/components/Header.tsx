@@ -78,7 +78,7 @@ const HeaderBtn = styled.button`
 `;
 
 const SideNavContainer = styled.div`
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
@@ -141,7 +141,7 @@ const NavLink: React.FC<NavLinkProp> = ({ path, pathName, onClick }) => (
 const Header = () => {
   const isLogin = useReactiveVar(isLoginVar);
 
-  const commonLinks = [{ path: "/map", pathName: "지도" }];
+  const commonLinks = [{ path: "/map", pathName: "지도로 보기" }];
   const loginLinks = [{ path: "/my-profile", pathName: "내정보" }];
   const logoutLinks = [
     { path: "/login", pathName: "로그인" },

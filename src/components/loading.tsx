@@ -20,11 +20,17 @@ const wave = keyframes`
 `;
 
 const Container = styled.div`
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
   background-color: ${(prop) => prop.theme.signaturelightBgColor};
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 999;
 `;
 
 const LoadingBox = styled.div``;
