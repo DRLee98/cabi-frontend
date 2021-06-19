@@ -82,6 +82,8 @@ const DimContents = styled.div`
 `;
 
 const CafeBox = styled.li`
+  background-color: ${(prop) => prop.theme.signaturelightBgColor};
+  border-radius: 10px 0 10px 10px;
   &:hover {
     ${CafeDim} {
       opacity: 1;

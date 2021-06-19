@@ -3,7 +3,6 @@ import gql from "graphql-tag";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router";
 import styled from "styled-components";
 import Button from "../components/Button";
 import { Input } from "../components/Input";
@@ -53,7 +52,7 @@ interface ILoginForm {
 export const Login = () => {
   const { register, handleSubmit, errors, watch, getValues, formState } =
     useForm<ILoginForm>({ mode: "onChange" });
-  const history = useHistory();
+
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const onCompleted = (data: loginMutation) => {
     console.log(data);
@@ -64,8 +63,8 @@ export const Login = () => {
       tokenVar(token);
       isLoginVar(true);
       localStorage.setItem(TOKEN, token);
-      history.push("/");
-      console.log("login");
+      window.location.reload();
+      window.location.href = "/";
     } else {
       setErrorMsg(error);
       setTimeout(() => setErrorMsg(null), 2000);

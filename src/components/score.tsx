@@ -16,7 +16,7 @@ const HeartIcon = styled(FontAwesomeIcon)`
 
 const ScoreBox = styled.div`
   font-size: 12px;
-  align-self: flex-end;
+  //align-self: flex-end;
 `;
 
 interface ScoreProps {
