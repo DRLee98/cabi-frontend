@@ -16,7 +16,10 @@ import { userProfileQuery } from "../__generated__/userProfileQuery";
 const ProfileBox = styled.section`
   display: grid;
   grid-template-columns: 1fr 3fr;
-  padding: 5em 0;
+  padding: 5em 10px;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+  }
 `;
 
 const SideBox = styled.aside`
@@ -31,6 +34,9 @@ const ContentsBox = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    margin-top: 1em;
+  }
 `;
 
 const Name = styled.strong`
