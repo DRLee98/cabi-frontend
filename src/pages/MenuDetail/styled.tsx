@@ -2,7 +2,11 @@ import styled from "styled-components";
 
 export const MenuContainer = styled.div`
   display: flex;
-  margin: 0 5em;
+  margin: 0 5em 5em;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+    margin: 0 2em 2em;
+  }
 `;
 
 export const ImageBox = styled.div`
@@ -11,12 +15,24 @@ export const ImageBox = styled.div`
   position: sticky;
   top: ${(prop) => prop.theme.headerHeight};
   padding-top: 5em;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    width: 100%;
+    height: 50vh;
+    position: relative;
+    top: 0;
+    padding-top: 0;
+  }
 `;
 
 export const ContentsBox = styled.div`
   width: 50%;
-  padding: 3em;
+  padding: 3em 0 3em 3em;
   margin-top: 5em;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    width: 100%;
+    padding: 0;
+    margin-top: 2em;
+  }
 `;
 
 export const NameBox = styled.div`
@@ -45,7 +61,11 @@ export const CategoryName = styled.small`
 
 export const Price = styled.span``;
 
-export const DescriptionBox = styled.div``;
+export const MenuInfoBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
 export const Description = styled.p`
   color: ${(prop) => prop.theme.disableColor};
@@ -116,20 +136,25 @@ export const NutrientBox = styled.div`
   margin: 2em 0;
 `;
 
-export const EditBtn = styled.span`
-  display: inline-block;
-  margin-left: 10px;
+export const EditBtn = styled.button`
+  display: block;
+  width: 45%;
   & a {
     margin: 0;
-    padding: 5px;
   }
 `;
 
-export const DeleteBtn = styled.span`
-  display: inline-block;
-  margin-left: 10px;
+export const DeleteBtn = styled.button`
+  display: block;
+  width: 45%;
   & button {
     margin: 0;
-    padding: 5px;
   }
+`;
+
+export const BtnBox = styled.div`
+  margin-top: 2em;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 `;

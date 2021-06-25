@@ -14,7 +14,6 @@ import {
   Container,
   CoverImage,
   SLink,
-  FlexBox,
   MenuImage,
 } from "../../components/styledComponent";
 import { UserCircleDetail, UserCircle } from "../../components/userCircleBox";
@@ -55,9 +54,12 @@ import {
   CategoryTitle,
   MenuList,
   MenuItem,
+  MenuInfo,
   MenuName,
+  MenuPrice,
   MapBox,
   ReviewBox,
+  OwnerBtns,
 } from "./styled";
 import { filterCategory, getIsLike } from "./common";
 import { SimpleUserFragment } from "../../__generated__/SimpleUserFragment";
@@ -256,7 +258,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
           </LikeUserList>
         </MidBox>
         {isOwner && cafe?.owner.id === (user && user.id) && (
-          <FlexBox>
+          <OwnerBtns>
             <CreateButton
               link={`/cafe/${cafe?.id}/create-menu`}
               text={"+ 메뉴 만들기"}
@@ -266,7 +268,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
               text={"+ 카페 수정하기"}
             />
             <DeleteButton onClick={deleteCafe} text={"- 카페 삭제하기"} />
-          </FlexBox>
+          </OwnerBtns>
         )}
         <ContentsBox>
           <MenuBox>
@@ -284,7 +286,10 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
                               sizes={"100%"}
                               src={menu.smallMenuImg || undefined}
                             />
-                            <MenuName>{menu.name}</MenuName>
+                            <MenuInfo>
+                              <MenuName>{menu.name}</MenuName>
+                              <MenuPrice>{menu.price}원</MenuPrice>
+                            </MenuInfo>
                           </SLink>
                         </MenuItem>
                       ))}

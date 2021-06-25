@@ -31,7 +31,7 @@ import {
   EditBtn,
   DeleteBtn,
   Price,
-  DescriptionBox,
+  MenuInfoBox,
   Description,
   Option,
   OptionBox,
@@ -43,6 +43,7 @@ import {
   OptionItemBox,
   OptionItem,
   NutrientBox,
+  BtnBox,
 } from "./styled";
 import { getCategoryName } from "./common";
 import { myProfileQuery } from "../../__generated__/myProfileQuery";
@@ -149,25 +150,25 @@ export const MenuDetail: React.FC<MenuDetailProp> = ({ me }) => {
                 <CategoryName>
                   {menu && getCategoryName(menu?.category)}
                 </CategoryName>
-                {isOwner && menu?.ownerId === (user && user.id) && (
-                  <>
-                    <EditBtn>
-                      <CreateButton
-                        link={`/cafe/${cafeId}/menu/${menuId}/edit`}
-                        text={"+ 수정하기"}
-                      />
-                    </EditBtn>
-                    <DeleteBtn>
-                      <DeleteButton onClick={deleteMenu} text={"- 삭제하기"} />
-                    </DeleteBtn>
-                  </>
-                )}
               </Box>
-              <Price>{menu?.price} 원</Price>
             </NameBox>
-            <DescriptionBox>
+            <MenuInfoBox>
               <Description>{menu?.description}</Description>
-            </DescriptionBox>
+              <Price>{menu?.price} 원</Price>
+            </MenuInfoBox>
+            {isOwner && menu?.ownerId === (user && user.id) && (
+              <BtnBox>
+                <EditBtn>
+                  <CreateButton
+                    link={`/cafe/${cafeId}/menu/${menuId}/edit`}
+                    text={"+ 수정하기"}
+                  />
+                </EditBtn>
+                <DeleteBtn>
+                  <DeleteButton onClick={deleteMenu} text={"- 삭제하기"} />
+                </DeleteBtn>
+              </BtnBox>
+            )}
             {menu?.options && menu.options?.length > 0 && (
               <OptionBox>
                 <OptionTitle>옵션</OptionTitle>

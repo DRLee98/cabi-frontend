@@ -47,6 +47,7 @@ export interface CafeFragment_menus {
   name: string;
   smallMenuImg: string | null;
   category: Category;
+  price: number;
 }
 
 export interface CafeFragment_reviews_rating {

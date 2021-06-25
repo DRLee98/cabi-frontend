@@ -113,6 +113,7 @@ export const SIMPLE_MENU_FRAGMENT = gql`
     name
     smallMenuImg
     category
+    price
   }
 `;
 

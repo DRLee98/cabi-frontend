@@ -18,6 +18,11 @@ const DeleteBtn = styled.button`
     color: ${(prop) => prop.theme.whiteColor};
     background-color: ${(prop) => prop.theme.redColor};
   }
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    color: ${(prop) => prop.theme.whiteColor};
+    background-color: ${(prop) => prop.theme.redColor};
+  }
 `;
 
 interface DeleteeButtonProp {

@@ -47,6 +47,7 @@ export interface cafeDetailQuery_cafeDetail_cafe_menus {
   name: string;
   smallMenuImg: string | null;
   category: Category;
+  price: number;
 }
 
 export interface cafeDetailQuery_cafeDetail_cafe_reviews_rating {

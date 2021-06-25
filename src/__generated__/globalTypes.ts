@@ -16,6 +16,11 @@ export enum Category {
   Meal = "Meal",
 }
 
+export enum MessageType {
+  System = "System",
+  User = "User",
+}
+
 export enum UserRole {
   Client = "Client",
   Owner = "Owner",
@@ -57,6 +62,8 @@ export interface CafeInputType {
 export interface ChatRoomInputType {
   users: UserInputType[];
   messages?: MessageInputType[] | null;
+  secret?: boolean | null;
+  password?: string | null;
 }
 
 export interface CreateAccountInput {
@@ -210,7 +217,8 @@ export interface MenuInputType {
 
 export interface MessageInputType {
   context: string;
-  writer: UserInputType;
+  type: MessageType;
+  writer?: UserInputType | null;
   chatRoom: ChatRoomInputType;
 }
 

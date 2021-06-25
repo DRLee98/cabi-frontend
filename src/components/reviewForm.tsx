@@ -36,6 +36,7 @@ const ReviewFormBox = styled.div<ReviewFormViewProp>`
   left: 50%;
   transform: translateX(-50%) ${(prop) => !prop.show && "translateY(100%)"};
   width: 50%;
+  min-width: 400px;
   max-width: 800px;
   padding: 1em;
   background-color: ${(prop) => prop.theme.signaturelightBgColor};

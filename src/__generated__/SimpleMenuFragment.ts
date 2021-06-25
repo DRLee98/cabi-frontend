@@ -15,4 +15,5 @@ export interface SimpleMenuFragment {
   name: string;
   smallMenuImg: string | null;
   category: Category;
+  price: number;
 }
