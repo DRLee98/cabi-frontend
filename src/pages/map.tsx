@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, CoverImage } from "components/styledComponent";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { KakaoMapView } from "api/kakaoMap";
 import { UserFragment } from "__generated__/UserFragment";
@@ -35,17 +37,39 @@ const SearchBtn = styled.button`
   }
 `;
 
-const CafeList = styled.ul`
+const CafeListBtn = styled.button`
+  width: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
-  width: 15vw;
+  left: 10px;
+  top: 10px;
+  cursor: pointer;
+  padding: 0.5em;
+  border-radius: 10px;
+  transition: all 0.5s ease;
+  color: ${(prop) => prop.theme.keywordBgColor};
+  background-color: ${(props) => props.theme.keywordColor};
+  &:hover {
+    color: ${(prop) => prop.theme.keywordColor};
+    background-color: ${(props) => props.theme.keywordBgColor};
+  }
+  z-index: 4;
+`;
+
+const CafeList = styled.ul<CafeListProp>`
+  position: absolute;
+  width: 280px;
   height: 70vh;
-  margin: 5vh 0;
   padding: 10px 0;
-  left: -100px;
-  top: 0;
+  left: 10px;
+  top: 50px;
   border-radius: 5px;
   background-color: ${(prop) => prop.theme.whiteColor};
   box-shadow: 0 2px 4px 1px rgb(0 0 0 / 12%);
+  opacity: ${(props) => (props.show ? "1" : "0")};
+  transition: opacity 0.2s ease;
   z-index: 5;
 `;
 
@@ -104,6 +128,10 @@ const SEARCH_CAFES_LATLNG_QUERY = gql`
   ${MAP_VIEW_CAFE_FRAGMENT}
 `;
 
+interface CafeListProp {
+  show: boolean;
+}
+
 interface Bounds {
   top: number;
   bottom: number;
@@ -132,6 +160,23 @@ export const Map: React.FC<MapProp> = ({ user }) => {
 
   const [markers, setMarkers] = useState<[]>();
   const getMarkers = (markers: []) => setMarkers(markers);
+
+  const [cafeList, setCafeList] = useState<boolean>(false);
+  const [showCafeList, setShowCafeList] = useState<boolean>(false);
+
+  const openCafeList = () => {
+    setCafeList(true);
+    setTimeout(() => {
+      setShowCafeList(true);
+    }, 200);
+  };
+
+  const closeCafeList = () => {
+    setShowCafeList(false);
+    setTimeout(() => {
+      setCafeList(false);
+    }, 200);
+  };
 
   const [searchCafe, { data, loading }] = useLazyQuery<searchCafesLatLngQuery>(
     SEARCH_CAFES_LATLNG_QUERY,
@@ -199,34 +244,43 @@ export const Map: React.FC<MapProp> = ({ user }) => {
           getMarkers={getMarkers}
           loading={loading}
         />
-        <CafeList>
-          {cafes.map((cafe, i) => (
-            <CafeItem
-              key={cafe.id}
-              onMouseOver={() => {
-                handleMouseEvent(i, MOUSE_OVER);
-              }}
-              onMouseOut={() => {
-                handleMouseEvent(i, MOUSE_OUT);
-              }}
-            >
-              <CafeLink to={`/cafe/${cafe.id}`}>
-                <CoverImageBox>
-                  <CoverImage src={cafe.smallCoverImg || ""} />
-                </CoverImageBox>
-                <ContentsBox>
-                  <CafeName>{cafe.name}</CafeName>
-                  <CafeAddress>{cafe.address.address}</CafeAddress>
-                  <Score
-                    totalScore={cafe.totalScore}
-                    avgScore={cafe.avgScore}
-                    likedUsers={cafe.likedUsers?.length || 0}
-                  />
-                </ContentsBox>
-              </CafeLink>
-            </CafeItem>
-          ))}
-        </CafeList>
+        <CafeListBtn onClick={cafeList ? closeCafeList : openCafeList}>
+          {cafeList ? (
+            <FontAwesomeIcon icon={faTimes} />
+          ) : (
+            <FontAwesomeIcon icon={faBars} />
+          )}
+        </CafeListBtn>
+        {cafeList && (
+          <CafeList show={showCafeList}>
+            {cafes.map((cafe, i) => (
+              <CafeItem
+                key={cafe.id}
+                onMouseOver={() => {
+                  handleMouseEvent(i, MOUSE_OVER);
+                }}
+                onMouseOut={() => {
+                  handleMouseEvent(i, MOUSE_OUT);
+                }}
+              >
+                <CafeLink to={`/cafe/${cafe.id}`}>
+                  <CoverImageBox>
+                    <CoverImage src={cafe.smallCoverImg || ""} />
+                  </CoverImageBox>
+                  <ContentsBox>
+                    <CafeName>{cafe.name}</CafeName>
+                    <CafeAddress>{cafe.address.address}</CafeAddress>
+                    <Score
+                      totalScore={cafe.totalScore}
+                      avgScore={cafe.avgScore}
+                      likedUsers={cafe.likedUsers?.length || 0}
+                    />
+                  </ContentsBox>
+                </CafeLink>
+              </CafeItem>
+            ))}
+          </CafeList>
+        )}
       </MapContainer>
     </Container>
   );

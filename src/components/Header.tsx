@@ -33,6 +33,9 @@ const TitleBox = styled.div`
   display: flex;
   font-size: 35px;
   width: 25%;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    font-size: 25px;
+  }
 `;
 
 const Title = styled.h1``;
@@ -61,6 +64,9 @@ const Form = styled.form`
   &:focus-within {
     background-color: ${(props) => props.theme.signaturelightBgColor};
   }
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    padding-right: 5px;
+  }
 `;
 
 const Input = styled.input`
@@ -74,6 +80,9 @@ const HeaderBtn = styled.button`
   transition: all 0.5s ease;
   &:hover {
     background-color: ${(props) => props.theme.lightBgColor};
+  }
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    padding: 0.2em;
   }
 `;
 

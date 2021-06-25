@@ -17,9 +17,11 @@ export const theme = {
   redColor: "#f44336",
   grayColor: "#545252ab",
   headerHeight: "7vh",
-  footerHeight: "10vh",
-  footerBgColor: "#f1f1f180",
-  footerColor: "#9a9a9a66",
+  footerHeight: "12vh",
+  footerBgColor: "#ffd19433",
+  footerColor: "#ce903e73",
+  mediumScreenWidth: "768px",
+  smallScreenWidth: "425px",
 };
 
 const themeBlue = {

@@ -30,9 +30,12 @@ const EmptyLink = styled(Link)`
   }
 `;
 
-const MyCafeContainer = styled.section``;
+const MyCafeContainer = styled.section`
+  padding: 0 10px;
+`;
 
 const CafeContainer = styled.section`
+  padding: 0 10px;
   padding-top: 2vh;
   margin-top: 2vh;
   border-top: 1px solid ${(prop) => prop.theme.signatureColor};

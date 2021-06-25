@@ -13,11 +13,17 @@ const GridBox = styled.ul`
   display: grid;
   grid-gap: 2em 1.2em;
   grid-template-columns: repeat(3, minmax(250px, 1fr));
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    padding: 10px;
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const CafeImg = styled.div<CafeBoxProps>`
-  height: 24vh;
-  min-height: 150px;
+  height: 22vw;
+  max-height: 250px;
+  //min-height: 150px;
   background-position: center;
   background-size: cover;
   background-image: url(${(prop) =>
@@ -29,9 +35,6 @@ const CafeImg = styled.div<CafeBoxProps>`
 
 const CafeContents = styled.div`
   padding: 10px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
 `;
 
 const LikeIcon = styled(FontAwesomeIcon)<IconProps>`
@@ -53,8 +56,17 @@ const LikeIcon = styled(FontAwesomeIcon)<IconProps>`
 `;
 
 const CafeName = styled.strong`
+  display: block;
+  margin-bottom: 5px;
   font-weight: bold;
   font-size: 18px;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    font-size: 14px;
+  }
+`;
+
+const CafeScore = styled.div`
+  text-align: right;
 `;
 
 const CafeDim = styled.div`
@@ -136,11 +148,13 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes, me }) => {
             </CafeImg>
             <CafeContents>
               <CafeName>{cafe.name}</CafeName>
-              <Score
-                totalScore={cafe.totalScore}
-                avgScore={cafe.avgScore}
-                likedUsers={cafe.likedUsers?.length || 0}
-              />
+              <CafeScore>
+                <Score
+                  totalScore={cafe.totalScore}
+                  avgScore={cafe.avgScore}
+                  likedUsers={cafe.likedUsers?.length || 0}
+                />
+              </CafeScore>
             </CafeContents>
           </CafeBox>
         </Link>

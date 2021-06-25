@@ -17,6 +17,11 @@ const CreateLink = styled(Link)`
     color: ${(prop) => prop.theme.keywordColor};
     background-color: ${(prop) => prop.theme.keywordBgColor};
   }
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    color: ${(prop) => prop.theme.keywordColor};
+    background-color: ${(prop) => prop.theme.keywordBgColor};
+  }
 `;
 
 interface CreateButtonProp {

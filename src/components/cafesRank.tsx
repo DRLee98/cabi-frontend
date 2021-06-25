@@ -13,12 +13,20 @@ const CafeRankContainer = styled.div`
   display: flex;
   justify-content: space-between;
   // border: 2px solid ${(prop) => prop.theme.signatureColor};
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+    height: auto;
+  }
 `;
 
 const CafeImgList = styled.ul`
   width: 70%;
   position: relative;
   overflow: hidden;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    width: 100%;
+    height: 45vw;
+  }
 `;
 
 const CafeImg = styled.li<CafeImgProp>`
@@ -41,9 +49,13 @@ const RankList = styled.ul`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    width: 100%;
+  }
 `;
 
 const RankItem = styled.li<RankItemProp>`
+  padding: 4px;
   height: 100%;
   transition: all 0.5s ease;
   ${(prop) =>
@@ -59,10 +71,10 @@ const RankItem = styled.li<RankItemProp>`
 
 const RankLink = styled(Link)`
   height: 100%;
-  padding: 0 10px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  //padding: 0 10px;
 `;
 
 const Rank = styled.span<RankProp>`
@@ -76,6 +88,9 @@ const Rank = styled.span<RankProp>`
       : prop.rank === 3
       ? "chocolate"
       : "gray"};
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    ${(prop) => prop.rank < 4 && "font-size: 20px"};
+  }
 `;
 
 const CafeInfo = styled.div``;
@@ -83,18 +98,24 @@ const CafeInfo = styled.div``;
 const CafeName = styled.strong`
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 4px;
   display: inline-block;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    font-size: 16px;
+  }
 `;
 
 const CafeAddress = styled.address`
   font-size: 14px;
   font-weight: normal;
+  margin: 4px 0;
   color: ${(prop) => prop.theme.grayColor};
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    font-size: 12px;
+  }
 `;
 
 const ScoreBox = styled.div`
-  align-self: auto;
+  text-align: right;
 `;
 
 export const CAFES_RANK_QUERY = gql`

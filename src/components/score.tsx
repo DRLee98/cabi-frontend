@@ -17,6 +17,17 @@ const HeartIcon = styled(FontAwesomeIcon)`
 const ScoreBox = styled.div`
   font-size: 12px;
   //align-self: flex-end;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: none;
+  }
+`;
+
+const SmallScoreBox = styled.div`
+  display: none;
+  font-size: 8px;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+  }
 `;
 
 interface ScoreProps {
@@ -31,11 +42,19 @@ export const Score: React.FC<ScoreProps> = ({
   likedUsers,
 }) => {
   return (
-    <ScoreBox>
-      <StarIcon icon={faStar} />
-      총합: {totalScore} / 평균: {avgScore}
-      <HeartIcon icon={faHeart} />
-      {likedUsers}
-    </ScoreBox>
+    <>
+      <ScoreBox>
+        <StarIcon icon={faStar} />
+        총합: {totalScore} / 평균: {avgScore}
+        <HeartIcon icon={faHeart} />
+        {likedUsers}
+      </ScoreBox>
+      <SmallScoreBox>
+        <StarIcon icon={faStar} />
+        {totalScore} / {avgScore}
+        <HeartIcon icon={faHeart} />
+        {likedUsers}
+      </SmallScoreBox>
+    </>
   );
 };
