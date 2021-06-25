@@ -14,6 +14,9 @@ export const Form = styled.form`
   grid-template:
     "Image Contents" 6fr
     "Button Button" 1fr/ 1fr 1fr;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+  }
 `;
 
 export const RadioBox = styled.div<RadioBoxProps>`
@@ -32,6 +35,9 @@ export const ImageBox = styled.div`
   align-items: center;
   justify-content: center;
   grid-area: Image;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    margin-bottom: 1em;
+  }
 `;
 
 export const ContentsBox = styled.div`

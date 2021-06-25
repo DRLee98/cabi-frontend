@@ -67,6 +67,10 @@ const Label = styled.label`
 
 const Span = styled.span``;
 
+const TotalSize = styled.div`
+  width: 50%;
+`;
+
 interface NutrientFormProps {
   register: any;
   value?: menuDetailQuery_menuDetail_menu_nutrient | null | undefined;
@@ -90,12 +94,14 @@ export const NutrientForm: React.FC<NutrientFormProps> = ({
           <TableValue colSpan={2}>
             <Label>
               <Span>총 내용량</Span>
-              <Input
-                ref={register}
-                name={"volume"}
-                type="number"
-                defaultValue={value?.volume || ""}
-              />
+              <TotalSize>
+                <Input
+                  ref={register}
+                  name={"volume"}
+                  type="number"
+                  defaultValue={value?.volume || ""}
+                />
+              </TotalSize>
               <Span>g</Span>
             </Label>
           </TableValue>

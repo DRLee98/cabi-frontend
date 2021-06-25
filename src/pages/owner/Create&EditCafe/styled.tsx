@@ -11,6 +11,10 @@ export const FormBox = styled.div`
 export const Form = styled.form`
   width: 75%;
   min-width: 750px;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    width: unset;
+    min-width: unset;
+  }
 `;
 
 export const BtnBox = styled.div`
@@ -29,6 +33,9 @@ export const ContentsBox = styled.div`
   grid-template:
     "name name" 1fr
     "description address" 2fr/ 1fr 1fr;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+  }
 `;
 
 export const NameBox = styled.div`
@@ -42,6 +49,9 @@ export const NameBox = styled.div`
 
 export const DescriptionBox = styled.div`
   grid-area: description;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    margin: 1em 0;
+  }
 `;
 
 export const AddressBox = styled.div`
@@ -51,6 +61,9 @@ export const AddressBox = styled.div`
 export const KeywordBox = styled.div`
   margin: 1em 0;
   display: flex;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+  }
 `;
 
 export const KeywordBtn = styled.span`
@@ -63,7 +76,15 @@ export const KeywordBtn = styled.span`
   min-width: fit-content;
   &:hover {
     background-color: ${(prop) => prop.theme.keywordBgColor};
-    color: white;
+    color: ${(prop) => prop.theme.keywordColor};
+  }
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 1em;
+    text-align: center;
+    background-color: ${(prop) => prop.theme.keywordBgColor};
+    color: ${(prop) => prop.theme.keywordColor};
   }
 `;
 
@@ -79,6 +100,11 @@ export const KeywordDelBtn = styled.span`
   opacity: 0;
   transition: all 0.5s ease;
   &:hover {
+    color: red;
+  }
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    opacity: 1;
     color: red;
   }
 `;

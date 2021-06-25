@@ -14,6 +14,13 @@ export const Form = styled.form`
   grid-template:
     "Image Contents" 6fr
     "Button Button" 1fr/ 1fr 1fr;
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    padding: 0 10px;
+  }
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+  }
 `;
 
 export const BtnBox = styled.div`
@@ -26,6 +33,13 @@ export const ImageBox = styled.div`
   align-items: center;
   justify-content: center;
   grid-area: Image;
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    img {
+      width: 20rem;
+      height: 22rem;
+    }
+  }
 `;
 
 export const ContentsBox = styled.div`
@@ -74,6 +88,11 @@ export const OptionDelBtn = styled.span`
   transition: all 0.5s ease;
   &:hover {
     color: red;
+  }
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    color: red;
+    opacity: 1;
   }
 `;
 
