@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { getLatLng } from "./kakaoMap";
 
 const LayerBackGround = styled.div`
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
@@ -13,7 +13,7 @@ const LayerBackGround = styled.div`
   align-items: center;
   justify-content: center;
   background-color: rgb(37 37 37 / 60%);
-  z-index: 99;
+  z-index: 999;
 `;
 
 const PostcodeBox = styled.div`
@@ -29,6 +29,10 @@ const CloseBtn = styled.button`
   background-color: white;
   border-radius: 10px;
   padding: 10px 5px;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    top: -50px;
+    right: 0px;
+  }
 `;
 
 interface PostcodeProps {
@@ -45,7 +49,10 @@ export const Postcode: React.FC<PostcodeProps> = ({
     setAddressResult({ ...data, lat, lng });
   };
 
-  const styles = { maxWidth: "750px" } as React.CSSProperties;
+  const styles = {
+    maxWidth: "750px",
+    minWidth: "380px",
+  } as React.CSSProperties;
 
   return (
     <LayerBackGround>
