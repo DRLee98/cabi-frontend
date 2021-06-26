@@ -14,6 +14,7 @@ import { myProfileQuery } from "../__generated__/myProfileQuery";
 import { Image } from "../components/styledComponent";
 import { REVIEW_FRAGMENT } from "../fragments";
 import { Link } from "react-router-dom";
+import { defaultProfileImg } from "commonConstants";
 
 const ReviewListBox = styled.div`
   padding-bottom: 3em;
@@ -283,9 +284,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                   }
                 >
                   <Image
-                    src={
-                      review.writer.smallProfileImg || "/image/user_basic.png"
-                    }
+                    src={review.writer.smallProfileImg || defaultProfileImg}
                     sizes={"100%"}
                   />
                 </Link>
@@ -325,7 +324,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                 <ReplyForm onSubmit={handleSubmit(onSubmit)}>
                   <ImageBox size={"2em"}>
                     <Image
-                      src={user?.smallProfileImg || "/image/user_basic.png"}
+                      src={user?.smallProfileImg || defaultProfileImg}
                       sizes={"100%"}
                     />
                   </ImageBox>
@@ -361,7 +360,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                               <Image
                                 src={
                                   reply.writer.smallProfileImg ||
-                                  "/image/user_basic.png"
+                                  defaultProfileImg
                                 }
                                 sizes={"100%"}
                               />

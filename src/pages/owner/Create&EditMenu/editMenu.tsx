@@ -11,7 +11,7 @@ import { Input, MenuImageInput, Select } from "../../../components/Input";
 import { NutrientForm } from "../../../components/nutrient";
 import { Slider } from "../../../components/slider";
 import { Container, Title } from "../../../components/styledComponent";
-import { siteName } from "../../../constants";
+import { siteName } from "../../../commonConstants";
 import { uploadFile } from "../../../upload";
 import { Category } from "../../../__generated__/globalTypes";
 import {
@@ -102,8 +102,9 @@ export const EditMenu = () => {
     }
   });
 
-  const [originalMenuImg, setOriginalMenuImg] =
-    useState<string | undefined>("");
+  const [originalMenuImg, setOriginalMenuImg] = useState<string | undefined>(
+    "",
+  );
   const [options, setOptions] = useState<string[]>(
     Object.keys(defaultOption) || [],
   );

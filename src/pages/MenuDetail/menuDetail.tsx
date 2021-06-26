@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router";
 import { Nutrient } from "../../components/nutrient";
 import { Slider } from "../../components/slider";
 import { Container, MenuImage } from "../../components/styledComponent";
-import { siteName } from "../../constants";
+import { siteName } from "../../commonConstants";
 import { UserRole } from "../../__generated__/globalTypes";
 import { useMenuDetail } from "../../hooks/menuDetailQuery";
 import { ReviewList } from "../../components/reviewList";

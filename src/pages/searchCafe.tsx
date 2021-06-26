@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 import { GridCafe } from "../components/cafes";
 import { Keywords } from "../components/keywords";
 import { Container } from "../components/styledComponent";
-import { siteName } from "../constants";
+import { siteName } from "../commonConstants";
 import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
 import { searchCafesQuery } from "../__generated__/searchCafesQuery";

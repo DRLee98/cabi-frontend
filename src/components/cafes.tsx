@@ -1,5 +1,6 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { defaultCoverImg } from "commonConstants";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -27,7 +28,7 @@ const CafeImg = styled.div<CafeBoxProps>`
   background-position: center;
   background-size: cover;
   background-image: url(${(prop) =>
-    prop.image ? prop.image : "/image/background_basic.png"});
+    prop.image ? prop.image : defaultCoverImg});
   border-radius: 10px 0 10px 0;
   position: relative;
   overflow: hidden;

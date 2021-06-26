@@ -19,16 +19,14 @@ import {
   ErrorMsg,
   Title,
 } from "../../../components/styledComponent";
-import { siteName } from "../../../constants";
+import { defaultCoverImg, siteName } from "../../../commonConstants";
 import { uploadFile } from "../../../upload";
 import {
   createCafeMutation,
   createCafeMutationVariables,
 } from "../../../__generated__/createCafeMutation";
 import { MY_CAFES_QUERY } from "../myCafes";
-import { useMe } from "../../../hooks/useMe";
 import { Slider } from "../../../components/slider";
-import { Loading } from "../../../components/loading";
 import {
   AddressBox,
   BtnBox,
@@ -119,8 +117,9 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
     }
   };
 
-  const [smallCoverImgUrl, setSmallCoverImgUrl] =
-    useState<string | undefined>("");
+  const [smallCoverImgUrl, setSmallCoverImgUrl] = useState<string | undefined>(
+    "",
+  );
   const [addressResult, setAddressResult] = useState<NewAddressData>();
   const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
@@ -203,7 +202,7 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
           <Title>카페 만들기</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <CoverImageInput register={register} />
+              <CoverImageInput register={register} url={defaultCoverImg} />
             </ImageBox>
             <ContentsBox>
               <NameBox>

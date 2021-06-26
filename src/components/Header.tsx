@@ -2,11 +2,12 @@ import { useReactiveVar } from "@apollo/client";
 import { faBars, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { MouseEventHandler, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { isLoginVar } from "../apollo";
-import { siteName, TOKEN } from "../constants";
+import { siteName, TOKEN } from "../commonConstants";
 import { Container } from "./styledComponent";
+import { BackBtn } from "components/backBtn";
 
 const SHeader = styled.header`
   position: fixed;
@@ -38,7 +39,9 @@ const TitleBox = styled.div`
   }
 `;
 
-const Title = styled.h1``;
+const Title = styled.h1`
+  line-height: 1.1;
+`;
 
 const LinkBox = styled.div`
   display: flex;
@@ -148,6 +151,8 @@ const NavLink: React.FC<NavLinkProp> = ({ path, pathName, onClick }) => (
 );
 
 const Header = () => {
+  const { pathname } = useLocation();
+  const noBackPath = ["/"];
   const isLogin = useReactiveVar(isLoginVar);
 
   const commonLinks = [{ path: "/map", pathName: "지도로 보기" }];
@@ -186,6 +191,7 @@ const Header = () => {
         <Container>
           <HeaderBox>
             <TitleBox>
+              {!noBackPath.includes(pathname) && <BackBtn />}
               {/* <FontAwesomeIcon icon={faCoffee} /> */}
               <Link to="/">
                 <Title>{siteName}</Title>

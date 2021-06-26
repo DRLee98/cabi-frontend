@@ -17,7 +17,7 @@ import {
   MenuImage,
 } from "../../components/styledComponent";
 import { UserCircleDetail, UserCircle } from "../../components/userCircleBox";
-import { siteName } from "../../constants";
+import { defaultCoverImg, siteName } from "../../commonConstants";
 import { CAFE_DETAIL_QUERY, useCafeDetail } from "../../hooks/cafeDetailQuery";
 import { cafeDetailQuery_cafeDetail_cafe_likedUsers } from "../../__generated__/cafeDetailQuery";
 import { UserRole } from "../../__generated__/globalTypes";
@@ -221,9 +221,7 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
       <Container>
         <InfoBox>
           <ImageBox>
-            <CoverImage
-              src={cafe?.originalCoverImg || "/image/background_basic.png"}
-            />
+            <CoverImage src={cafe?.originalCoverImg || defaultCoverImg} />
           </ImageBox>
           <Title>{cafe?.name}</Title>
           <OwnerInfo>

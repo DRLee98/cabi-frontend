@@ -9,7 +9,7 @@ import { AddressForm } from "../../components/addressForm";
 import Button from "../../components/Button";
 import { ImageInput, Input, RadioInput } from "../../components/Input";
 import { Container, ErrorMsg, Title } from "../../components/styledComponent";
-import { siteName } from "../../constants";
+import { defaultProfileImg, siteName } from "../../commonConstants";
 import { uploadFile } from "../../upload";
 import {
   createAccountMutation,
@@ -120,7 +120,7 @@ export const CreateAccount = () => {
           <Title>회원가입</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <ImageInput register={register} />
+              <ImageInput register={register} url={defaultProfileImg} />
             </ImageBox>
             <ContentsBox>
               <Input

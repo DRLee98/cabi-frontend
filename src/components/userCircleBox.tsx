@@ -4,6 +4,7 @@ import { Image } from "./styledComponent";
 import { Link } from "react-router-dom";
 import { SimpleUserFragment } from "../__generated__/SimpleUserFragment";
 import { UserFragment } from "../__generated__/UserFragment";
+import { defaultProfileImg } from "commonConstants";
 
 const UserInfo = styled.div`
   padding: 0;
@@ -76,7 +77,7 @@ export const UserCircleDetail: React.FC<UserCircleProp> = ({ user, me }) => {
         width={userNameWidth > userEmailWidth ? userNameWidth : userEmailWidth}
       >
         <Image
-          src={user?.smallProfileImg || "/image/user_basic.png"}
+          src={user?.smallProfileImg || defaultProfileImg}
           sizes={"5rem"}
         />
         <UserInfo>
@@ -98,7 +99,7 @@ export const UserCircle: React.FC<UserCircleProp> = ({ user, me }) => {
     <UserBox>
       <Link to={toLink}>
         <Image
-          src={user?.smallProfileImg || "/image/user_basic.png"}
+          src={user?.smallProfileImg || defaultProfileImg}
           sizes={"4rem"}
         />
       </Link>

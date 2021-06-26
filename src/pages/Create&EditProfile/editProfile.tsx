@@ -9,7 +9,7 @@ import { AddressForm } from "../../components/addressForm";
 import Button from "../../components/Button";
 import { ImageInput, Input } from "../../components/Input";
 import { Container, Title } from "../../components/styledComponent";
-import { siteName } from "../../constants";
+import { siteName } from "../../commonConstants";
 import { MY_PROFILE_QUERY } from "../../hooks/useMe";
 import { uploadFile } from "../../upload";
 import {

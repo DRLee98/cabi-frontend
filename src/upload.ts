@@ -1,4 +1,4 @@
-import { URL } from "./constants";
+import { URL } from "./commonConstants";
 import { imageResize } from "./imageResize";
 
 export const uploadFile = async (file: File, width: number, height: number) => {

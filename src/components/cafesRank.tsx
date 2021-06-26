@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { defaultCoverImg } from "commonConstants";
 import gql from "graphql-tag";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -197,9 +198,7 @@ export const CafesRank = () => {
             view={getView(i + 1)}
           >
             <Link to={`/cafe/${cafe.id}`}>
-              <CoverImage
-                src={cafe.originalCoverImg || "/image/background_basic.png"}
-              />
+              <CoverImage src={cafe.originalCoverImg || defaultCoverImg} />
             </Link>
           </CafeImg>
         ))}

@@ -11,7 +11,7 @@ import { Input, MenuImageInput, Select } from "../../../components/Input";
 import { NutrientForm } from "../../../components/nutrient";
 import { Slider } from "../../../components/slider";
 import { Container, Title } from "../../../components/styledComponent";
-import { siteName } from "../../../constants";
+import { siteName } from "../../../commonConstants";
 import { uploadFile } from "../../../upload";
 import {
   createMenuMutation,

@@ -15,7 +15,7 @@ import {
   Textarea,
 } from "../../../components/Input";
 import { Container, Title } from "../../../components/styledComponent";
-import { siteName } from "../../../constants";
+import { defaultCoverImg, siteName } from "../../../commonConstants";
 import { uploadFile } from "../../../upload";
 import { Slider } from "../../../components/slider";
 import {
@@ -82,8 +82,9 @@ export const EditCafe = () => {
 
   const history = useHistory();
   const client = useApolloClient();
-  const [originalCoverImg, setOriginalCoverImg] =
-    useState<string | undefined>("");
+  const [originalCoverImg, setOriginalCoverImg] = useState<string | undefined>(
+    "",
+  );
   const [addressResult, setAddressResult] = useState<NewAddressData>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [keywords, setKeywords] = useState<string[]>(
@@ -230,7 +231,7 @@ export const EditCafe = () => {
             <ImageBox>
               <CoverImageInput
                 register={register}
-                url={cafe?.originalCoverImg || "/image/background_basic.png"}
+                url={cafe?.originalCoverImg || defaultCoverImg}
               />
             </ImageBox>
             <ContentsBox>

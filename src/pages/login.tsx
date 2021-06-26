@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Button from "../components/Button";
 import { Input } from "../components/Input";
 import { Container } from "../components/styledComponent";
-import { siteName, TOKEN } from "../constants";
+import { siteName, TOKEN } from "../commonConstants";
 import {
   loginMutation,
   loginMutationVariables,

@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { GridCafe } from "../components/cafes";
 import { Loading } from "../components/loading";
 import { Container, Image } from "../components/styledComponent";
-import { siteName } from "../constants";
+import { defaultProfileImg, siteName } from "../commonConstants";
 import { USER_FRAGMENT } from "../fragments";
 import { UserRole } from "../__generated__/globalTypes";
 import { UserFragment } from "../__generated__/UserFragment";
@@ -135,7 +135,7 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
       <Container>
         <ProfileBox>
           <SideBox>
-            <Image src={user?.originalProfileImg || "/image/user_basic.png"} />
+            <Image src={user?.originalProfileImg || defaultProfileImg} />
           </SideBox>
           <ContentsBox>
             <Name>{user?.name} 님</Name>
@@ -178,7 +178,7 @@ export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
       <Container>
         <ProfileBox>
           <SideBox>
-            <Image src={user?.originalProfileImg || "/image/user_basic.png"} />
+            <Image src={user?.originalProfileImg || defaultProfileImg} />
           </SideBox>
           <ContentsBox>
             <Name>{user?.name} 님</Name>

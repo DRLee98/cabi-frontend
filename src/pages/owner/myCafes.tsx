@@ -8,7 +8,7 @@ import { CreateButton } from "../../components/createBtn";
 import { Keywords } from "../../components/keywords";
 import { Loading } from "../../components/loading";
 import { Container, Title } from "../../components/styledComponent";
-import { siteName } from "../../constants";
+import { siteName } from "../../commonConstants";
 import { SIMPLE_CAFE_FRAGMENT } from "../../fragments";
 import { useKeywords } from "../../hooks/useKeywords";
 import { myCafesQuery } from "../../__generated__/myCafesQuery";

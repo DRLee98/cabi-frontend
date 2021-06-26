@@ -6,7 +6,7 @@ import { GridCafe } from "../components/cafes";
 import { Keywords } from "../components/keywords";
 import { Loading } from "../components/loading";
 import { Container } from "../components/styledComponent";
-import { siteName } from "../constants";
+import { siteName } from "../commonConstants";
 import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
 import { searchCafesKeywordQuery } from "../__generated__/searchCafesKeywordQuery";
