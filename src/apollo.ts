@@ -8,18 +8,24 @@ import {
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { setContext } from "@apollo/client/link/context";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { TOKEN, URL } from "./commonConstants";
+import { TOKEN } from "./commonConstants";
 
 const token = localStorage.getItem(TOKEN);
 export const isLoginVar = makeVar(Boolean(token));
 export const tokenVar = makeVar(token);
 
 const httpLink = createHttpLink({
-  uri: `https://${URL}/graphql`,
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://cabi-backend.herokuapp.com/graphql"
+      : "http://localhost:4000/graphql",
 });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://${URL}/graphql`,
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "wss://cabi-backend.herokuapp.com/graphql"
+      : "ws://localhost:4000/graphql",
   options: {
     reconnect: true,
     connectionParams: {
