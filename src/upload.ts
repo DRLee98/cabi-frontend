@@ -1,5 +1,9 @@
-import { URL } from "./commonConstants";
 import { imageResize } from "./imageResize";
+
+const URL =
+  process.env.NODE_ENV === "production"
+    ? "https://cabi-backend.herokuapp.com"
+    : "http://localhost:4000";
 
 export const uploadFile = async (file: File, width: number, height: number) => {
   const smallFile = await imageResize(file, width, height);
