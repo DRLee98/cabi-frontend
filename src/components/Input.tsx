@@ -170,7 +170,7 @@ interface RadioInputLabelProps {
 interface InputProps {
   register?: any;
   name?: string;
-  label: string;
+  label?: string;
   write?: Boolean;
   type?: string;
   error?: string;
@@ -223,7 +223,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <InputOutBox>
       <InputInBox error={error}>
-        <InputLabel write={write || disabled}>{label}</InputLabel>
+        {label && <InputLabel write={write || disabled}>{label}</InputLabel>}
         <SInput ref={register} name={name} type={type} disabled={disabled} />
       </InputInBox>
       {error && <ErrorMsg>{error}</ErrorMsg>}

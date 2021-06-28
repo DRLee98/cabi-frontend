@@ -23,6 +23,8 @@ export const theme = {
   menuBackgroundColor: "#82c5d230",
   mediumScreenWidth: "768px",
   smallScreenWidth: "425px",
+  chatBoxBgColor: "#ffeed4",
+  myChatBoxBgColor: "#19bbc72b",
 };
 
 const themeBlue = {

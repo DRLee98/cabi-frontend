@@ -51,7 +51,9 @@ interface UserBoxProp {
 
 interface UserCircleProp {
   user: SimpleUserFragment | null | undefined;
-  me: UserFragment | null | undefined;
+  me?: UserFragment | null | undefined;
+  size?: string;
+  link?: boolean;
 }
 
 const getLink = (user: UserCircleProp["user"], me: UserCircleProp["me"]) => {
@@ -93,16 +95,29 @@ export const UserCircleDetail: React.FC<UserCircleProp> = ({ user, me }) => {
   );
 };
 
-export const UserCircle: React.FC<UserCircleProp> = ({ user, me }) => {
+export const UserCircle: React.FC<UserCircleProp> = ({
+  user,
+  me,
+  size,
+  link = true,
+}) => {
   const toLink = getLink(user, me);
   return (
     <UserBox>
-      <Link to={toLink}>
+      {link && (
+        <Link to={toLink}>
+          <Image
+            src={user?.smallProfileImg || defaultProfileImg}
+            sizes={size || "4rem"}
+          />
+        </Link>
+      )}
+      {!link && (
         <Image
           src={user?.smallProfileImg || defaultProfileImg}
-          sizes={"4rem"}
+          sizes={size || "4rem"}
         />
-      </Link>
+      )}
     </UserBox>
   );
 };

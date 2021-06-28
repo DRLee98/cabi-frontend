@@ -62,6 +62,7 @@ export interface CafeInputType {
 export interface ChatRoomInputType {
   users: UserInputType[];
   messages?: MessageInputType[] | null;
+  name: string;
   secret?: boolean | null;
   password?: string | null;
 }
@@ -108,6 +109,11 @@ export interface CreateMenuReviewInput {
   score: number;
   cafeId: number;
   menuId: number;
+}
+
+export interface CreateMessageInput {
+  context: string;
+  chatRoomId: number;
 }
 
 export interface CreateNutrientInput {
@@ -180,6 +186,15 @@ export interface EditProfileInput {
   smallProfileImg?: string | null;
   oldPassword?: string | null;
   address?: AddressInputType | null;
+}
+
+export interface EntranceChatRoomInput {
+  id: number;
+  password?: string | null;
+}
+
+export interface IsSecretChatRoomInput {
+  id: number;
 }
 
 export interface KeywordInputType {
@@ -305,6 +320,10 @@ export interface UserInputType {
 }
 
 export interface UserProfileInput {
+  id: number;
+}
+
+export interface ViewChatRoomInput {
   id: number;
 }
 

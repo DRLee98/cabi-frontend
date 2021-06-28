@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Wrap = styled.div`
-  min-height: 100vh;
+  min-height: 88vh;
   padding-top: ${(prop) => prop.theme.headerHeight};
-  margin-bottom: 15px;
 `;
 
 export const Container = styled.div`
@@ -12,12 +11,17 @@ export const Container = styled.div`
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  margin-bottom: 2vh;
 `;
 
 export const Title = styled.h2`
   margin-bottom: 2em;
   font-weight: bold;
   font-size: x-large;
+`;
+
+export const CenterTitle = styled(Title)`
+  text-align: center;
 `;
 
 export const ErrorMsg = styled.p`

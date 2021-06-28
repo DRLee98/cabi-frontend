@@ -156,7 +156,10 @@ const Header = () => {
   const isLogin = useReactiveVar(isLoginVar);
 
   const commonLinks = [{ path: "/map", pathName: "지도로 보기" }];
-  const loginLinks = [{ path: "/my-profile", pathName: "내정보" }];
+  const loginLinks = [
+    { path: "/chat-rooms", pathName: "수다방" },
+    { path: "/my-profile", pathName: "내정보" },
+  ];
   const logoutLinks = [
     { path: "/login", pathName: "로그인" },
     { path: "/create-account", pathName: "회원가입" },

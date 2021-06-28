@@ -248,3 +248,16 @@ export const USER_FRAGMENT = gql`
   ${REVIEW_FRAGMENT}
   ${REPLY_FRAGMENT}
 `;
+
+export const MESSAGE_FRAGMENT = gql`
+  fragment MessageFragment on Message {
+    id
+    type
+    context
+    createdAt
+    writer {
+      ...SimpleUserFragment
+    }
+  }
+  ${SIMPLE_USER_FRAGMENT}
+`;
