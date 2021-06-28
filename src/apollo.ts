@@ -15,7 +15,7 @@ export const isLoginVar = makeVar(Boolean(token));
 export const tokenVar = makeVar(token);
 
 const httpLink = createHttpLink({
-  uri: `http://${URL}/graphql`,
+  uri: `https://${URL}/graphql`,
 });
 
 const wsLink = new WebSocketLink({
