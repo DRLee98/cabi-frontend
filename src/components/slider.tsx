@@ -13,7 +13,7 @@ const SliderContainer = styled.div<SliderContainerProps>`
 `;
 
 const SliderBox = styled.div<SliderBoxProps>`
-  overflow-x: clip;
+  overflow-x: hidden;
   position: absolute;
   left: 0;
   right: 0;

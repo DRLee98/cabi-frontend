@@ -49,6 +49,11 @@ const LinkBox = styled.div`
   align-content: center;
   justify-content: flex-end;
   font-size: 18px;
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
+    font-size: 22px;
+    width: 70%;
+  }
 `;
 
 const LogoutBtn = styled.button``;

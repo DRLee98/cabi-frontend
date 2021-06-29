@@ -1,7 +1,7 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { defaultCoverImg } from "commonConstants";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { seeCafesQuery_seeCafes_cafes } from "../__generated__/seeCafesQuery";
@@ -84,6 +84,9 @@ const CafeDim = styled.div`
 
 const KeywordsBox = styled.div`
   width: 100%;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    font-size: 10px;
+  }
 `;
 
 const DimContents = styled.div`
@@ -119,6 +122,11 @@ interface CafesProp {
 }
 
 export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes, me }) => {
+  const {
+    screen: { width },
+  } = window;
+  const userCircleSize = width < 500 ? "2rem" : "4rem";
+
   return (
     <GridBox>
       {cafes?.map((cafe) => (
@@ -142,7 +150,12 @@ export const GridCafe: React.FC<CafesProp> = ({ owner = false, cafes, me }) => {
                     <StackKeywords keywords={cafe.keywords} />
                   </KeywordsBox>
                   {cafe.owner.id !== me?.id && (
-                    <UserCircle user={cafe.owner} me={me} />
+                    <UserCircle
+                      link={false}
+                      user={cafe.owner}
+                      me={me}
+                      size={userCircleSize}
+                    />
                   )}
                 </DimContents>
               </CafeDim>

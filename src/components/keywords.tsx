@@ -29,7 +29,7 @@ const KeywordContainer = styled.div`
   margin: 1em 0;
 `;
 
-const StackKeywordContainer = styled.div`
+const StackKeywordContainer = styled.ul`
   display: flex;
   flex-wrap: wrap-reverse;
   gap: 10px;
