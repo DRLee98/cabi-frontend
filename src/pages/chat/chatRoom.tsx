@@ -53,7 +53,7 @@ const SendMsgForm = styled.form`
   align-items: center;
   justify-content: space-between;
   position: sticky;
-  top: 100%;
+  bottom: 0;
   left: 0;
   right: 0;
   padding: 0.5em;
@@ -82,6 +82,7 @@ const MessagesContainer = styled.ul`
   display: flex;
   flex-direction: column;
   padding: 0 1em;
+  min-height: 72vh;
 `;
 
 interface ChatRoomParam {
@@ -124,6 +125,7 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
       ? scrollHeight - footer?.offsetHeight - screenHeight
       : scrollHeight - screenHeight;
     window.scroll(0, height);
+    console.log(height, scrollHeight);
   };
 
   const [
@@ -277,7 +279,7 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
             </PasswordForm>
           </PasswordContainer>
         ) : (
-          <MessagesContainer>
+          <MessagesContainer onLoad={scrollBottom}>
             <CenterTitle>
               {viewChatData?.viewChatRoom.chatRoom.name}
             </CenterTitle>
