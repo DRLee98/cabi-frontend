@@ -6,6 +6,7 @@ import { Container, CenterTitle } from "../../components/styledComponent";
 import { siteName } from "../../commonConstants";
 import { viewChatRoomsQuery } from "__generated__/viewChatRoomsQuery";
 import { ChatRoomList } from "components/chatRooms";
+import { CreateButton } from "components/createBtn";
 import styled from "styled-components";
 import { VIEW_CHAT_ROOMS_QUERY } from "./chatGql";
 
@@ -24,6 +25,7 @@ export const ChatRooms = () => {
       </Helmet>
       <Container>
         <CenterTitle>수다방들</CenterTitle>
+        <CreateButton link={"/create-chat-room"} text="수다방 만들기+" />
         <ChatRoomList chatRooms={chatRooms} />
       </Container>
     </>

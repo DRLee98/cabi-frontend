@@ -35,7 +35,7 @@ const TitleBox = styled.div`
   font-size: 35px;
   width: 25%;
   @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
-    font-size: 25px;
+    font-size: 22px;
   }
 `;
 

@@ -19,6 +19,16 @@ export const VIEW_CHAT_ROOMS_QUERY = gql`
   ${SIMPLE_USER_FRAGMENT}
 `;
 
+export const CREATE_CHAT_ROOM_MUTATION = gql`
+  mutation createChatRoomMutation($input: CreateChatRoomInput!) {
+    createChatRoom(input: $input) {
+      ok
+      error
+      id
+    }
+  }
+`;
+
 export const IS_SECRET_CHAT_ROOM_QUERY = gql`
   query isSecretChatRoomQuery($input: IsSecretChatRoomInput!) {
     isSecretChatRoom(input: $input) {
@@ -67,4 +77,13 @@ export const CREATE_MESSAGE_MUTATION = gql`
       id
     }
   }
+`;
+
+export const LISTEN_NEW_MESSAGE = gql`
+  subscription listenNewMessageSubscription($input: ListenNewMessageInput!) {
+    listenNewMessage(input: $input) {
+      ...MessageFragment
+    }
+  }
+  ${MESSAGE_FRAGMENT}
 `;

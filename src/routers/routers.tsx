@@ -29,6 +29,7 @@ import Footer from "components/Footer";
 import { Map } from "pages/map";
 import { ChatRooms } from "../pages/chat/chatRooms";
 import { ChatRoom } from "../pages/chat/chatRoom";
+import { CreateChatRoom } from "../pages/chat/createChatRoom";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
@@ -40,6 +41,7 @@ export const Routers = () => {
     { path: "/edit-profile", component: <EditProfile user={user} /> },
     { path: "/chat-rooms", component: <ChatRooms /> },
     { path: "/chat-room/:id", component: <ChatRoom user={user} /> },
+    { path: "/create-chat-room", component: <CreateChatRoom user={user} /> },
   ];
 
   const logoutRouters = [

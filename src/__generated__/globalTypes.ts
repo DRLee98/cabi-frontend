@@ -92,6 +92,12 @@ export interface CreateCafeReviewInput {
   cafeId: number;
 }
 
+export interface CreateChatRoomInput {
+  secret?: boolean | null;
+  password?: string | null;
+  name: string;
+}
+
 export interface CreateMenuInput {
   name: string;
   description: string;
@@ -201,6 +207,10 @@ export interface KeywordInputType {
   name: string;
   slug: string;
   cafes?: CafeInputType[] | null;
+}
+
+export interface ListenNewMessageInput {
+  id: number;
 }
 
 export interface LoginInput {

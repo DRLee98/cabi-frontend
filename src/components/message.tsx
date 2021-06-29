@@ -19,9 +19,7 @@ const SysContext = styled.div`
 const MessageBox = styled.li<MessageTypeProp>`
   display: flex;
   ${({ me }) => me && "justify-content: flex-end;"};
-  & + & {
-    margin-top: 15px;
-  }
+  margin-bottom: 15px;
   ${SysMessageBox} + & {
     margin-top: 15px;
   }
@@ -56,7 +54,7 @@ const TimeStamp = styled.span<MessageTypeProp>`
   position: absolute;
   bottom: 0;
   ${({ me }) => (me ? "right: 105%;" : "left: 105%;")};
-  width: fit-content;
+  width: max-content;
   font-size: 12px;
   font-weight: 100;
 `;

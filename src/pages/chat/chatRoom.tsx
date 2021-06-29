@@ -1,5 +1,10 @@
-import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import {
+  useMutation,
+  useQuery,
+  useLazyQuery,
+  useSubscription,
+} from "@apollo/client";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
 import { Loading } from "components/loading";
@@ -18,6 +23,7 @@ import {
   CREATE_MESSAGE_MUTATION,
   ENTRANCE_CHAT_ROOM_MUTATION,
   IS_SECRET_CHAT_ROOM_QUERY,
+  LISTEN_NEW_MESSAGE,
   VIEW_CHAT_ROOM_QUERY,
 } from "./chatGql";
 import { viewChatRoomQueryVariables } from "__generated__/viewChatRoomQuery";
@@ -106,17 +112,55 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
     },
   );
 
-  const [viewChatRoom, { loading: viewChatLoading, data: viewChatData }] =
-    useLazyQuery<any, viewChatRoomQueryVariables>(VIEW_CHAT_ROOM_QUERY, {
-      onCompleted: (data) => {
-        const {
-          viewChatRoom: { ok, error, chatRoom },
-        } = data;
-        if (ok) {
-          setMessages(chatRoom.messages);
+  const scrollBottom = () => {
+    const {
+      body: { scrollHeight },
+    } = document;
+    const {
+      screen: { height: screenHeight },
+    } = window;
+    const footer = document.querySelector("footer");
+    const height = footer
+      ? scrollHeight - footer?.offsetHeight - screenHeight
+      : scrollHeight - screenHeight;
+    window.scroll(0, height);
+  };
+
+  const [
+    viewChatRoom,
+    { loading: viewChatLoading, data: viewChatData, subscribeToMore },
+  ] = useLazyQuery<any, viewChatRoomQueryVariables>(VIEW_CHAT_ROOM_QUERY, {
+    onCompleted: (data) => {
+      const {
+        viewChatRoom: { ok, error, chatRoom },
+      } = data;
+      if (ok) {
+        setMessages(chatRoom.messages);
+        scrollBottom();
+        if (subscribeToMore) {
+          subscribeToMore({
+            document: LISTEN_NEW_MESSAGE,
+            variables: { input: { id: +id } },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) return prev;
+              const newMessage = subscriptionData.data.listenNewMessage;
+              setMessages((prev) => [...prev, newMessage]);
+              scrollBottom();
+              return {
+                viewChatRoom: {
+                  ...prev.viewChatRoom,
+                  chatRoom: {
+                    ...prev.viewChatRoom.chatRoom,
+                    messages,
+                  },
+                },
+              };
+            },
+          });
         }
-      },
-    });
+      }
+    },
+  });
 
   const [entranceChatRoomMutation, { loading: entranceLoading }] = useMutation<
     entranceChatRoomMutation,
@@ -166,6 +210,7 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
           };
           setMessages((prev) => [...prev, newMessage]);
           setValue("context", "");
+          scrollBottom();
         }
       } else {
         console.log(error);
@@ -205,8 +250,6 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
       }
     }
   }, [isSecretData]);
-
-  console.log(viewChatData);
 
   return loading || viewChatLoading ? (
     <Loading />
