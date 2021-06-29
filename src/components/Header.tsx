@@ -19,7 +19,7 @@ const SHeader = styled.header`
   max-height: 60px;
   background-color: white;
   color: ${(props) => props.theme.signatureColor};
-  padding: 0 5px;
+  padding: 0 10px;
   z-index: 999;
 `;
 
@@ -34,7 +34,8 @@ const TitleBox = styled.div`
   display: flex;
   font-size: 35px;
   width: 25%;
-  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      theme.mediumScreenWidth}) {
     font-size: 22px;
   }
 `;

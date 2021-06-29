@@ -69,6 +69,17 @@ const LoadingDot = styled.li`
   }
 `;
 
+const DotLoadingBox = styled.div`
+  background-color: ${(prop) => prop.theme.signaturelightBgColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 45vh;
+  li + li {
+    margin-left: 1em;
+  }
+`;
+
 export const Loading = () => {
   return (
     <Container>
@@ -84,5 +95,18 @@ export const Loading = () => {
         </LoadingDotList>
       </LoadingBox>
     </Container>
+  );
+};
+
+export const DotLoading = () => {
+  return (
+    <DotLoadingBox>
+      <LoadingDotList>
+        <LoadingDot></LoadingDot>
+        <LoadingDot></LoadingDot>
+        <LoadingDot></LoadingDot>
+        <LoadingDot></LoadingDot>
+      </LoadingDotList>
+    </DotLoadingBox>
   );
 };

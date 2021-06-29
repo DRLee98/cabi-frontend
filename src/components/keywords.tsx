@@ -32,11 +32,14 @@ const KeywordContainer = styled.div`
 const StackKeywordContainer = styled.div`
   display: flex;
   flex-wrap: wrap-reverse;
-  gap: 10px 0;
+  gap: 10px;
 `;
 
 const StackKeyword = styled(Keyword)`
   background-color: rgb(239 239 239 / 60%);
+  & + & {
+    margin-left: 0;
+  }
 `;
 
 interface KeywordProp {

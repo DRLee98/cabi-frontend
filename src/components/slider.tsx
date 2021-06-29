@@ -19,6 +19,7 @@ const SliderBox = styled.div<SliderBoxProps>`
   right: 0;
   margin: ${(prop) => (prop.margin ? "0 2.5em" : "0")};
   transition: all 0.3s ease;
+  isolation: isolate;
 `;
 
 const SliderList = styled.ul<SliderListProps>`

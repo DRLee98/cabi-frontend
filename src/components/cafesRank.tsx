@@ -8,6 +8,7 @@ import { RANK_CAFE_FRAGMENT } from "../fragments";
 import { cafesRankQuery } from "../__generated__/cafesRankQuery";
 import { Score } from "./score";
 import { CoverImage } from "./styledComponent";
+import { DotLoading } from "components/loading";
 
 const CafeRankContainer = styled.div`
   height: 45vh;
@@ -179,7 +180,7 @@ export const CafesRank = () => {
   };
 
   return loading ? (
-    <h1>loading</h1>
+    <DotLoading />
   ) : (
     <CafeRankContainer>
       <CafeImgList
