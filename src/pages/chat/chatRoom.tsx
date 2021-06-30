@@ -221,24 +221,30 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
           });
           if (chatRoomFragment) {
             const { id: userId, name, email, smallProfileImg } = user;
-            client.writeFragment({
-              id: `ChatRoom:${id}`,
-              fragment: CHAT_ROOM_FRAGMENT,
-              fragmentName: "ChatRoomFragment",
-              data: {
-                ...chatRoomFragment,
-                users: [
-                  ...chatRoomFragment.users,
-                  {
-                    id: userId,
-                    name,
-                    email,
-                    smallProfileImg,
-                    __typename: "User",
-                  },
-                ],
-              },
-            });
+            if (
+              chatRoomFragment.users.filter(
+                (chatUser: SimpleUserFragment) => chatUser.id === user.id,
+              ).length === 0
+            ) {
+              client.writeFragment({
+                id: `ChatRoom:${id}`,
+                fragment: CHAT_ROOM_FRAGMENT,
+                fragmentName: "ChatRoomFragment",
+                data: {
+                  ...chatRoomFragment,
+                  users: [
+                    ...chatRoomFragment.users,
+                    {
+                      id: userId,
+                      name,
+                      email,
+                      smallProfileImg,
+                      __typename: "User",
+                    },
+                  ],
+                },
+              });
+            }
           }
         }
 
