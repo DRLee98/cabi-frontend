@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Slider } from "components/slider";
 import { UserCircle } from "components/userCircleBox";
 import { viewChatRoomsQuery_viewChatRooms_chatRooms } from "__generated__/viewChatRoomsQuery";
+import { SimpleUserFragment } from "__generated__/SimpleUserFragment";
 
 const List = styled.ul`
   display: flex;
@@ -66,14 +67,16 @@ export const ChatRoomList: React.FC<ChatRoomListProp> = ({ chatRooms }) => {
   return (
     <List>
       {chatRooms?.map((chatRoom) => (
-        <ChatRoomItem key={chatRoom.id}>
+        <ChatRoomItem
+          key={`${chatRoom.id}CHAT_${new Date().getTime()}_${Math.random()}`}
+        >
           <ChatLink to={`chat-room/${chatRoom.id}`}>
             <IconBox>
               <FontAwesomeIcon icon={faCommentDots} />
             </IconBox>
             <ChatRoomName>{chatRoom.name}</ChatRoomName>
             <Slider slideWidth={200}>
-              {chatRoom.users.map((user) => (
+              {chatRoom.users.map((user: SimpleUserFragment) => (
                 <UserItem>
                   <UserCircle user={user} size={"2.7em"} link={false} />
                 </UserItem>

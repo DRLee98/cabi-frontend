@@ -1,5 +1,10 @@
 import { gql } from "@apollo/client";
-import { MESSAGE_FRAGMENT, SIMPLE_USER_FRAGMENT } from "fragments";
+import {
+  CHAT_ROOM_FRAGMENT,
+  MESSAGE_FRAGMENT,
+  SIMPLE_CHAT_ROOM_FRAGMENT,
+  SIMPLE_USER_FRAGMENT,
+} from "fragments";
 
 export const VIEW_CHAT_ROOMS_QUERY = gql`
   query viewChatRoomsQuery {
@@ -7,16 +12,24 @@ export const VIEW_CHAT_ROOMS_QUERY = gql`
       ok
       error
       chatRooms {
-        id
-        name
-        secret
-        users {
-          ...SimpleUserFragment
-        }
+        ...SimpleChatRoomFragment
       }
     }
   }
-  ${SIMPLE_USER_FRAGMENT}
+  ${SIMPLE_CHAT_ROOM_FRAGMENT}
+`;
+
+export const MY_CHAT_ROOMS_QUERY = gql`
+  query myChatRoomsQuery {
+    myChatRooms {
+      ok
+      error
+      chatRooms {
+        ...SimpleChatRoomFragment
+      }
+    }
+  }
+  ${SIMPLE_CHAT_ROOM_FRAGMENT}
 `;
 
 export const CREATE_CHAT_ROOM_MUTATION = gql`
@@ -45,24 +58,25 @@ export const VIEW_CHAT_ROOM_QUERY = gql`
       ok
       error
       chatRoom {
-        id
-        name
-        users {
-          ...SimpleUserFragment
-        }
-        messages {
-          ...MessageFragment
-        }
+        ...ChatRoomFragment
       }
     }
   }
-  ${MESSAGE_FRAGMENT}
-  ${SIMPLE_USER_FRAGMENT}
+  ${CHAT_ROOM_FRAGMENT}
 `;
 
 export const ENTRANCE_CHAT_ROOM_MUTATION = gql`
   mutation entranceChatRoomMutation($input: EntranceChatRoomInput!) {
     entranceChatRoom(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
+export const EXIT_CHAT_ROOM_MUTATION = gql`
+  mutation exitChatRoomMutation($input: ExitChatRoomInput!) {
+    exitChatRoom(input: $input) {
       ok
       error
     }
@@ -86,4 +100,24 @@ export const LISTEN_NEW_MESSAGE = gql`
     }
   }
   ${MESSAGE_FRAGMENT}
+`;
+
+export const LISTEN_ENTRANCE_USER = gql`
+  subscription listenEntranceUserSubscription(
+    $input: ListenEntranceUserInput!
+  ) {
+    listenEntranceUser(input: $input) {
+      ...SimpleUserFragment
+    }
+  }
+  ${SIMPLE_USER_FRAGMENT}
+`;
+
+export const LISTEN_EXIT_USER = gql`
+  subscription listenExitUserSubscription($input: ListenExitUserInput!) {
+    listenExitUser(input: $input) {
+      ...SimpleUserFragment
+    }
+  }
+  ${SIMPLE_USER_FRAGMENT}
 `;

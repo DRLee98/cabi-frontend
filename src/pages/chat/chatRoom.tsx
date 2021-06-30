@@ -3,12 +3,17 @@ import {
   useQuery,
   useLazyQuery,
   useSubscription,
+  useApolloClient,
 } from "@apollo/client";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Loading } from "components/loading";
-import { Container, CenterTitle } from "components/styledComponent";
+import {
+  Container,
+  CenterTitle,
+  FlexCenterBox,
+} from "components/styledComponent";
 import Button from "components/Button";
 import { siteName } from "commonConstants";
 import { isSecretChatRoomQuery } from "__generated__/isSecretChatRoomQuery";
@@ -24,11 +29,19 @@ import {
   ENTRANCE_CHAT_ROOM_MUTATION,
   IS_SECRET_CHAT_ROOM_QUERY,
   LISTEN_NEW_MESSAGE,
+  LISTEN_ENTRANCE_USER,
+  LISTEN_EXIT_USER,
   VIEW_CHAT_ROOM_QUERY,
+  EXIT_CHAT_ROOM_MUTATION,
+  MY_CHAT_ROOMS_QUERY,
 } from "./chatGql";
 import { viewChatRoomQueryVariables } from "__generated__/viewChatRoomQuery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDoorOpen,
+  faPaperPlane,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { MessageFragment } from "__generated__/MessageFragment";
 import {
   createMessageMutation,
@@ -37,13 +50,19 @@ import {
 import { MessageType } from "__generated__/globalTypes";
 import { Message } from "components/message";
 import { UserFragment } from "__generated__/UserFragment";
+import { SimpleUserFragment } from "__generated__/SimpleUserFragment";
+import { SimpleChatRoomFragment } from "__generated__/SimpleChatRoomFragment";
+import { UserList } from "components/userList";
+import {
+  exitChatRoomMutation,
+  exitChatRoomMutationVariables,
+} from "__generated__/exitChatRoomMutation";
+import { CHAT_ROOM_FRAGMENT } from "fragments";
+import { Alert } from "components/alert";
 
-const PasswordContainer = styled.div`
+const PasswordContainer = styled(FlexCenterBox)`
   min-height: 80vh;
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 
 const PasswordForm = styled.form``;
@@ -85,6 +104,41 @@ const MessagesContainer = styled.ul`
   min-height: 72vh;
 `;
 
+const ChatMenu = styled.div`
+  position: sticky;
+  top: 6vh;
+  background-color: ${({ theme }) => theme.whiteColor};
+  border-bottom: 1px solid ${({ theme }) => theme.signatureColor};
+  padding: 1em;
+  z-index: 5;
+  h2 {
+    margin: 0;
+    line-height: 1.2;
+    position: relative;
+  }
+`;
+
+const Icon = styled(FlexCenterBox)`
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 999px;
+  color: ${({ theme }) => theme.signatureColor};
+  &:hover {
+    background-color: ${({ theme }) => theme.signaturelightBgColor};
+  }
+  transition: all 0.3s ease;
+  cursor: pointer;
+  & + & {
+    right: 50px;
+  }
+`;
+
 interface ChatRoomParam {
   id: string;
 }
@@ -99,8 +153,12 @@ interface ChatRoomProp {
 }
 
 export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
+  const history = useHistory();
+  const client = useApolloClient();
   const { id } = useParams<ChatRoomParam>();
   const [isSecret, setIsSecret] = useState<boolean>(false);
+  const [userListOpen, setUserListOpen] = useState<boolean>(false);
+  const [exitChat, setExitChat] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const [messages, setMessages] = useState<MessageFragment[] | []>([]);
   const { register, handleSubmit, getValues, setValue, formState } =
@@ -125,21 +183,107 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
       ? scrollHeight - footer?.offsetHeight - screenHeight
       : scrollHeight - screenHeight;
     window.scroll(0, height);
-    console.log(height, scrollHeight);
   };
 
   const [
     viewChatRoom,
     { loading: viewChatLoading, data: viewChatData, subscribeToMore },
   ] = useLazyQuery<any, viewChatRoomQueryVariables>(VIEW_CHAT_ROOM_QUERY, {
-    onCompleted: (data) => {
+    onCompleted: async (data) => {
       const {
         viewChatRoom: { ok, error, chatRoom },
       } = data;
       if (ok) {
         setMessages(chatRoom.messages);
+
+        const myChatRoomsData = await client.readQuery({
+          query: MY_CHAT_ROOMS_QUERY,
+        });
+        if (myChatRoomsData) {
+          const chatRooms = myChatRoomsData.myChatRooms.chatRooms;
+          client.writeQuery({
+            query: MY_CHAT_ROOMS_QUERY,
+            data: {
+              myChatRooms: {
+                error,
+                ok,
+                chatRooms: [...chatRooms, chatRoom],
+              },
+            },
+          });
+        }
+
+        if (user) {
+          const chatRoomFragment = client.readFragment({
+            id: `ChatRoom:${id}`,
+            fragment: CHAT_ROOM_FRAGMENT,
+            fragmentName: "ChatRoomFragment",
+          });
+          if (chatRoomFragment) {
+            const { id: userId, name, email, smallProfileImg } = user;
+            client.writeFragment({
+              id: `ChatRoom:${id}`,
+              fragment: CHAT_ROOM_FRAGMENT,
+              fragmentName: "ChatRoomFragment",
+              data: {
+                ...chatRoomFragment,
+                users: [
+                  ...chatRoomFragment.users,
+                  {
+                    id: userId,
+                    name,
+                    email,
+                    smallProfileImg,
+                    __typename: "User",
+                  },
+                ],
+              },
+            });
+          }
+        }
+
         scrollBottom();
+
         if (subscribeToMore) {
+          subscribeToMore({
+            document: LISTEN_ENTRANCE_USER,
+            variables: { input: { id: +id } },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) return prev;
+              const entranceUser = subscriptionData.data.listenEntranceUser;
+              return {
+                viewChatRoom: {
+                  ...prev.viewChatRoom,
+                  chatRoom: {
+                    ...prev.viewChatRoom.chatRoom,
+                    users: [...prev.viewChatRoom.chatRoom.users, entranceUser],
+                  },
+                },
+              };
+            },
+          });
+
+          subscribeToMore({
+            document: LISTEN_EXIT_USER,
+            variables: { input: { id: +id } },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) return prev;
+              const exitUser = subscriptionData.data.listenExitUser;
+              const users = prev.viewChatRoom.chatRoom.users.filter(
+                (user: SimpleUserFragment) => user.id !== exitUser.id,
+              );
+              return {
+                viewChatRoom: {
+                  ...prev.viewChatRoom,
+                  chatRoom: {
+                    ...prev.viewChatRoom.chatRoom,
+                    users,
+                  },
+                },
+              };
+            },
+          });
+
           subscribeToMore({
             document: LISTEN_NEW_MESSAGE,
             variables: { input: { id: +id } },
@@ -168,7 +312,7 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
     entranceChatRoomMutation,
     entranceChatRoomMutationVariables
   >(ENTRANCE_CHAT_ROOM_MUTATION, {
-    onCompleted: (data) => {
+    onCompleted: async (data) => {
       const {
         entranceChatRoom: { ok, error },
       } = data;
@@ -180,6 +324,55 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
       } else {
         setErrorMsg(error);
         setTimeout(() => setErrorMsg(null), 2000);
+      }
+    },
+  });
+
+  const [exitChatRoomMutation, { loading: exitLoading }] = useMutation<
+    exitChatRoomMutation,
+    exitChatRoomMutationVariables
+  >(EXIT_CHAT_ROOM_MUTATION, {
+    onCompleted: async (data) => {
+      const {
+        exitChatRoom: { ok, error },
+      } = data;
+      if (ok) {
+        const myChatRoomsData = await client.readQuery({
+          query: MY_CHAT_ROOMS_QUERY,
+        });
+        if (myChatRoomsData) {
+          const chatRooms = myChatRoomsData.myChatRooms.chatRooms;
+          client.writeQuery({
+            query: MY_CHAT_ROOMS_QUERY,
+            data: {
+              myChatRooms: {
+                error,
+                ok,
+                chatRooms: chatRooms.filter(
+                  (chatRoom: SimpleChatRoomFragment) => chatRoom.id !== +id,
+                ),
+              },
+            },
+          });
+        }
+        const chatRoomFragment = await client.readFragment({
+          id: `ChatRoom:${id}`,
+          fragment: CHAT_ROOM_FRAGMENT,
+          fragmentName: "ChatRoomFragment",
+        });
+        client.writeFragment({
+          id: `ChatRoom:${id}`,
+          fragment: CHAT_ROOM_FRAGMENT,
+          fragmentName: "ChatRoomFragment",
+          data: {
+            ...chatRoomFragment,
+            users: chatRoomFragment.users.filter(
+              (chatRoomUser: SimpleUserFragment) =>
+                user && chatRoomUser.id !== user.id,
+            ),
+          },
+        });
+        history.push("/chat-rooms");
       }
     },
   });
@@ -226,6 +419,12 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
     }
   };
 
+  const exitChatRoom = () => {
+    if (!exitLoading) {
+      exitChatRoomMutation({ variables: { input: { id: +id } } });
+    }
+  };
+
   const onSubmitPassword = async () => {
     const { password } = getValues();
     entranceChatRoom(password);
@@ -252,6 +451,8 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
       }
     }
   }, [isSecretData]);
+
+  console.log(viewChatData);
 
   return loading || viewChatLoading ? (
     <Loading />
@@ -280,9 +481,30 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
           </PasswordContainer>
         ) : (
           <MessagesContainer onLoad={scrollBottom}>
-            <CenterTitle>
-              {viewChatData?.viewChatRoom.chatRoom.name}
-            </CenterTitle>
+            <ChatMenu>
+              <CenterTitle>
+                {viewChatData?.viewChatRoom.chatRoom.name}
+                <Icon
+                  onClick={() => {
+                    setExitChat(true);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faDoorOpen} />
+                </Icon>
+                <Icon
+                  onClick={() => {
+                    setUserListOpen((prev) => !prev);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faUser} />
+                </Icon>
+              </CenterTitle>
+              <UserList
+                open={userListOpen}
+                users={viewChatData?.viewChatRoom.chatRoom.users}
+                me={user}
+              />
+            </ChatMenu>
             {messages.map((msg: MessageFragment) => (
               <Message
                 key={msg.createdAt}
@@ -304,6 +526,15 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
             <FontAwesomeIcon icon={faPaperPlane} />
           </SendMsgBtn>
         </SendMsgForm>
+      )}
+      {exitChat && (
+        <Alert
+          okFn={exitChatRoom}
+          cancelFn={() => {
+            setExitChat(false);
+          }}
+          text={`${viewChatData?.viewChatRoom.chatRoom.name} 수다방에서 나가시겠습니까?`}
+        />
       )}
     </>
   );

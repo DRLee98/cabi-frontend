@@ -15,6 +15,7 @@ export const theme = {
   blackColor: "#2d2d2d",
   starYellow: "#ffe92a",
   redColor: "#f44336",
+  blueColor: "#3ca9ff",
   grayColor: "#545252ab",
   headerHeight: "7vh",
   footerHeight: "12vh",

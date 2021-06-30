@@ -12,6 +12,9 @@ import { USER_FRAGMENT } from "../fragments";
 import { UserRole } from "../__generated__/globalTypes";
 import { UserFragment } from "../__generated__/UserFragment";
 import { userProfileQuery } from "../__generated__/userProfileQuery";
+import { myChatRoomsQuery } from "__generated__/myChatRoomsQuery";
+import { MY_CHAT_ROOMS_QUERY } from "pages/chat/chatGql";
+import { ChatRoomList } from "components/chatRooms";
 
 const ProfileBox = styled.section`
   display: grid;
@@ -86,14 +89,20 @@ const Address = styled.p`
   margin-bottom: 1.5rem;
 `;
 
-const CafesBox = styled.section``;
+const Section = styled.section`
+  & + & {
+    padding-top: 2em;
+    margin-top: 2em;
+    border-top: 2px dashed ${({ theme }) => theme.signatureBgColor};
+  }
+`;
 
-const CafesTitle = styled.strong`
+const SectionTitle = styled.strong`
   display: block;
   margin-bottom: 20px;
   padding-bottom: 10px;
   font-size: 20px;
-  border-bottom: 1px solid ${(props) => props.theme.signatureColor};
+  //border-bottom: 1px solid ${(props) => props.theme.signatureColor};
 `;
 
 const USER_PROFILE_QUERY = gql`
@@ -122,8 +131,11 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
   const { loading, data } = useQuery<userProfileQuery>(USER_PROFILE_QUERY, {
     variables: { input: { id: +id } },
   });
+  const { data: myChatRoomsData, loading: myChatRoomsLoading } =
+    useQuery<myChatRoomsQuery>(MY_CHAT_ROOMS_QUERY);
 
   const user = data?.userProfile.user;
+  const myChatRooms = myChatRoomsData?.myChatRooms.chatRooms || [];
 
   return loading ? (
     <Loading />
@@ -150,10 +162,10 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
             </Box>
           </ContentsBox>
         </ProfileBox>
-        <CafesBox>
-          <CafesTitle>
+        <Section>
+          <SectionTitle>
             {user?.role === UserRole.Client ? "단골 카페" : "사장님의 카페"}
-          </CafesTitle>
+          </SectionTitle>
           {user?.role === UserRole.Client ? (
             <GridCafe cafes={user?.likeCafes} me={me} />
           ) : (
@@ -163,13 +175,21 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
               me={me}
             />
           )}
-        </CafesBox>
+        </Section>
+        <Section>
+          <SectionTitle>참여중인 수다방</SectionTitle>
+          <ChatRoomList chatRooms={myChatRooms} />
+        </Section>
       </Container>
     </>
   );
 };
 
 export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
+  const { data: myChatRoomsData, loading: myChatRoomsLoading } =
+    useQuery<myChatRoomsQuery>(MY_CHAT_ROOMS_QUERY);
+
+  const myChatRooms = myChatRoomsData?.myChatRooms.chatRooms || [];
   return (
     <>
       <Helmet>
@@ -194,16 +214,20 @@ export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
             </Box>
           </ContentsBox>
         </ProfileBox>
-        <CafesBox>
-          <CafesTitle>
+        <Section>
+          <SectionTitle>
             {user?.role === UserRole.Client ? "단골 카페" : "사장님의 카페"}
-          </CafesTitle>
+          </SectionTitle>
           {user?.role === UserRole.Client ? (
             <GridCafe cafes={user?.likeCafes} me={user} />
           ) : (
             <GridCafe owner={true} cafes={user?.cafes} me={user} />
           )}
-        </CafesBox>
+        </Section>
+        <Section>
+          <SectionTitle>참여중인 수다방</SectionTitle>
+          <ChatRoomList chatRooms={myChatRooms} />
+        </Section>
       </Container>
     </>
   );

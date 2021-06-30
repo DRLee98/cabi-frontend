@@ -88,3 +88,9 @@ export const SLink = styled(Link)``;
 export const FlexBox = styled.div`
   display: flex;
 `;
+
+export const FlexCenterBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

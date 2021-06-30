@@ -261,3 +261,30 @@ export const MESSAGE_FRAGMENT = gql`
   }
   ${SIMPLE_USER_FRAGMENT}
 `;
+
+export const SIMPLE_CHAT_ROOM_FRAGMENT = gql`
+  fragment SimpleChatRoomFragment on ChatRoom {
+    id
+    name
+    secret
+    users {
+      ...SimpleUserFragment
+    }
+  }
+  ${SIMPLE_USER_FRAGMENT}
+`;
+
+export const CHAT_ROOM_FRAGMENT = gql`
+  fragment ChatRoomFragment on ChatRoom {
+    id
+    name
+    users {
+      ...SimpleUserFragment
+    }
+    messages {
+      ...MessageFragment
+    }
+  }
+  ${MESSAGE_FRAGMENT}
+  ${SIMPLE_USER_FRAGMENT}
+`;

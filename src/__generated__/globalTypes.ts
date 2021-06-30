@@ -199,6 +199,10 @@ export interface EntranceChatRoomInput {
   password?: string | null;
 }
 
+export interface ExitChatRoomInput {
+  id: number;
+}
+
 export interface IsSecretChatRoomInput {
   id: number;
 }
@@ -207,6 +211,14 @@ export interface KeywordInputType {
   name: string;
   slug: string;
   cafes?: CafeInputType[] | null;
+}
+
+export interface ListenEntranceUserInput {
+  id: number;
+}
+
+export interface ListenExitUserInput {
+  id: number;
 }
 
 export interface ListenNewMessageInput {
