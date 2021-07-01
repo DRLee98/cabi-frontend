@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
+import { Dim } from "./styledComponent";
 
 const wave = keyframes`
   0% {
@@ -67,6 +68,12 @@ const LoadingDot = styled.li`
   &:nth-child(5) {
     animation: ${wave} 2s linear infinite 1.2s;
   }
+  & + & {
+    margin-left: 1em;
+  }
+  ${Dim} & {
+    background-color: ${(prop) => prop.theme.signatureBgColor};
+  }
 `;
 
 const DotLoadingBox = styled.div`
@@ -75,9 +82,6 @@ const DotLoadingBox = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 45vh;
-  li + li {
-    margin-left: 1em;
-  }
 `;
 
 export const Loading = () => {
@@ -108,5 +112,18 @@ export const DotLoading = () => {
         <LoadingDot></LoadingDot>
       </LoadingDotList>
     </DotLoadingBox>
+  );
+};
+
+export const DimLoading = () => {
+  return (
+    <Dim>
+      <LoadingDotList>
+        <LoadingDot></LoadingDot>
+        <LoadingDot></LoadingDot>
+        <LoadingDot></LoadingDot>
+        <LoadingDot></LoadingDot>
+      </LoadingDotList>
+    </Dim>
   );
 };

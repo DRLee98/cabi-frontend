@@ -140,6 +140,10 @@ export interface CreateReplyInput {
   reviewId: number;
 }
 
+export interface DeleteAccountInput {
+  password: string;
+}
+
 export interface DeleteCafeInput {
   id: number;
 }

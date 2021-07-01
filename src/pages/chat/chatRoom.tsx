@@ -58,7 +58,7 @@ import {
   exitChatRoomMutationVariables,
 } from "__generated__/exitChatRoomMutation";
 import { CHAT_ROOM_FRAGMENT } from "fragments";
-import { Alert } from "components/alert";
+import { Confirm } from "components/confirm";
 
 const PasswordContainer = styled(FlexCenterBox)`
   min-height: 80vh;
@@ -534,7 +534,7 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
         </SendMsgForm>
       )}
       {exitChat && (
-        <Alert
+        <Confirm
           okFn={exitChatRoom}
           cancelFn={() => {
             setExitChat(false);

@@ -1,13 +1,13 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { GridCafe } from "../components/cafes";
 import { Loading } from "../components/loading";
 import { Container, Image } from "../components/styledComponent";
-import { defaultProfileImg, siteName } from "../commonConstants";
+import { defaultProfileImg, siteName, TOKEN } from "../commonConstants";
 import { USER_FRAGMENT } from "../fragments";
 import { UserRole } from "../__generated__/globalTypes";
 import { UserFragment } from "../__generated__/UserFragment";
@@ -15,6 +15,13 @@ import { userProfileQuery } from "../__generated__/userProfileQuery";
 import { myChatRoomsQuery } from "__generated__/myChatRoomsQuery";
 import { MY_CHAT_ROOMS_QUERY } from "pages/chat/chatGql";
 import { ChatRoomList } from "components/chatRooms";
+import { PasswordConfirm } from "components/confirm";
+import { DimLoading } from "components/loading";
+import {
+  deleteAccountMutation,
+  deleteAccountMutationVariables,
+} from "__generated__/deleteAccountMutation";
+import { isLoginVar, tokenVar } from "../apollo";
 
 const ProfileBox = styled.section`
   display: grid;
@@ -53,34 +60,44 @@ const Email = styled.small`
   margin-bottom: 1.2rem;
 `;
 
-const Role = styled.span`
+const BtnBase = styled.button`
   font-size: 20px;
   width: fit-content;
   padding: 0.5rem 1rem;
   border: 1px solid;
   border-radius: 999px;
-  border-color: ${(props) => props.theme.signatureColor};
-  color: ${(props) => props.theme.signatureColor};
-  margin-right: 1rem;
+  cursor: pointer;
+  transition: all 0.5s ease;
 `;
 
-const SLink = styled(Link)`
-  font-size: 20px;
-  width: fit-content;
-  padding: 0.5rem 1rem;
-  border: 1px solid;
-  border-radius: 999px;
-  border-color: ${(props) => props.theme.disableColor};
-  color: ${(props) => props.theme.disableColor};
-  transition: all 0.5s ease;
+const Role = styled(BtnBase)`
+  border-color: ${({ theme }) => theme.signatureColor};
+  color: ${({ theme }) => theme.signatureColor};
+  cursor: auto;
+`;
+
+const EditBtn = styled(BtnBase)`
+  border-color: ${({ theme }) => theme.disableColor};
+  color: ${({ theme }) => theme.disableColor};
   &:hover {
-    border-color: ${(props) => props.theme.signatureColor};
-    color: ${(props) => props.theme.signatureColor};
+    border-color: ${({ theme }) => theme.signatureColor};
+    color: ${({ theme }) => theme.signatureColor};
+  }
+`;
+
+const DeleteBtn = styled(BtnBase)`
+  border-color: ${({ theme }) => theme.disableColor};
+  color: ${({ theme }) => theme.disableColor};
+  &:hover {
+    border-color: ${({ theme }) => theme.redColor};
+    color: ${({ theme }) => theme.redColor};
   }
 `;
 
 const Box = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
 `;
 
 const Address = styled.p`
@@ -102,7 +119,7 @@ const SectionTitle = styled.strong`
   margin-bottom: 20px;
   padding-bottom: 10px;
   font-size: 20px;
-  //border-bottom: 1px solid ${(props) => props.theme.signatureColor};
+  //border-bottom: 1px solid ${({ theme }) => theme.signatureColor};
 `;
 
 const USER_PROFILE_QUERY = gql`
@@ -116,6 +133,15 @@ const USER_PROFILE_QUERY = gql`
     }
   }
   ${USER_FRAGMENT}
+`;
+
+const DELETE_ACCOUNT_MUTATION = gql`
+  mutation deleteAccountMutation($input: DeleteAccountInput!) {
+    deleteAccount(input: $input) {
+      ok
+      error
+    }
+  }
 `;
 
 interface ProfileParam {
@@ -186,8 +212,34 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
 };
 
 export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
+  const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>();
   const { data: myChatRoomsData, loading: myChatRoomsLoading } =
     useQuery<myChatRoomsQuery>(MY_CHAT_ROOMS_QUERY);
+  const [deleteAccountMutation, { loading }] = useMutation<
+    deleteAccountMutation,
+    deleteAccountMutationVariables
+  >(DELETE_ACCOUNT_MUTATION, {
+    onCompleted: (data) => {
+      const {
+        deleteAccount: { ok, error },
+      } = data;
+      if (ok) {
+        tokenVar("");
+        isLoginVar(false);
+        localStorage.removeItem(TOKEN);
+        window.location.reload();
+        window.location.href = "/";
+      } else {
+        setErrorMsg(error);
+        setTimeout(() => setErrorMsg(null), 2000);
+      }
+    },
+  });
+
+  const deleteAccountFn = (password: string) => {
+    deleteAccountMutation({ variables: { input: { password } } });
+  };
 
   const myChatRooms = myChatRoomsData?.myChatRooms.chatRooms || [];
   return (
@@ -210,7 +262,16 @@ export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
               <Role>
                 {user?.role === UserRole.Client ? "고객님" : "사장님"}
               </Role>
-              <SLink to="/edit-profile">회원정보 변경하기</SLink>
+              <Link to="/edit-profile">
+                <EditBtn>회원정보 변경하기</EditBtn>
+              </Link>
+              <DeleteBtn
+                onClick={() => {
+                  setDeleteAccount(true);
+                }}
+              >
+                회원 탈퇴하기
+              </DeleteBtn>
             </Box>
           </ContentsBox>
         </ProfileBox>
@@ -229,6 +290,17 @@ export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
           <ChatRoomList chatRooms={myChatRooms} />
         </Section>
       </Container>
+      {deleteAccount && (
+        <PasswordConfirm
+          text={"회원탈퇴를 위해 비밀번호를 입력해 주세요."}
+          okFn={deleteAccountFn}
+          cancelFn={() => {
+            setDeleteAccount(false);
+          }}
+          errorMsg={errorMsg}
+        />
+      )}
+      {loading && <DimLoading />}
     </>
   );
 };
