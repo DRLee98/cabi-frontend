@@ -1,46 +1,75 @@
-# Getting Started with Create React App
+# Project Cabi Front-end (https://cabi.netlify.app/)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 프로젝트 소개
 
-## Available Scripts
+> 인터넛 강의를 들으며 공부하던 중 배운 것을 숙달할 만한 무언가가 없을까 고민하던 때에 카페를 비교하는 웹을 만들어보면 어떻겠냐는 친구의 아이디어로 시작하게 되었습니다.
+>
+> 이 프로젝트는 까비 프로젝트의 프론트엔드 부분이며 React를 이용하여 만들어졌습니다.
 
-In the project directory, you can run:
+### 사용 기술
 
-### `yarn start`
+> React, TypeScript, Styled Components, Apollo Hooks, Kakao Map, Daum Postcode
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## **공통 기능**
 
-### `yarn test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. 조회
 
-### `yarn build`
+   - 유저 - 유저의 프로필을 조회할 수 있습니다. -카페 - 카페 상세 조회가 가능합니다. - 카페 이름을 검색을 하여 조건에 맞는 카페들을 조회할 수 있습니다. - 키워드를 이용하여 조건에 맞는 카페들을 조회할 수 있습니다. - 카페 혹은 메뉴에 작성된 댓글을 조회할 수 있습니다. - 카카오 맵을 이용하여 지도 상에 위치한 카페들을 조회할 수 있습니다.
+   - 메뉴
+     - 메뉴 상세 조회가 가능합니다.
+   - 댓글
+     - 카페 혹은 메뉴에 작성된 댓글을 조회할 수 있습니다.
+   - 답글
+     - 작성된 댓글에 대한 답글을 조회할 수 있습니다.
+   - 수다방
+     - 생성된 수다방들을 조회할 수 있습니다.
+     - 참여 중인 수다방들을 조회할 수 있습니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. 생성
+   - 답글
+     - 작성된 댓글에 대해 내용만을 입력하여 작성할 수 있습니다.
+   - 수다방
+     - 수다방 생성이 가능하며 생성 시 비밀방 설정을 할 수 있습니다.
+     - 수다방을 비밀방으로 생성 시 비밀번호를 필수로 입력해야 하며 변경은 불가능합니다.
+     - 수다방에 입장하여 실시간으로 채팅을 할 수 있습니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## **고객님 기능**
 
-### `yarn eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. 생성
+   - 댓글
+     - 카페 혹은 메뉴에 대한 댓글을 작성하며 내용, **평점**을 입력할 수 있습니다.
+     - 평점에 따라 카페의 순위가 집계되며 평점의 합계는 매시 정각에 합산됩니다.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## **사장님 기능**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+---
 
-## Learn More
+1. 생성
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   - 카페
+     - 이름, 설명, 주소를 필수로 입력하고 필요에 따라 커버 이미지, 키워드를 추가하여 카페를 생성합니다.
+   - 메뉴
+     - 자신이 만든 카페에 한해서 이름, 설명, 주소, 커버 이미지, 키워드를 수정할 수 있습니다.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. 수정
+
+   - 카페
+     - 이름, 설명, 주소를 필수로 입력하고 필요에 따라 커버 이미지, 키워드를 추가하여 카페를 생성합니다.
+   - 메뉴
+     - 자신이 만든 카페에 한해서 이름, 설명, 가격, 카테고리, 메뉴 이미지, 영양성분, 추가 옵션을 수정할 수 있습니다.
+
+3. 삭제
+   - 카페
+     - 자신이 만든 카페를 삭제할 수 있습니다.
+   - 메뉴
+     - 자신이 만든 카페의 메뉴를 삭제할 수 있습니다.
