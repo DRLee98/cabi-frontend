@@ -107,7 +107,6 @@ export const KakaoMapView: React.FC<KakaoMapViewProp> = ({
 
       window.kakao.maps.event.addListener(marker, "click", function () {
         showOverlay(cafe, position);
-        console.log(marker);
       });
     });
   };

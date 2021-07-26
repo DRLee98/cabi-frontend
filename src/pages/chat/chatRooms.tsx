@@ -26,8 +26,6 @@ export const ChatRooms = () => {
   const chatRooms = data?.viewChatRooms.chatRooms || [];
   const myChatRooms = myChatRoomsData?.myChatRooms.chatRooms || [];
 
-  console.log(myChatRooms);
-
   return loading || myChatRoomsLoading ? (
     <Loading />
   ) : (

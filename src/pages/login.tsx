@@ -56,7 +56,6 @@ export const Login = () => {
 
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const onCompleted = (data: loginMutation) => {
-    console.log(data);
     const {
       login: { ok, error, token },
     } = data;

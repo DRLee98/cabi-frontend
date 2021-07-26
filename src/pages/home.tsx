@@ -35,8 +35,6 @@ export const Home: React.FC<HomeProp> = ({ user }) => {
   const keywords = getkeywords?.viewKeywords.keywords;
   const cafes = data?.seeCafes.cafes;
 
-  console.log(cafes);
-
   return loading ? (
     <Loading />
   ) : (

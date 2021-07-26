@@ -107,7 +107,6 @@ export const CreateMenu = () => {
   };
 
   const onCompleted = (data: createMenuMutation) => {
-    console.log(data);
     const {
       createMenu: { ok, error, menuId },
     } = data;

@@ -1,7 +1,6 @@
 import { MapViewCafeFragment } from "__generated__/MapViewCafeFragment";
 
 export const Overlay = (cafe: MapViewCafeFragment) => {
-  console.log(cafe);
   let contents = `<div style="transform:translateY(-50%);top:-52px;position:relative;background-color:white;padding:10px;border-radius:10px;font-size:12px;">
         ${
           cafe.smallCoverImg &&

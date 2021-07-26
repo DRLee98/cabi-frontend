@@ -205,8 +205,6 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
     }
   };
 
-  console.log(cafe);
-
   useEffect(() => {
     setToggleLike(isLike);
   }, [isLike]);

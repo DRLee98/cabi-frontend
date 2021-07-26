@@ -458,8 +458,6 @@ export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
     }
   }, [isSecretData]);
 
-  console.log(viewChatData);
-
   return loading || viewChatLoading ? (
     <Loading />
   ) : (
