@@ -16,7 +16,6 @@ import {
   editProfiletMutation,
   editProfiletMutationVariables,
 } from "../../__generated__/editProfiletMutation";
-import { UserFragment } from "../../__generated__/UserFragment";
 import { FormBox, Form, ImageBox, ContentsBox, BtnBox } from "./styled";
 import { useAppSelector } from "app/hooks";
 

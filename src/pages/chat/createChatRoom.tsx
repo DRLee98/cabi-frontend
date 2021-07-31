@@ -15,7 +15,6 @@ import {
   createChatRoomMutationVariables,
 } from "__generated__/createChatRoomMutation";
 import { useHistory } from "react-router-dom";
-import { UserFragment } from "__generated__/UserFragment";
 import { useAppSelector } from "app/hooks";
 
 const Form = styled.form`

@@ -12,7 +12,6 @@ import { siteName } from "../../commonConstants";
 import { SIMPLE_CAFE_FRAGMENT } from "../../fragments";
 import { useKeywords } from "../../hooks/useKeywords";
 import { myCafesQuery } from "../../__generated__/myCafesQuery";
-import { UserFragment } from "../../__generated__/UserFragment";
 import { useAppSelector } from "app/hooks";
 
 const EmptyBox = styled.div`

@@ -2,10 +2,9 @@ import {
   useMutation,
   useQuery,
   useLazyQuery,
-  useSubscription,
   useApolloClient,
 } from "@apollo/client";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useHistory, useParams } from "react-router-dom";
 import { Loading } from "components/loading";
@@ -49,7 +48,6 @@ import {
 } from "__generated__/createMessageMutation";
 import { MessageType } from "__generated__/globalTypes";
 import { Message } from "components/message";
-import { UserFragment } from "__generated__/UserFragment";
 import { SimpleUserFragment } from "__generated__/SimpleUserFragment";
 import { SimpleChatRoomFragment } from "__generated__/SimpleChatRoomFragment";
 import { UserList } from "components/userList";
@@ -60,6 +58,7 @@ import {
 import { CHAT_ROOM_FRAGMENT } from "fragments";
 import { Confirm } from "components/confirm";
 import { useAppSelector } from "app/hooks";
+import { ChatRoomFragment } from "__generated__/ChatRoomFragment";
 
 const PasswordContainer = styled(FlexCenterBox)`
   min-height: 80vh;
@@ -198,14 +197,21 @@ export const ChatRoom = () => {
           query: MY_CHAT_ROOMS_QUERY,
         });
         if (myChatRoomsData) {
-          const chatRooms = myChatRoomsData.myChatRooms.chatRooms;
+          let chatRooms: ChatRoomFragment[] =
+            myChatRoomsData.myChatRooms.chatRooms;
+          const findRoom = chatRooms.find(
+            (room: ChatRoomFragment) => room.id === chatRoom.id,
+          );
+          if (!findRoom) {
+            chatRooms = [...chatRooms, chatRoom];
+          }
           client.writeQuery({
             query: MY_CHAT_ROOMS_QUERY,
             data: {
               myChatRooms: {
                 error,
                 ok,
-                chatRooms: [...chatRooms, chatRoom],
+                chatRooms,
               },
             },
           });

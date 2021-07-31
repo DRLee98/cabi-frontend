@@ -21,7 +21,6 @@ import { defaultCoverImg, siteName } from "../../commonConstants";
 import { CAFE_DETAIL_QUERY, useCafeDetail } from "../../hooks/cafeDetailQuery";
 import { cafeDetailQuery_cafeDetail_cafe_likedUsers } from "../../__generated__/cafeDetailQuery";
 import { UserRole } from "../../__generated__/globalTypes";
-import { myProfileQuery } from "../../__generated__/myProfileQuery";
 import { MY_CAFES_QUERY } from "../owner/myCafes";
 import { myCafesQuery_myCafes_cafes } from "../../__generated__/myCafesQuery";
 import { DeleteButton } from "../../components/deleteBtn";

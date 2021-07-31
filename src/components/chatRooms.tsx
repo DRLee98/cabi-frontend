@@ -66,9 +66,11 @@ interface ChatRoomListProp {
 export const ChatRoomList: React.FC<ChatRoomListProp> = ({ chatRooms }) => {
   return (
     <List>
-      {chatRooms?.map((chatRoom) => (
+      {chatRooms?.map((chatRoom, i) => (
         <ChatRoomItem
-          key={`${chatRoom.id}CHAT_${new Date().getTime()}_${Math.random()}`}
+          key={`${chatRoom.id}CHAT_${
+            new Date().getTime() * Math.random() * 10000 * (i + 1)
+          }`}
         >
           <ChatLink to={`chat-room/${chatRoom.id}`}>
             <IconBox>

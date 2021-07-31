@@ -14,7 +14,6 @@ import {
   createMenuReviewMutation,
   createMenuReviewMutationVariables,
 } from "../__generated__/createMenuReviewMutation";
-import { myProfileQuery } from "../__generated__/myProfileQuery";
 import { CAFE_DETAIL_QUERY } from "../hooks/cafeDetailQuery";
 import { MENU_DETAIL_QUERY } from "../hooks/menuDetailQuery";
 import { useAppSelector } from "app/hooks";

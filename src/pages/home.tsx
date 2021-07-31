@@ -10,7 +10,6 @@ import { siteName } from "../commonConstants";
 import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
 import { seeCafesQuery } from "../__generated__/seeCafesQuery";
-import { UserFragment } from "../__generated__/UserFragment";
 import { useAppSelector } from "app/hooks";
 
 const SEE_CAFES_QUERY = gql`

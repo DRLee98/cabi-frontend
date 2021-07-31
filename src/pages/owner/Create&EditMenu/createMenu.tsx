@@ -19,7 +19,6 @@ import {
 } from "../../../__generated__/createMenuMutation";
 import { Category } from "../../../__generated__/globalTypes";
 import { CAFE_DETAIL_QUERY } from "../../../hooks/cafeDetailQuery";
-import { Loading } from "../../../components/loading";
 import {
   FormBox,
   Form,

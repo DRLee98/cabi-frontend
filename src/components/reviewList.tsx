@@ -10,7 +10,6 @@ import {
   createReplyMutation,
   createReplyMutationVariables,
 } from "../__generated__/createReplyMutation";
-import { myProfileQuery } from "../__generated__/myProfileQuery";
 import { Image } from "../components/styledComponent";
 import { REVIEW_FRAGMENT } from "../fragments";
 import { Link } from "react-router-dom";

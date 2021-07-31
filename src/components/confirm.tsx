@@ -2,7 +2,7 @@ import { MouseEventHandler } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { Input } from "./Input";
-import { FlexCenterBox, CenterTitle } from "./styledComponent";
+import { FlexCenterBox } from "./styledComponent";
 
 const Dim = styled(FlexCenterBox)`
   position: fixed;

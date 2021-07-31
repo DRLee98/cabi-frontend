@@ -65,7 +65,7 @@ export const Routers = () => {
     { path: "/cafe/:cafeId/menu/:menuId/edit", component: <EditMenu /> },
   ];
 
-  const clientRouters = [{ path: "/", component: <Home /> }];
+  // const clientRouters = [{ path: "/", component: <Home /> }];
 
   const commonRouters = [
     { path: "/", component: <Home /> },
@@ -95,15 +95,14 @@ export const Routers = () => {
                     {router.component}
                   </Route>
                 ))}
-              {commonRouters.map((router) => {
-                if (user?.role !== UserRole.Owner || router.path !== "/") {
-                  return (
+              {commonRouters.map(
+                (router) =>
+                  (user?.role !== UserRole.Owner || router.path !== "/") && (
                     <Route key={router.path} path={router.path} exact>
                       {router.component}
                     </Route>
-                  );
-                }
-              })}
+                  ),
+              )}
             </>
           ) : (
             <>

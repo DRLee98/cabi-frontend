@@ -90,12 +90,12 @@ export const EditMenu = () => {
   const defaultOption: optionObj = {};
   const defaultAdditionalOption: optionObj = {};
 
-  menuOptions?.map((option, i) => {
+  menuOptions?.forEach((option, i) => {
     const optionKey = `${option.name + i}_option`;
     const optionObj = { name: option.name, price: option.price };
     defaultOption[optionKey] = optionObj;
     if (option.optionItems && option.optionItems?.length > 0) {
-      option.optionItems.map((addOption) => {
+      option.optionItems.forEach((addOption) => {
         const addOptionKey = `${optionKey}_${addOption.name}_optionItem`;
         defaultAdditionalOption[addOptionKey] = addOption;
       });

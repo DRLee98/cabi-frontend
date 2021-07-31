@@ -5,7 +5,6 @@ import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { KakaoMapView } from "api/kakaoMap";
-import { UserFragment } from "__generated__/UserFragment";
 import { searchCafesLatLngQuery } from "__generated__/searchCafesLatLngQuery";
 import { MAP_VIEW_CAFE_FRAGMENT } from "fragments";
 import { gql, useLazyQuery } from "@apollo/client";

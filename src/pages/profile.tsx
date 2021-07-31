@@ -10,7 +10,6 @@ import { Container, Image } from "../components/styledComponent";
 import { defaultProfileImg, siteName, TOKEN } from "../commonConstants";
 import { USER_FRAGMENT } from "../fragments";
 import { UserRole } from "../__generated__/globalTypes";
-import { UserFragment } from "../__generated__/UserFragment";
 import { userProfileQuery } from "../__generated__/userProfileQuery";
 import { myChatRoomsQuery } from "__generated__/myChatRoomsQuery";
 import { MY_CHAT_ROOMS_QUERY } from "pages/chat/chatGql";
@@ -156,7 +155,7 @@ export const Profile = () => {
   const { loading, data } = useQuery<userProfileQuery>(USER_PROFILE_QUERY, {
     variables: { input: { id: +id } },
   });
-  const { data: myChatRoomsData, loading: myChatRoomsLoading } =
+  const { data: myChatRoomsData } =
     useQuery<myChatRoomsQuery>(MY_CHAT_ROOMS_QUERY);
 
   const user = data?.userProfile.user;
@@ -214,7 +213,7 @@ export const MyProfile = () => {
   const user = useAppSelector((state) => state.loggedInUser.value);
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>();
-  const { data: myChatRoomsData, loading: myChatRoomsLoading } =
+  const { data: myChatRoomsData } =
     useQuery<myChatRoomsQuery>(MY_CHAT_ROOMS_QUERY);
   const [deleteAccountMutation, { loading }] = useMutation<
     deleteAccountMutation,

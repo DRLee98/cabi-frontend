@@ -28,16 +28,16 @@ export const theme = {
   myChatBoxBgColor: "#19bbc72b",
 };
 
-const themeBlue = {
-  signatureBgColor: "#212d45",
-  signatureColor: "#f1f1f1",
-  disableBgColor: "#c2c4c7",
-  disableColor: "#8c8c8c",
-};
+// const themeBlue = {
+//   signatureBgColor: "#212d45",
+//   signatureColor: "#f1f1f1",
+//   disableBgColor: "#c2c4c7",
+//   disableColor: "#8c8c8c",
+// };
 
-const themeGreen = {
-  signatureBgColor: "#DBD5A4",
-  signatureColor: "#649173",
-  disableBgColor: "#c2c4c7",
-  disableColor: "#8c8c8c",
-};
+// const themeGreen = {
+//   signatureBgColor: "#DBD5A4",
+//   signatureColor: "#649173",
+//   disableBgColor: "#c2c4c7",
+//   disableColor: "#8c8c8c",
+// };

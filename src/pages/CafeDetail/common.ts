@@ -1,6 +1,5 @@
 import {
   cafeDetailQuery_cafeDetail_cafe,
-  cafeDetailQuery_cafeDetail_cafe_likedUsers,
   cafeDetailQuery_cafeDetail_cafe_menus,
 } from "../../__generated__/cafeDetailQuery";
 import { Category } from "../../__generated__/globalTypes";

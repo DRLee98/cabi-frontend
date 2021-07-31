@@ -11,7 +11,6 @@ import { useKeywords } from "../hooks/useKeywords";
 import { searchCafesQuery } from "../__generated__/searchCafesQuery";
 import queryString from "query-string";
 import { Loading } from "../components/loading";
-import { UserFragment } from "../__generated__/UserFragment";
 import { useAppSelector } from "app/hooks";
 
 const SEARCH_CAFES_QUERY = gql`
