@@ -22,6 +22,7 @@ import {
   deleteAccountMutationVariables,
 } from "__generated__/deleteAccountMutation";
 import { isLoginVar, tokenVar } from "../apollo";
+import { useAppSelector } from "app/hooks";
 
 const ProfileBox = styled.section`
   display: grid;
@@ -148,11 +149,9 @@ interface ProfileParam {
   id: string;
 }
 
-interface MyProfileProp {
-  user: UserFragment | null | undefined;
-}
+export const Profile = () => {
+  const me = useAppSelector((state) => state.loggedInUser.value);
 
-export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
   const { id } = useParams<ProfileParam>();
   const { loading, data } = useQuery<userProfileQuery>(USER_PROFILE_QUERY, {
     variables: { input: { id: +id } },
@@ -211,7 +210,8 @@ export const Profile: React.FC<MyProfileProp> = ({ user: me }) => {
   );
 };
 
-export const MyProfile: React.FC<MyProfileProp> = ({ user }) => {
+export const MyProfile = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>();
   const { data: myChatRoomsData, loading: myChatRoomsLoading } =

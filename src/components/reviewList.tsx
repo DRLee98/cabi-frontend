@@ -15,6 +15,7 @@ import { Image } from "../components/styledComponent";
 import { REVIEW_FRAGMENT } from "../fragments";
 import { Link } from "react-router-dom";
 import { defaultProfileImg } from "commonConstants";
+import { useAppSelector } from "app/hooks";
 
 const ReviewListBox = styled.div`
   padding-bottom: 3em;
@@ -182,25 +183,22 @@ interface ReplyFormBtnProp {
 }
 
 interface ReviewListProp {
-  me: myProfileQuery | null | undefined;
   totalScore?: number;
   avgScore?: number;
   reviews?: ReviewFragment[] | null | undefined;
 }
 
 export const ReviewList: React.FC<ReviewListProp> = ({
-  me,
   totalScore,
   avgScore,
   reviews,
 }) => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const { register, handleSubmit, getValues, formState } =
     useForm<ReplyFormProp>({ mode: "onChange" });
   const client = useApolloClient();
   const [reviewId, setReviewId] = useState<number>(-1);
   const [viewReply, setViewReply] = useState<number[]>([]);
-
-  const user = me?.myProfile.user;
 
   const toggleViewReply = (id: number) => {
     if (viewReply.includes(id)) {
@@ -219,7 +217,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
       const { contents } = getValues();
       const newReply = {
         contents,
-        writer: me,
+        writer: user,
         __typename: "Reply",
       };
       const review = client.readFragment({
@@ -306,7 +304,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
                 <CreateDate>
                   {new Date(Date.parse(review.createdAt)).toLocaleString()}
                 </CreateDate>
-                {me && (
+                {user && (
                   <ReplyBtn
                     onClick={() =>
                       reviewId && reviewId === review.id
@@ -320,7 +318,7 @@ export const ReviewList: React.FC<ReviewListProp> = ({
               </ContentsBox>
             </ReviewBox>
             <ReplyBox>
-              {me && reviewId === review.id && (
+              {user && reviewId === review.id && (
                 <ReplyForm onSubmit={handleSubmit(onSubmit)}>
                   <ImageBox size={"2em"}>
                     <Image

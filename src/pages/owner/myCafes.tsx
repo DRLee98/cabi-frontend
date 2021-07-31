@@ -13,6 +13,7 @@ import { SIMPLE_CAFE_FRAGMENT } from "../../fragments";
 import { useKeywords } from "../../hooks/useKeywords";
 import { myCafesQuery } from "../../__generated__/myCafesQuery";
 import { UserFragment } from "../../__generated__/UserFragment";
+import { useAppSelector } from "app/hooks";
 
 const EmptyBox = styled.div`
   margin: 15vh 0;
@@ -57,11 +58,8 @@ export const MY_CAFES_QUERY = gql`
   ${SIMPLE_CAFE_FRAGMENT}
 `;
 
-interface MyCafesProp {
-  user: UserFragment | null | undefined;
-}
-
-export const MyCafes: React.FC<MyCafesProp> = ({ user }) => {
+export const MyCafes = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const { data, loading } = useQuery<myCafesQuery>(MY_CAFES_QUERY);
   const { data: keywordsData } = useKeywords();
 

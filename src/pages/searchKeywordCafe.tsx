@@ -11,6 +11,7 @@ import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
 import { searchCafesKeywordQuery } from "../__generated__/searchCafesKeywordQuery";
 import { UserFragment } from "../__generated__/UserFragment";
+import { useAppSelector } from "app/hooks";
 
 const SEARCH_CAFES_KEYWORD_QUERY = gql`
   query searchCafesKeywordQuery($input: SearchCafesKeywordInput!) {
@@ -29,13 +30,8 @@ interface SearchKeywordCafeParams {
   slug: string;
 }
 
-interface SearchKeywordCafeProp {
-  user: UserFragment | null | undefined;
-}
-
-export const SearchKeywordCafe: React.FC<SearchKeywordCafeProp> = ({
-  user,
-}) => {
+export const SearchKeywordCafe = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const { slug } = useParams<SearchKeywordCafeParams>();
 
   const { data, loading } = useQuery<searchCafesKeywordQuery>(

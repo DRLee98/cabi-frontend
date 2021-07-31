@@ -18,6 +18,7 @@ import {
 } from "../../__generated__/editProfiletMutation";
 import { UserFragment } from "../../__generated__/UserFragment";
 import { FormBox, Form, ImageBox, ContentsBox, BtnBox } from "./styled";
+import { useAppSelector } from "app/hooks";
 
 const EDIT_PROFILE_MUTATION = gql`
   mutation editProfiletMutation($input: EditProfileInput!) {
@@ -39,11 +40,8 @@ interface EditProfileFormProp {
   file?: FileList;
 }
 
-interface EditProfileProp {
-  user: UserFragment | null | undefined;
-}
-
-export const EditProfile: React.FC<EditProfileProp> = ({ user }) => {
+export const EditProfile = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const [profileImg, setProfileImg] = useState<string | undefined>("");
   const client = useApolloClient();
   const { register, handleSubmit, errors, watch, getValues, formState } =

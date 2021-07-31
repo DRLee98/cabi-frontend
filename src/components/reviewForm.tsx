@@ -17,6 +17,7 @@ import {
 import { myProfileQuery } from "../__generated__/myProfileQuery";
 import { CAFE_DETAIL_QUERY } from "../hooks/cafeDetailQuery";
 import { MENU_DETAIL_QUERY } from "../hooks/menuDetailQuery";
+import { useAppSelector } from "app/hooks";
 
 const ReviewFormBtn = styled.button<ReviewFormViewProp>`
   position: fixed;
@@ -122,7 +123,6 @@ interface IconProp {
 }
 
 interface ReviewFormProp {
-  me?: myProfileQuery;
   cafeId: number;
   menuId?: number;
 }
@@ -131,11 +131,8 @@ interface FormProp {
   contents: string;
 }
 
-export const ReviewForm: React.FC<ReviewFormProp> = ({
-  me,
-  cafeId,
-  menuId,
-}) => {
+export const ReviewForm: React.FC<ReviewFormProp> = ({ cafeId, menuId }) => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const { register, handleSubmit, getValues, formState } = useForm<FormProp>({
     mode: "onChange",
   });
@@ -159,7 +156,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({
           score: ratingValue,
           __typename: "Rating",
         },
-        writer: me,
+        writer: user,
         __typename: "Review",
       };
       const {
@@ -203,7 +200,7 @@ export const ReviewForm: React.FC<ReviewFormProp> = ({
           score: ratingValue,
           __typename: "Rating",
         },
-        writer: me,
+        writer: user,
         __typename: "Review",
       };
       const {

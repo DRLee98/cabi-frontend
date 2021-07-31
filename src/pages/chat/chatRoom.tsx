@@ -59,6 +59,7 @@ import {
 } from "__generated__/exitChatRoomMutation";
 import { CHAT_ROOM_FRAGMENT } from "fragments";
 import { Confirm } from "components/confirm";
+import { useAppSelector } from "app/hooks";
 
 const PasswordContainer = styled(FlexCenterBox)`
   min-height: 80vh;
@@ -148,11 +149,8 @@ interface ChatRoomFormProp {
   context: string;
 }
 
-interface ChatRoomProp {
-  user?: UserFragment | null;
-}
-
-export const ChatRoom: React.FC<ChatRoomProp> = ({ user }) => {
+export const ChatRoom = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const history = useHistory();
   const client = useApolloClient();
   const { id } = useParams<ChatRoomParam>();

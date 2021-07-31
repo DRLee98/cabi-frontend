@@ -8,6 +8,8 @@ import { isLoginVar } from "../apollo";
 import { siteName, TOKEN } from "../commonConstants";
 import { Container } from "./styledComponent";
 import { BackBtn } from "components/backBtn";
+import { logout as storeLogout } from "app/store";
+import { useAppDispatch } from "app/hooks";
 
 const SHeader = styled.header`
   position: fixed;
@@ -157,6 +159,7 @@ const NavLink: React.FC<NavLinkProp> = ({ path, pathName, onClick }) => (
 );
 
 const Header = () => {
+  const dispatch = useAppDispatch();
   const { pathname } = useLocation();
   const noBackPath = ["/"];
   const isLogin = useReactiveVar(isLoginVar);
@@ -189,6 +192,7 @@ const Header = () => {
   };
 
   const logout = () => {
+    dispatch(storeLogout(null));
     localStorage.setItem(TOKEN, "");
     window.location.reload();
     window.location.href = "/";

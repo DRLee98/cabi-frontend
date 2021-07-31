@@ -46,7 +46,7 @@ import {
   BtnBox,
 } from "./styled";
 import { getCategoryName } from "./common";
-import { myProfileQuery } from "../../__generated__/myProfileQuery";
+import { useAppSelector } from "app/hooks";
 
 const DELETE_MENU_MUTATION = gql`
   mutation deleteMenuMutation($input: DeleteMenuInput!) {
@@ -62,11 +62,8 @@ interface MenuDetailParams {
   menuId: string;
 }
 
-interface MenuDetailProp {
-  me: myProfileQuery | null | undefined;
-}
-
-export const MenuDetail: React.FC<MenuDetailProp> = ({ me }) => {
+export const MenuDetail = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const history = useHistory();
   const client = useApolloClient();
 
@@ -75,7 +72,6 @@ export const MenuDetail: React.FC<MenuDetailProp> = ({ me }) => {
   const [optionWidth, setOptionWidth] = useState<number>(0);
 
   const menu = data?.menuDetail.menu;
-  const user = me?.myProfile?.user;
 
   const isOwner = user && user.role === UserRole.Owner;
 
@@ -223,13 +219,12 @@ export const MenuDetail: React.FC<MenuDetailProp> = ({ me }) => {
               </NutrientBox>
             )}
             <ReviewList
-              me={me}
               totalScore={menu?.totalScore}
               avgScore={menu?.avgScore}
               reviews={menu?.reviews}
             />
-            {me && !isOwner && (
-              <ReviewForm me={me} cafeId={+cafeId} menuId={+menuId} />
+            {user && !isOwner && (
+              <ReviewForm cafeId={+cafeId} menuId={+menuId} />
             )}
           </ContentsBox>
         </MenuContainer>

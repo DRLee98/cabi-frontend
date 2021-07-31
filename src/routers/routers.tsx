@@ -30,18 +30,26 @@ import { Map } from "pages/map";
 import { ChatRooms } from "../pages/chat/chatRooms";
 import { ChatRoom } from "../pages/chat/chatRoom";
 import { CreateChatRoom } from "../pages/chat/createChatRoom";
+import { login } from "app/store";
+import { useAppDispatch } from "app/hooks";
 
 export const Routers = () => {
   const isLogin = useReactiveVar(isLoginVar);
+
   const { data: me } = useMe();
   const user = me?.myProfile.user;
 
+  const dispatch = useAppDispatch();
+  user && dispatch(login(user));
+
+  //const test = useAppSelector((state) => state.loggedInUser.value);
+
   const loginRouters = [
-    { path: "/my-profile", component: <MyProfile user={user} /> },
-    { path: "/edit-profile", component: <EditProfile user={user} /> },
+    { path: "/my-profile", component: <MyProfile /> },
+    { path: "/edit-profile", component: <EditProfile /> },
     { path: "/chat-rooms", component: <ChatRooms /> },
-    { path: "/chat-room/:id", component: <ChatRoom user={user} /> },
-    { path: "/create-chat-room", component: <CreateChatRoom user={user} /> },
+    { path: "/chat-room/:id", component: <ChatRoom /> },
+    { path: "/create-chat-room", component: <CreateChatRoom /> },
   ];
 
   const logoutRouters = [
@@ -50,23 +58,23 @@ export const Routers = () => {
   ];
 
   const ownerRouters = [
-    { path: "/", component: <MyCafes user={user} /> },
+    { path: "/", component: <MyCafes /> },
     { path: "/create-cafe", component: <CreateCafe userId={user?.id} /> },
     { path: "/cafe/:cafeId/create-menu", component: <CreateMenu /> },
     { path: "/cafe/:cafeId/edit", component: <EditCafe /> },
     { path: "/cafe/:cafeId/menu/:menuId/edit", component: <EditMenu /> },
   ];
 
-  const clientRouters = [{ path: "/", component: <Home user={user} /> }];
+  const clientRouters = [{ path: "/", component: <Home /> }];
 
   const commonRouters = [
-    { path: "/", component: <Home user={user} /> },
-    { path: "/search-cafes", component: <SearchCafe user={user} /> },
-    { path: "/keyword/:slug", component: <SearchKeywordCafe user={user} /> },
-    { path: "/cafe/:cafeId", component: <CafeDetail me={me} /> },
-    { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail me={me} /> },
-    { path: "/profile/:id", component: <Profile user={user} /> },
-    { path: "/map", component: <Map user={user} /> },
+    { path: "/", component: <Home /> },
+    { path: "/search-cafes", component: <SearchCafe /> },
+    { path: "/keyword/:slug", component: <SearchKeywordCafe /> },
+    { path: "/cafe/:cafeId", component: <CafeDetail /> },
+    { path: "/cafe/:cafeId/menu/:menuId", component: <MenuDetail /> },
+    { path: "/profile/:id", component: <Profile /> },
+    { path: "/map", component: <Map /> },
   ];
 
   return (

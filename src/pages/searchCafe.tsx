@@ -12,6 +12,7 @@ import { searchCafesQuery } from "../__generated__/searchCafesQuery";
 import queryString from "query-string";
 import { Loading } from "../components/loading";
 import { UserFragment } from "../__generated__/UserFragment";
+import { useAppSelector } from "app/hooks";
 
 const SEARCH_CAFES_QUERY = gql`
   query searchCafesQuery($input: SearchCafesInput!) {
@@ -26,11 +27,8 @@ const SEARCH_CAFES_QUERY = gql`
   ${SIMPLE_CAFE_FRAGMENT}
 `;
 
-interface SearchCafeProp {
-  user: UserFragment | null | undefined;
-}
-
-export const SearchCafe: React.FC<SearchCafeProp> = ({ user }) => {
+export const SearchCafe = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const { search } = useLocation();
   const { word } = queryString.parse(search);
 

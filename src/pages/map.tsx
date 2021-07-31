@@ -10,6 +10,7 @@ import { searchCafesLatLngQuery } from "__generated__/searchCafesLatLngQuery";
 import { MAP_VIEW_CAFE_FRAGMENT } from "fragments";
 import { gql, useLazyQuery } from "@apollo/client";
 import { Score } from "components/score";
+import { useAppSelector } from "app/hooks";
 
 const MapContainer = styled.div`
   position: relative;
@@ -139,13 +140,10 @@ interface Bounds {
   right: number;
 }
 
-interface MapProp {
-  user: UserFragment | null | undefined;
-}
-
 let firstCall = true;
 
-export const Map: React.FC<MapProp> = ({ user }) => {
+export const Map = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const userAddress = user?.address;
   let latlng = { lat: 37.537183, lng: 127.005454 };
   if (userAddress && userAddress.lat && userAddress.lng) {

@@ -11,6 +11,7 @@ import { SIMPLE_CAFE_FRAGMENT } from "../fragments";
 import { useKeywords } from "../hooks/useKeywords";
 import { seeCafesQuery } from "../__generated__/seeCafesQuery";
 import { UserFragment } from "../__generated__/UserFragment";
+import { useAppSelector } from "app/hooks";
 
 const SEE_CAFES_QUERY = gql`
   query seeCafesQuery {
@@ -25,11 +26,8 @@ const SEE_CAFES_QUERY = gql`
   ${SIMPLE_CAFE_FRAGMENT}
 `;
 
-interface HomeProp {
-  user: UserFragment | null | undefined;
-}
-
-export const Home: React.FC<HomeProp> = ({ user }) => {
+export const Home = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const { data, loading } = useQuery<seeCafesQuery>(SEE_CAFES_QUERY);
   const { data: getkeywords } = useKeywords();
   const keywords = getkeywords?.viewKeywords.keywords;

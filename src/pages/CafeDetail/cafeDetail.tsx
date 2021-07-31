@@ -63,6 +63,7 @@ import {
 } from "./styled";
 import { filterCategory, getIsLike } from "./common";
 import { SimpleUserFragment } from "../../__generated__/SimpleUserFragment";
+import { useAppSelector } from "app/hooks";
 
 const DELETE_CAFE_MUTATION = gql`
   mutation deleteCafeMutation($input: DeleteCafeInput!) {
@@ -86,11 +87,8 @@ interface cafeDetailParam {
   cafeId: string;
 }
 
-interface CafeDetailProp {
-  me?: myProfileQuery;
-}
-
-export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
+export const CafeDetail = () => {
+  const user = useAppSelector((state) => state.loggedInUser.value);
   const history = useHistory();
   const client = useApolloClient();
 
@@ -100,7 +98,6 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
   const cafe = data?.cafeDetail.cafe;
   const keywords = cafe?.keywords;
 
-  const user = me?.myProfile.user;
   const isOwner = user && user.role === UserRole.Owner;
 
   const isLike = getIsLike(cafe, user);
@@ -299,12 +296,11 @@ export const CafeDetail: React.FC<CafeDetailProp> = ({ me }) => {
           </MapBox>
           <ReviewBox>
             <ReviewList
-              me={me}
               totalScore={cafe?.totalScore}
               avgScore={cafe?.avgScore}
               reviews={cafe?.reviews}
             />
-            {me && !isOwner && <ReviewForm me={me} cafeId={+cafeId} />}
+            {user && !isOwner && <ReviewForm cafeId={+cafeId} />}
           </ReviewBox>
         </ContentsBox>
       </Container>
