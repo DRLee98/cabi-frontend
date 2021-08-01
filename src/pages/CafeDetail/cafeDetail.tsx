@@ -1,4 +1,9 @@
-import { useApolloClient, useMutation } from "@apollo/client";
+import {
+  ApolloCache,
+  FetchResult,
+  useApolloClient,
+  useMutation,
+} from "@apollo/client";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import gql from "graphql-tag";
 import React, { useEffect, useState } from "react";
@@ -18,7 +23,7 @@ import {
 } from "../../components/styledComponent";
 import { UserCircleDetail, UserCircle } from "../../components/userCircleBox";
 import { defaultCoverImg, siteName } from "../../commonConstants";
-import { CAFE_DETAIL_QUERY, useCafeDetail } from "../../hooks/cafeDetailQuery";
+import { useCafeDetail } from "../../hooks/cafeDetailQuery";
 import { cafeDetailQuery_cafeDetail_cafe_likedUsers } from "../../__generated__/cafeDetailQuery";
 import { UserRole } from "../../__generated__/globalTypes";
 import { MY_CAFES_QUERY } from "../owner/myCafes";
@@ -149,49 +154,38 @@ export const CafeDetail = () => {
     }
   };
 
-  const toggleCompleted = (data: toggleLikeCafeMutation) => {
-    const {
-      toggleLikeCafe: { ok, error },
-    } = data;
-    if (ok) {
-      const {
-        cafeDetail: { cafe },
-      } = client.readQuery({
-        query: CAFE_DETAIL_QUERY,
-        variables: { input: { id: +cafeId } },
-      });
-      let likedUsers;
-      if (!toggleLike) {
-        likedUsers = [...cafe.likedUsers, user];
-      } else {
-        likedUsers = cafe.likedUsers.filter(
-          (likeUser: cafeDetailQuery_cafeDetail_cafe_likedUsers) =>
-            user && likeUser.id !== user.id,
-        );
-      }
-      client.writeQuery({
-        query: CAFE_DETAIL_QUERY,
-        data: {
-          cafeDetail: {
-            error,
-            ok,
-            cafe: {
-              ...cafe,
-              likedUsers,
-            },
+  const updateToggleLike = (
+    cache: ApolloCache<toggleLikeCafeMutation>,
+    result: FetchResult<toggleLikeCafeMutation>,
+  ) => {
+    if (result.data?.toggleLikeCafe.ok) {
+      cache.modify({
+        id: `Cafe:${cafeId}`,
+        fields: {
+          likedUsers(prev: [cafeDetailQuery_cafeDetail_cafe_likedUsers]) {
+            if (!toggleLike) {
+              setToggleLike(true);
+              return [...prev, user];
+            } else {
+              setToggleLike(false);
+              return (
+                prev &&
+                prev.filter(
+                  (likeUser: cafeDetailQuery_cafeDetail_cafe_likedUsers) =>
+                    user && likeUser.id !== user.id,
+                )
+              );
+            }
           },
-          __typename: "Cafe",
         },
-        variables: { input: { id: +cafeId } },
       });
-      setToggleLike((prev) => !prev);
     }
   };
 
   const [toggleLikeCafeMutation, { loading: toggleLoading }] = useMutation<
     toggleLikeCafeMutation,
     toggleLikeCafeMutationVariables
-  >(TOGGLE_LIKE_CAFE_MUTATION, { onCompleted: toggleCompleted });
+  >(TOGGLE_LIKE_CAFE_MUTATION, { update: updateToggleLike });
 
   const toggleLikeCafe = () => {
     if (!toggleLoading) {
