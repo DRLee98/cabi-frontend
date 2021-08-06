@@ -4,6 +4,7 @@ import styled from "styled-components";
 export const Wrap = styled.div`
   min-height: 88vh;
   padding-top: ${(prop) => prop.theme.headerHeight};
+  position: relative;
 `;
 
 export const Container = styled.div`

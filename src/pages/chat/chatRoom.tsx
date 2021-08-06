@@ -60,6 +60,10 @@ import { Confirm } from "components/confirm";
 import { useAppSelector } from "app/hooks";
 import { ChatRoomFragment } from "__generated__/ChatRoomFragment";
 
+const ChatContainer = styled(Container)`
+  margin-bottom: 0;
+`;
+
 const PasswordContainer = styled(FlexCenterBox)`
   min-height: 80vh;
   flex-direction: column;
@@ -68,16 +72,21 @@ const PasswordContainer = styled(FlexCenterBox)`
 const PasswordForm = styled.form``;
 
 const SendMsgForm = styled.form`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
+  position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   padding: 0.5em;
   background-color: ${({ theme }) => theme.whiteColor};
   box-shadow: 0px 0px 8px 1px rgb(140 122 122 / 12%);
+`;
+
+const SendMsgBox = styled.div`
+  max-width: 1400px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const SendMsgInput = styled.input`
@@ -97,7 +106,7 @@ const SendMsgBtn = styled.button`
   transition: background-color 0.2s ease;
 `;
 
-const MessagesContainer = styled.ul`
+const ChatBox = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 1em;
@@ -118,6 +127,21 @@ const ChatMenu = styled.div`
   }
 `;
 
+const MessageBox = styled.ul`
+  height: 100%;
+  max-height: 65vh;
+  overflow-y: scroll;
+  padding: 0 10px;
+  margin: 10px 0;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.lightBgColor};
+    border-radius: 10px;
+  }
+`;
+
 const Icon = styled(FlexCenterBox)`
   position: absolute;
   right: 0px;
@@ -130,7 +154,7 @@ const Icon = styled(FlexCenterBox)`
   border-radius: 999px;
   color: ${({ theme }) => theme.signatureColor};
   &:hover {
-    background-color: ${({ theme }) => theme.signaturelightBgColor};
+    background-color: ${({ theme }) => theme.lightBgColor};
   }
   transition: all 0.3s ease;
   cursor: pointer;
@@ -169,17 +193,11 @@ export const ChatRoom = () => {
   );
 
   const scrollBottom = () => {
-    const {
-      body: { scrollHeight },
-    } = document;
-    const {
-      screen: { height: screenHeight },
-    } = window;
-    const footer = document.querySelector("footer");
-    const height = footer
-      ? scrollHeight - footer?.offsetHeight - screenHeight
-      : scrollHeight - screenHeight;
-    window.scroll(0, height);
+    const lists = document.querySelectorAll("ul");
+    const messageBox = lists[lists.length - 1];
+    if (messageBox) {
+      messageBox.scrollTop = messageBox.scrollHeight;
+    }
   };
 
   const [
@@ -301,7 +319,7 @@ export const ChatRoom = () => {
               if (!subscriptionData.data) return prev;
               const newMessage = subscriptionData.data.listenNewMessage;
               setMessages((prev) => [...prev, newMessage]);
-              scrollBottom();
+              //scrollBottom();
               return {
                 viewChatRoom: {
                   ...prev.viewChatRoom,
@@ -469,7 +487,7 @@ export const ChatRoom = () => {
       <Helmet>
         <title>{siteName}</title>
       </Helmet>
-      <Container>
+      <ChatContainer>
         {isSecret ? (
           <PasswordContainer>
             <CenterTitle>비밀번호를 입력해 주세요.</CenterTitle>
@@ -488,7 +506,7 @@ export const ChatRoom = () => {
             </PasswordForm>
           </PasswordContainer>
         ) : (
-          <MessagesContainer onLoad={scrollBottom}>
+          <ChatBox onLoad={scrollBottom}>
             <ChatMenu>
               <CenterTitle>
                 {viewChatData?.viewChatRoom.chatRoom.name}
@@ -513,26 +531,32 @@ export const ChatRoom = () => {
                 me={user}
               />
             </ChatMenu>
-            {messages.map((msg: MessageFragment) => (
-              <Message
-                key={msg.createdAt}
-                message={msg}
-                me={(user && msg.writer && user.id === msg.writer.id) || false}
-              />
-            ))}
-          </MessagesContainer>
+            <MessageBox>
+              {messages.map((msg: MessageFragment) => (
+                <Message
+                  key={msg.createdAt}
+                  message={msg}
+                  me={
+                    (user && msg.writer && user.id === msg.writer.id) || false
+                  }
+                />
+              ))}
+            </MessageBox>
+          </ChatBox>
         )}
-      </Container>
+      </ChatContainer>
       {!isSecret && (
         <SendMsgForm onSubmit={handleSubmit(onSubmitSendMsg)}>
-          <SendMsgInput
-            ref={register({ required: true })}
-            name="context"
-            type="text"
-          />
-          <SendMsgBtn>
-            <FontAwesomeIcon icon={faPaperPlane} />
-          </SendMsgBtn>
+          <SendMsgBox>
+            <SendMsgInput
+              ref={register({ required: true })}
+              name="context"
+              type="text"
+            />
+            <SendMsgBtn>
+              <FontAwesomeIcon icon={faPaperPlane} />
+            </SendMsgBtn>
+          </SendMsgBox>
         </SendMsgForm>
       )}
       {exitChat && (
