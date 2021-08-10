@@ -59,17 +59,18 @@ export const CategoryName = styled.small`
   color: ${(prop) => prop.theme.disableColor};
 `;
 
-export const Price = styled.span``;
-
-export const MenuInfoBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+export const Price = styled.span`
+  display: block;
+  font-size: 18px;
+  text-align: right;
 `;
+
+export const MenuInfoBox = styled.div``;
 
 export const Description = styled.p`
   color: ${(prop) => prop.theme.disableColor};
   font-weight: 100;
+  margin-bottom: 10px;
 `;
 
 export const OptionBox = styled.div`

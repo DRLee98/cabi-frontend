@@ -11,13 +11,13 @@ import { CoverImage } from "./styledComponent";
 import { DotLoading } from "components/loading";
 
 const CafeRankContainer = styled.div`
-  height: 45vh;
+  min-height: 45vh;
   display: flex;
   justify-content: space-between;
   // border: 2px solid ${(prop) => prop.theme.signatureColor};
   @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    min-height: unset;
     display: block;
-    height: auto;
   }
 `;
 
@@ -27,7 +27,10 @@ const CafeImgList = styled.ul`
   overflow: hidden;
   @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
     width: 100%;
-    height: 45vw;
+    height: 60vw;
+    img {
+      height: 45vw;
+    }
   }
 `;
 
@@ -52,12 +55,12 @@ const RankList = styled.ul`
   flex-direction: column;
   justify-content: center;
   @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
-    width: 100%;
+    display: none;
   }
 `;
 
 const RankItem = styled.li<RankItemProp>`
-  padding: 4px;
+  padding: 6px 10px;
   height: 100%;
   transition: all 0.5s ease;
   ${(prop) =>
@@ -79,9 +82,23 @@ const RankLink = styled(Link)`
   //padding: 0 10px;
 `;
 
+const ImageTitle = styled.div`
+  display: none;
+  height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: ${(prop) => prop.theme.whiteColor};
+  padding: 6px 10px;
+  @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
+    display: block;
+    height: auto;
+  }
+`;
+
 const Rank = styled.span<RankProp>`
   margin-right: 5px;
-  ${(prop) => prop.rank < 4 && "font-size: 25px"};
+  ${(prop) => prop.rank < 4 && "font-size: 1.6em"};
   color: ${(prop) =>
     prop.rank === 1
       ? "gold"
@@ -91,14 +108,14 @@ const Rank = styled.span<RankProp>`
       ? "chocolate"
       : "gray"};
   @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
-    ${(prop) => prop.rank < 4 && "font-size: 20px"};
+    ${(prop) => prop.rank < 4 && "font-size: 1em"};
   }
 `;
 
 const CafeInfo = styled.div``;
 
 const CafeName = styled.strong`
-  font-size: 20px;
+  font-size: 1em;
   font-weight: bold;
   display: inline-block;
   @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
@@ -201,6 +218,20 @@ export const CafesRank = () => {
             <Link to={`/cafe/${cafe.id}`}>
               <CoverImage src={cafe.originalCoverImg || defaultCoverImg} />
             </Link>
+            <ImageTitle>
+              <CafeInfo>
+                <Rank rank={i + 1}>{i + 1}.</Rank>
+                <CafeName>{cafe.name}</CafeName>
+                <CafeAddress>{cafe.address.address}</CafeAddress>
+              </CafeInfo>
+              <ScoreBox>
+                <Score
+                  totalScore={cafe.totalScore}
+                  avgScore={cafe.avgScore}
+                  likedUsers={cafe.likedUsers?.length || 0}
+                />
+              </ScoreBox>
+            </ImageTitle>
           </CafeImg>
         ))}
       </CafeImgList>

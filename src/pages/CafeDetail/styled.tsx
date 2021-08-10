@@ -182,18 +182,20 @@ export const MenuItem = styled.li`
 `;
 
 export const MenuInfo = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  height: 10%;
+  // display: flex;
+  // align-items: flex-end;
+  // justify-content: space-between;
+  // height: 10%;
+  padding: 5px 0;
   width: 90%;
 `;
 
-export const MenuName = styled.span``;
+export const MenuName = styled.h4``;
 
-export const MenuPrice = styled.span`
+export const MenuPrice = styled.strong`
   color: ${({ theme }) => theme.grayColor};
   font-size: 13px;
+  text-align: right;
 `;
 
 interface ToggleLikeBtnProp {

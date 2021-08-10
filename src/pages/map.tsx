@@ -71,6 +71,14 @@ const CafeList = styled.ul<CafeListProp>`
   opacity: ${(props) => (props.show ? "1" : "0")};
   transition: opacity 0.2s ease;
   z-index: 5;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.lightBgColor};
+    border-radius: 10px;
+  }
 `;
 
 const CafeItem = styled.li`
