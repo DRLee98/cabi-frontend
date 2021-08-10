@@ -196,6 +196,8 @@ export const MenuPrice = styled.strong`
   color: ${({ theme }) => theme.grayColor};
   font-size: 13px;
   text-align: right;
+  display: block;
+  margin-top: 5px;
 `;
 
 interface ToggleLikeBtnProp {
