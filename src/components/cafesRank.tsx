@@ -85,13 +85,12 @@ const RankLink = styled(Link)`
 const ImageTitle = styled.div`
   display: none;
   height: 0;
-  display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: ${(prop) => prop.theme.whiteColor};
   padding: 6px 10px;
   @media only screen and (max-width: ${({ theme }) => theme.smallScreenWidth}) {
-    display: block;
+    display: flex;
     height: auto;
   }
 `;
