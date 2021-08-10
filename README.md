@@ -1,5 +1,7 @@
 # Project Cabi Front-end (https://cabi.netlify.app/)
 
+테스트 계정 : ID: test@test.com, PW: 12345
+
 ## 프로젝트 소개
 
 > 인터넛 강의를 들으며 공부하던 중 배운 것을 숙달할 만한 무언가가 없을까 고민하던 때에 카페를 비교하는 웹을 만들어보면 어떻겠냐는 친구의 아이디어로 시작하게 되었습니다.
