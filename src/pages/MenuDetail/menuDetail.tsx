@@ -5,7 +5,7 @@ import { Nutrient } from "../../components/nutrient";
 import { Slider } from "../../components/slider";
 import { Container, MenuImage } from "../../components/styledComponent";
 import { siteName } from "../../commonConstants";
-import { UserRole } from "../../__generated__/globalTypes";
+import { Category, UserRole } from "../../__generated__/globalTypes";
 import { useMenuDetail } from "../../hooks/menuDetailQuery";
 import { ReviewList } from "../../components/reviewList";
 import { ReviewForm } from "../../components/reviewForm";
@@ -213,11 +213,14 @@ export const MenuDetail = () => {
                 </OptionList>
               </OptionBox>
             )}
-            {menu && menu.nutrient && (
-              <NutrientBox>
-                <Nutrient nutrient={menu.nutrient} />
-              </NutrientBox>
-            )}
+            {menu &&
+              menu.nutrient &&
+              menu.category !== Category.Goods &&
+              menu.category !== Category.Etc && (
+                <NutrientBox>
+                  <Nutrient nutrient={menu.nutrient} />
+                </NutrientBox>
+              )}
             <ReviewList
               totalScore={menu?.totalScore}
               avgScore={menu?.avgScore}
