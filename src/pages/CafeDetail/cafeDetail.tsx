@@ -22,7 +22,11 @@ import {
   MenuImage,
 } from "../../components/styledComponent";
 import { UserCircleDetail, UserCircle } from "../../components/userCircleBox";
-import { defaultCoverImg, siteName } from "../../commonConstants";
+import {
+  defaultCoverImg,
+  defaultMenuImg,
+  siteName,
+} from "../../commonConstants";
 import { useCafeDetail } from "../../hooks/cafeDetailQuery";
 import { cafeDetailQuery_cafeDetail_cafe_likedUsers } from "../../__generated__/cafeDetailQuery";
 import { UserRole } from "../../__generated__/globalTypes";
@@ -270,7 +274,7 @@ export const CafeDetail = () => {
                           <SLink to={`/cafe/${cafeId}/menu/${menu.id}`}>
                             <MenuImage
                               sizes={"100%"}
-                              src={menu.smallMenuImg || undefined}
+                              src={menu.smallMenuImg || defaultMenuImg}
                             />
                             <MenuInfo>
                               <MenuName>{menu.name}</MenuName>

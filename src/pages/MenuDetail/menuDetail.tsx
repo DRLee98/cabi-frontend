@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router";
 import { Nutrient } from "../../components/nutrient";
 import { Slider } from "../../components/slider";
 import { Container, MenuImage } from "../../components/styledComponent";
-import { siteName } from "../../commonConstants";
+import { defaultMenuImg, siteName } from "../../commonConstants";
 import { Category, UserRole } from "../../__generated__/globalTypes";
 import { useMenuDetail } from "../../hooks/menuDetailQuery";
 import { ReviewList } from "../../components/reviewList";
@@ -136,7 +136,7 @@ export const MenuDetail = () => {
           <ImageBox>
             <MenuImage
               sizes={"100%"}
-              src={menu?.originalMenuImg || undefined}
+              src={menu?.originalMenuImg || defaultMenuImg}
             />
           </ImageBox>
           <ContentsBox>

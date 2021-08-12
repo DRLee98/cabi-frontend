@@ -11,7 +11,7 @@ import { Input, MenuImageInput, Select } from "../../../components/Input";
 import { NutrientForm } from "../../../components/nutrient";
 import { Slider } from "../../../components/slider";
 import { Container, Title } from "../../../components/styledComponent";
-import { siteName } from "../../../commonConstants";
+import { defaultMenuImg, siteName } from "../../../commonConstants";
 import { uploadFile } from "../../../upload";
 import { Category } from "../../../__generated__/globalTypes";
 import {
@@ -293,7 +293,10 @@ export const EditMenu = () => {
           <Title>메뉴 수정하기</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <MenuImageInput register={register} url={menu?.originalMenuImg} />
+              <MenuImageInput
+                register={register}
+                url={menu?.originalMenuImg || defaultMenuImg}
+              />
             </ImageBox>
             <ContentsBox>
               <Input

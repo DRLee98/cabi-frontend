@@ -11,7 +11,7 @@ import { Input, MenuImageInput, Select } from "../../../components/Input";
 import { NutrientForm } from "../../../components/nutrient";
 import { Slider } from "../../../components/slider";
 import { Container, Title } from "../../../components/styledComponent";
-import { siteName } from "../../../commonConstants";
+import { defaultMenuImg, siteName } from "../../../commonConstants";
 import { uploadFile } from "../../../upload";
 import {
   createMenuMutation,
@@ -221,7 +221,7 @@ export const CreateMenu = () => {
           <Title>메뉴 만들기</Title>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <ImageBox>
-              <MenuImageInput register={register} />
+              <MenuImageInput register={register} url={defaultMenuImg} />
             </ImageBox>
             <ContentsBox>
               <Input
