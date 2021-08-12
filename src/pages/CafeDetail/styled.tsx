@@ -174,6 +174,7 @@ export const MenuItem = styled.li`
     align-items: center;
     justify-content: center;
     img {
+      margin: 5px;
       border-radius: 15px 0 15px 15px;
       height: 85%;
       width: 95%;
