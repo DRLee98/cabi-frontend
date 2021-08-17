@@ -102,6 +102,7 @@ export const EditMenu = () => {
     }
   });
 
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
   const [originalMenuImg, setOriginalMenuImg] = useState<string | undefined>(
     "",
   );
@@ -247,9 +248,11 @@ export const EditMenu = () => {
       } = getValues();
       const optionList = getOption(options, additionalOptions, getValues);
       if (file.length > 0) {
+        setUploadLoading(true);
         ({ originalImage: originalMenuImgUrl, smallImage: smallMenuImgUrl } =
           await uploadFile(file[0], 400, 500));
         setOriginalMenuImg(originalMenuImgUrl);
+        setUploadLoading(false);
       }
       editMenuMutation({
         variables: {
@@ -416,7 +419,7 @@ export const EditMenu = () => {
             </ContentsBox>
             <BtnBox>
               <Button
-                loading={loading}
+                loading={loading || uploadLoading}
                 valid={formState.isValid}
                 text={"메뉴 수정하기"}
                 error={errorMsg}

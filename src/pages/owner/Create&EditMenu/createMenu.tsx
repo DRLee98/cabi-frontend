@@ -72,6 +72,7 @@ export const CreateMenu = () => {
   const history = useHistory();
   const client = useApolloClient();
   const { cafeId } = useParams<CreateMenuParams>();
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
   const [smallMenuImg, setSmallMenuImg] = useState<string | undefined>("");
   const [options, setOptions] = useState<string[]>([]);
   const [additionalOptions, setAdditionalOptions] = useState<string[]>([]);
@@ -178,9 +179,11 @@ export const CreateMenu = () => {
       } = getValues();
       const optionList = getOption(options, additionalOptions, getValues);
       if (file.length > 0) {
+        setUploadLoading(true);
         ({ originalImage: originalMenuImgUrl, smallImage: smallMenuImgUrl } =
           await uploadFile(file[0], 400, 500));
         setSmallMenuImg(smallMenuImgUrl);
+        setUploadLoading(false);
       }
       createMenuMutation({
         variables: {
@@ -320,7 +323,7 @@ export const CreateMenu = () => {
             </ContentsBox>
             <BtnBox>
               <Button
-                loading={loading}
+                loading={loading || uploadLoading}
                 valid={formState.isValid}
                 text={"메뉴 만들기"}
                 error={errorMsg}

@@ -41,6 +41,7 @@ interface EditProfileFormProp {
 
 export const EditProfile = () => {
   const user = useAppSelector((state) => state.loggedInUser.value);
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
   const [profileImg, setProfileImg] = useState<string | undefined>("");
   const client = useApolloClient();
   const { register, handleSubmit, errors, watch, getValues, formState } =
@@ -110,9 +111,11 @@ export const EditProfile = () => {
       let smallProfileImg;
       const { name, oldPassword, password, file } = getValues();
       if (file && file.length > 0) {
+        setUploadLoading(true);
         ({ originalImage: originalProfileImg, smallImage: smallProfileImg } =
           await uploadFile(file[0], 200, 200));
         setProfileImg(originalProfileImg);
+        setUploadLoading(false);
       }
       editProfiletMutation({
         variables: {
@@ -225,7 +228,7 @@ export const EditProfile = () => {
             </ContentsBox>
             <BtnBox>
               <Button
-                loading={loading}
+                loading={loading || uploadLoading}
                 valid={formState.isValid}
                 text={"변경하기"}
                 error={errorMsg}

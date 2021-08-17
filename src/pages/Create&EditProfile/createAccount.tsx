@@ -60,6 +60,7 @@ export const CreateAccount = () => {
       setTimeout(() => setErrorMsg(null), 2000);
     }
   };
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
   const [addressResult, setAddressResult] = useState<NewAddressData>();
   const [addressError, setAddressdError] = useState<String>();
   const [errorMsg, setErrorMsg] = useState<string | null>();
@@ -82,8 +83,10 @@ export const CreateAccount = () => {
         return;
       }
       if (file.length > 0) {
+        setUploadLoading(true);
         ({ originalImage: originalProfileImg, smallImage: smallProfileImg } =
           await uploadFile(file[0], 200, 200));
+        setUploadLoading(false);
       }
       createAccountMutation({
         variables: {
@@ -209,7 +212,7 @@ export const CreateAccount = () => {
             </ContentsBox>
             <BtnBox>
               <Button
-                loading={loading}
+                loading={loading || uploadLoading}
                 valid={formState.isValid && Boolean(addressResult)}
                 text={"가입하기"}
                 error={errorMsg}

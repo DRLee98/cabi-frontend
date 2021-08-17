@@ -82,6 +82,7 @@ export const EditCafe = () => {
 
   const history = useHistory();
   const client = useApolloClient();
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
   const [originalCoverImg, setOriginalCoverImg] = useState<string | undefined>(
     "",
   );
@@ -184,9 +185,11 @@ export const EditCafe = () => {
         });
       }
       if (file.length > 0) {
+        setUploadLoading(true);
         ({ originalImage: originalCoverImgUrl, smallImage: smallCoverImgUrl } =
           await uploadFile(file[0], 300, 200));
         setOriginalCoverImg(originalCoverImgUrl);
+        setUploadLoading(false);
       }
       editCafeMutation({
         variables: {
@@ -287,7 +290,7 @@ export const EditCafe = () => {
             </KeywordBox>
             <BtnBox>
               <Button
-                loading={loading}
+                loading={loading || uploadLoading}
                 valid={formState.isValid}
                 text={"카페 수정하기"}
                 error={errorMsg}

@@ -117,6 +117,7 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
     }
   };
 
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
   const [smallCoverImgUrl, setSmallCoverImgUrl] = useState<string | undefined>(
     "",
   );
@@ -164,9 +165,11 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
         return;
       }
       if (file.length > 0) {
+        setUploadLoading(true);
         ({ originalImage: originalCoverImgUrl, smallImage: smallCoverImgUrl } =
           await uploadFile(file[0], 300, 200));
         setSmallCoverImgUrl(smallCoverImgUrl);
+        setUploadLoading(false);
       }
       createCafeMutation({
         variables: {
@@ -253,7 +256,7 @@ export const CreateCafe: React.FC<CreateCafeProp> = ({ userId }) => {
             </KeywordBox>
             <BtnBox>
               <Button
-                loading={loading}
+                loading={loading || uploadLoading}
                 valid={formState.isValid && Boolean(addressResult)}
                 text={"카페 만들기"}
                 error={errorMsg}
