@@ -1,5 +1,6 @@
 import React, { MouseEventHandler } from "react";
-import DaumPostcode, { AddressData } from "react-daum-postcode";
+import DaumPostcode from "react-daum-postcode";
+import type { AddressData } from "react-daum-postcode";
 import styled from "styled-components";
 import { getLatLng } from "./kakaoMap";
 

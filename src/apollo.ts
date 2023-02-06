@@ -17,14 +17,14 @@ export const tokenVar = makeVar(token);
 const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV === "production"
-      ? "https://web-production-aee3.up.railway.app/graphql"
+      ? "https://cabi-backend.up.railway.app/graphql"
       : "http://localhost:4000/graphql",
 });
 
 const wsLink = new WebSocketLink({
   uri:
     process.env.NODE_ENV === "production"
-      ? "wss://web-production-aee3.up.railway.app/graphql"
+      ? "wss://cabi-backend.up.railway.app/graphql"
       : "ws://localhost:4000/graphql",
   options: {
     reconnect: true,
