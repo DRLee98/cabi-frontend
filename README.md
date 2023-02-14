@@ -1,6 +1,8 @@
 # Project Cabi Front-end (https://cabi.netlify.app/)
 
-테스트 계정 : ID: test@test.com, PW: 12345
+테스트 계정 : 
+   ID: testA@test.com, PW: 12345
+   ID: testB@test.com, PW: 12345
 
 ## 프로젝트 소개
 
