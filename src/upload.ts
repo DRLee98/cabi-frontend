@@ -2,7 +2,7 @@ import { imageResize } from "./imageResize";
 
 const URL =
   process.env.NODE_ENV === "production"
-    ? "https://cabi-backend.herokuapp.com"
+    ? "https://cabi-backend.up.railway.app"
     : "http://localhost:4000";
 
 export const uploadFile = async (file: File, width: number, height: number) => {
