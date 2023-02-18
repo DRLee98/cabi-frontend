@@ -168,7 +168,7 @@ export const MenuItem = styled.li`
   border-radius: 15px 0 15px 15px;
   overflow: hidden;
   a {
-    height: 100%;
+    height: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;

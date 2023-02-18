@@ -44,9 +44,18 @@ export const CoverImage = styled.img`
   background-color: lightgray;
 `;
 
-export const MenuImage = styled.img`
+interface IMenuImage {
+  sizes?: string;
+  src: string;
+}
+
+export const MenuImage = styled.div<IMenuImage>`
   width: ${(prop) => (prop.sizes ? prop.sizes : "30rem")};
   height: ${(prop) => (prop.sizes ? prop.sizes : "35rem")};
+  background-image: url(${(prop) => prop.src});
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   background-color: ${(prop) => prop.theme.whiteColor};
 `;
 
