@@ -31,9 +31,11 @@ const Input = styled.input<InputStyleProps>`
 `;
 
 const SearchBtn = styled.span`
+  min-width: max-content;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 10px;
   cursor: pointer;
   background-color: ${(prop) => prop.theme.signatureBgColor};
   color: ${(prop) => prop.theme.signatureColor};

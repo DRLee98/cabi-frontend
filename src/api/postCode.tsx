@@ -60,9 +60,8 @@ export const Postcode: React.FC<PostcodeProps> = ({
         <CloseBtn onClick={closePostcode}>닫기</CloseBtn>
         <DaumPostcode
           onComplete={handleComplete}
-          width={"50vw"}
+          width={"fit-content"}
           height={"80vh"}
-          style={styles}
         />
       </PostcodeBox>
     </LayerBackGround>
